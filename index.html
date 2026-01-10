@@ -3,215 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ARK - Academic Scheduler </title>
+    <title>ARK - Academic Scheduler</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getDatabase, ref, onValue, push, remove, update, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyDm0zv5xTNWqSyj4w34Je2yH1Er91iqvKs",
-            authDomain: "myscheduler-624e9.firebaseapp.com",
-            databaseURL: "https://myscheduler-624e9-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "myscheduler-624e9",
-            storageBucket: "myscheduler-624e9.firebasestorage.app",
-            messagingSenderId: "967010876778",
-            appId: "1:967010876778:web:f427493c0aa40547383913"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-        const scheduleRef = ref(db, 'schedules');
-        window.schedules = [];
-
-        onValue(scheduleRef, (snapshot) => {
-            const data = snapshot.val();
-            window.schedules = data ? Object.entries(data).map(([key, val]) => ({...val, firebaseKey: key})) : [];
-            updateFilterList(document.getElementById('filterSelector').value); 
-            updateDataLists(); 
-            renderManageTable();
-        });
-
-        window.resetDatabase = () => {
-            if(confirm("⚠️ WARNING: This will permanently delete ALL schedule entries. Are you sure?")) {
-                if(confirm("FINAL CONFIRMATION: Delete everything?")) {
-                    set(scheduleRef, null)
-                        .then(() => alert("Database cleared successfully."))
-                        .catch((error) => alert("Error clearing database: " + error));
-                }
-            }
-        };
-
-        // --- FIXED CONFLICT DETECTION LOGIC ---
-        function checkConflict(newEntry) {
-            for (let existing of window.schedules) {
-                if (existing.day !== newEntry.day) continue;
-                
-                const isOverlapping = (newEntry.start < existing.end && newEntry.end > existing.start);
-
-                if (isOverlapping) {
-                    if (existing.teacher === newEntry.teacher) 
-                        return `INSTRUCTOR CONFLICT: ${existing.teacher} is already assigned to ${existing.subject} at this time.`;
-                    
-                    if (existing.room === newEntry.room && newEntry.room !== "ONLINE") 
-                        return `ROOM CONFLICT: Room ${existing.room} is currently occupied by ${existing.section}.`;
-                    
-                    if (existing.section === newEntry.section) 
-                        return `SECTION CONFLICT: Section ${existing.section} already has ${existing.subject} during this slot.`;
-                }
-            }
-            return null; // No conflict
-        }
-
-        window.addSchedule = () => {
-            const entry = {
-                subject: document.getElementById('subject').value.trim().toUpperCase(),
-                section: document.getElementById('section').value.trim().toUpperCase(),
-                teacher: document.getElementById('teacher').value.trim().toUpperCase(),
-                room: document.getElementById('room').value.trim().toUpperCase(),
-                day: document.getElementById('day').value,
-                start: document.getElementById('startTime').value,
-                end: document.getElementById('endTime').value
-            };
-
-            if(!entry.subject || !entry.section || !entry.start || !entry.end) {
-                return alert("Please fill in all required fields.");
-            }
-            if(entry.start >= entry.end) return alert("Error: Start time must be before End time.");
-
-            // Fixed logic to capture the string message
-            const conflictMessage = checkConflict(entry);
-            if(conflictMessage) {
-                alert("⚠️ SCHEDULING ERROR\n\n" + conflictMessage);
-                return;
-            }
-
-            push(scheduleRef, entry);
-            alert("Saved Successfully!");
-        };
-
-        window.handleDragStart = (e, k) => { e.dataTransfer.setData("text", k); e.target.style.opacity = "0.4"; };
-        window.handleDragEnd = (e) => e.target.style.opacity = "1";
-        window.handleDragOver = (e) => { e.preventDefault(); e.currentTarget.style.background = "#f0fdf4"; };
-        window.handleDragLeave = (e) => e.currentTarget.style.background = "";
-        window.handleDrop = (e, day, start) => {
-            e.preventDefault();
-            const key = e.dataTransfer.getData("text");
-            const entry = window.schedules.find(s => s.firebaseKey === key);
-            if(!entry) return;
-
-            const [sh, sm] = entry.start.split(':').map(Number);
-            const [eh, em] = entry.end.split(':').map(Number);
-            const dur = (eh * 60 + em) - (sh * 60 + sm);
-            const [nh, nm] = start.split(':').map(Number);
-            const totalEnd = (nh * 60 + nm) + dur;
-            const end = `${Math.floor(totalEnd/60).toString().padStart(2,'0')}:${(totalEnd%60).toString().padStart(2,'0')}`;
-            
-            const newPos = { ...entry, day, start, end };
-            const tempSchedules = window.schedules.filter(s => s.firebaseKey !== key);
-            
-            // Re-use logic for drag and drop
-            const conflict = tempSchedules.find(existing => {
-                if (existing.day !== newPos.day) return false;
-                const isOverlapping = (newPos.start < existing.end && newPos.end > existing.start);
-                if (isOverlapping) {
-                    if (existing.teacher === newPos.teacher || (existing.room === newPos.room && newPos.room !== "ONLINE") || existing.section === newPos.section) return true;
-                }
-                return false;
-            });
-
-            if(conflict) return alert("Cannot move: A conflict was detected at the new time slot.");
-            update(ref(db, `schedules/${key}`), { day, start, end });
-        };
-
-        window.deleteEntry = (k) => { if(confirm("Delete this entry?")) remove(ref(db, `schedules/${k}`)); };
-    </script>
-
     <style>
-        :root { --ark-dark: #0f172a; --ark-accent: #3b82f6; --ark-border: #e2e8f0; }
-        body { font-family: 'Inter', sans-serif; background: #f1f5f9; margin: 0; padding: 20px; color: #1e293b; }
-        .main-container { max-width: 1400px; margin: auto; background: white; border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); padding: 25px; }
+        :root { --ark-dark: #0f172a; --ark-accent: #3b82f6; --ark-border: #e2e8f0; --row-height: 60px; }
+        body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background: #f8fafc; margin: 0; padding: 15px; color: #1e293b; line-height: 1.2; }
         
-        .matrix-header { display: flex; align-items: center; justify-content: center; gap: 20px; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 3px solid var(--ark-dark); }
-        .matrix-header img { width: 70px; height: 70px; object-fit: contain; }
-        .matrix-header-text h2 { margin: 0; font-size: 22px; color: var(--ark-dark); letter-spacing: 1px; }
-        .matrix-header-text p { margin: 0; font-size: 13px; font-weight: 700; color: #64748b; text-transform: uppercase; }
+        /* Login Overlay */
+        #loginOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--ark-dark); display: flex; align-items: center; justify-content: center; z-index: 10000; }
+        .login-card { background: white; padding: 30px; border-radius: 12px; width: 100%; max-width: 320px; text-align: center; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
+        .login-card input { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; }
+        .btn-login { width: 100%; padding: 10px; background: var(--ark-accent); color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
 
-        .action-bar { display: flex; justify-content: space-between; align-items: center; background: var(--ark-dark); color: white; padding: 12px 20px; border-radius: 8px; margin-bottom: 20px; }
-        .btn-export { border: none; padding: 8px 16px; border-radius: 6px; color: white; font-weight: 600; cursor: pointer; font-size: 11px; display: flex; align-items: center; gap: 8px; transition: opacity 0.2s; }
-        .btn-export:hover { opacity: 0.9; }
+        /* Layout */
+        .main-container { max-width: 1440px; margin: auto; background: white; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); padding: 15px; }
+        
+        /* Header with Logo */
+        .matrix-header { display: flex; align-items: center; justify-content: center; gap: 20px; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid var(--ark-dark); }
+        .company-logo { width: 80px; height: 80px; object-fit: contain; }
+        .matrix-header-text h2 { margin: 0; font-size: 18px; color: var(--ark-dark); }
+        .matrix-header-text p { margin: 0; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; }
 
-        .input-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin-bottom: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-        .input-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; align-items: end; }
-        .input-group { display: flex; flex-direction: column; gap: 6px; }
-        .input-group label { display: block; font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; }
-        .input-group input, .input-group select { 
-            width: 100%; padding: 10px 12px; border: 2px solid #f1f5f9; border-radius: 8px; 
-            font-size: 14px; font-weight: 500; color: #1e293b; background-color: #f8fafc; 
-            transition: all 0.2s ease; box-sizing: border-box; height: 44px; 
-        }
-        .input-group input:focus { outline: none; border-color: var(--ark-accent); background: white; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1); }
-        .btn-save { background: var(--ark-dark); color: white; border: none; padding: 0 25px; border-radius: 8px; font-weight: 700; cursor: pointer; height: 44px; font-size: 12px; text-transform: uppercase; }
+        .action-bar { display: flex; justify-content: space-between; align-items: center; background: var(--ark-dark); color: white; padding: 8px 15px; border-radius: 6px; margin-bottom: 15px; }
+        .btn-export { border: none; padding: 6px 12px; border-radius: 4px; color: white; font-weight: 600; cursor: pointer; font-size: 10px; display: flex; align-items: center; gap: 6px; }
 
-        .matrix-table { width: 100%; border-collapse: collapse; table-layout: fixed; border: 1px solid #cbd5e1; }
-        .matrix-table th, .matrix-table td { border: 1px solid #e2e8f0; padding: 4px; text-align: center; height: 50px; position: relative; }
-        .matrix-table th { background: #334155; color: white; font-size: 11px; text-transform: uppercase; }
-        .time-col { background: #f8fafc; font-weight: 800; color: #0f172a; width: 140px !important; border-right: 2px solid #cbd5e1; font-size: 10px; }
+        .input-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; margin-bottom: 15px; }
+        .input-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; align-items: end; }
+        .input-group label { display: block; font-size: 10px; font-weight: 800; color: #64748b; text-transform: uppercase; margin-bottom: 4px; }
+        .input-group input, .input-group select { width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; height: 36px; box-sizing: border-box; }
+        
+        /* Matrix Table */
+        .matrix-table { width: 100%; border-collapse: collapse; table-layout: fixed; border: 1px solid #cbd5e1; background: #fff; }
+        .matrix-table th, .matrix-table td { border: 1px solid #e2e8f0; padding: 2px; text-align: center; height: var(--row-height); font-size: 11px; }
+        .matrix-table th { background: #334155; color: white; height: 30px; font-size: 10px; }
+        .time-col { background: #f8fafc !important; font-weight: 800; color: #0f172a; width: 130px !important; border-right: 2px solid #cbd5e1; font-size: 9px; }
 
-        .slot-box { 
-            padding: 6px; border-radius: 4px; font-size: 9px; margin: 2px; cursor: grab; 
-            border-left: 4px solid; display: flex; flex-direction: column; 
-            justify-content: center; align-items: center; line-height: 1.3;
-        }
-        .slot-box strong { font-size: 10px; margin-bottom: 2px; }
+        .slot-box { padding: 4px; border-radius: 3px; font-size: 9px; margin: 1px; cursor: grab; border-left: 3px solid #22c55e; background: #f0fdf4; display: flex; flex-direction: column; justify-content: center; align-items: center; line-height: 1.1; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+        .slot-box strong { font-size: 10px; color: #1e293b; display: block; }
+        .slot-box span { color: #64748b; font-size: 8.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
 
-        .manage-table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 12px; }
-        .manage-table th { background: #f1f5f9; padding: 12px; text-align: left; color: #475569; }
-        .manage-table td { padding: 12px; border-bottom: 1px solid #f1f5f9; }
+        /* Masterlist Table */
+        .manage-table { width: 100%; border-collapse: collapse; font-size: 11.5px; margin-top: 10px; }
+        .manage-table th { background: #f1f5f9; padding: 8px; text-align: left; border-bottom: 2px solid #e2e8f0; font-weight: 700; }
+        .manage-table td { padding: 6px 8px; border-bottom: 1px solid #f1f5f9; }
+        .manage-table tr:nth-child(even) { background-color: #f8fafc; }
+        
+        .hidden { display: none !important; }
+        .btn-delete { color: #ef4444; background: none; border: none; cursor: pointer; padding: 4px; }
     </style>
 </head>
 <body>
 
-<div class="main-container">
+<div id="loginOverlay">
+    <div class="login-card">
+	            <img src="images/logo.png" alt="Logo" class="company-logo"> 
 
+        <h2 style="margin: 0 0 5px 0; color: var(--ark-dark); font-size: 18px;">ARK LOGIN</h2>
+        <p style="font-size: 11px; color: #64748b; margin-bottom: 15px;">Enter credentials to Access Class Schedule Maker</p>
+        <input type="email" id="loginEmail" placeholder="Email">
+        <input type="password" id="loginPassword" placeholder="Password">
+        <button class="btn-login" onclick="handleLogin()">SIGN IN</button>
+        <p id="loginError" style="color: #ef4444; font-size: 10px; margin-top: 10px;"></p>
+    </div>
+</div>
+
+<div class="main-container">
     <div class="action-bar">
-        <div style="font-size: 13px; font-weight: 600;"><i class="fa-solid fa-layer-group"></i> SCHEDULER CONTROLS</div>
-        <div style="display:flex; gap:8px;">
-            <button class="btn-export" style="background:#ef4444;" onclick="resetDatabase()"><i class="fa-solid fa-triangle-exclamation"></i> RESET DATABASE</button>
-            <span style="border-left: 1px solid #475569; margin: 0 5px;"></span>
-            <button class="btn-export" style="background:#dc2626;" onclick="downloadFullMatrix('pdf')"><i class="fa-solid fa-file-pdf"></i> EXPORT PDF</button>
-            <button class="btn-export" style="background:#16a34a;" onclick="downloadFullMatrix('png')"><i class="fa-solid fa-image"></i> EXPORT PNG</button>
-            <button class="btn-export" style="background:#15803d;" onclick="downloadExcelMasterlist()"><i class="fa-solid fa-file-excel"></i> MASTERLIST</button>
+        <div style="font-size: 11px; font-weight: 700;"><i class="fa-solid fa-calendar-check"></i> SCHEDULER</div>
+        <div style="display:flex; gap:6px;">
+            <button class="btn-export" style="background:#64748b;" onclick="handleLogout()">LOGOUT</button>
+            <button class="btn-export" style="background:#ef4444;" onclick="resetDatabase()">RESET</button>
+            <button class="btn-export" style="background:#dc2626;" onclick="downloadFullMatrix('pdf')">PDF</button>
+            <button class="btn-export" style="background:#16a34a;" onclick="downloadFullMatrix('png')">PNG</button>
+            <button class="btn-export" style="background:#15803d;" onclick="downloadExcelMasterlist()">EXCEL</button>
         </div>
     </div>
 
     <div class="input-card">
         <div class="input-row">
-            <div class="input-group">
-                <label>Subject</label>
-                <input id="subject" type="text" list="subjectList" placeholder="e.g. MATH 101">
-                <datalist id="subjectList"></datalist>
-            </div>
-            <div class="input-group">
-                <label>Section</label>
-                <input id="section" type="text" list="sectionList" placeholder="e.g. BSIT-1A">
-                <datalist id="sectionList"></datalist>
-            </div>
-            <div class="input-group">
-                <label>Instructor</label>
-                <input id="teacher" type="text" list="teacherList" placeholder="Enter Name">
-                <datalist id="teacherList"></datalist>
-            </div>
-            <div class="input-group">
-                <label>Room</label>
-                <input id="room" type="text" list="roomList" placeholder="e.g. LAB 1">
-                <datalist id="roomList"></datalist>
-            </div>
+            <div class="input-group"><label>Subject</label><input id="subject" type="text" list="subjectList"><datalist id="subjectList"></datalist></div>
+            <div class="input-group"><label>Section</label><input id="section" type="text" list="sectionList"><datalist id="sectionList"></datalist></div>
+            <div class="input-group"><label>Instructor</label><input id="teacher" type="text" list="teacherList"><datalist id="teacherList"></datalist></div>
+            <div class="input-group"><label>Room</label><input id="room" type="text" list="roomList"><datalist id="roomList"></datalist></div>
             <div class="input-group">
                 <label>Day</label>
                 <select id="day">
@@ -219,158 +97,255 @@
                     <option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option>
                 </select>
             </div>
-            <div class="input-group">
-                <label>Start</label>
-                <input id="startTime" type="time" value="07:00">
-            </div>
-            <div class="input-group">
-                <label>End</label>
-                <input id="endTime" type="time" value="08:00">
-            </div>
-            <button class="btn-save" onclick="addSchedule()">Save Entry</button>
+            <div class="input-group"><label>Start</label><input id="startTime" type="time" value="07:00"></div>
+            <div class="input-group"><label>End</label><input id="endTime" type="time" value="08:00"></div>
+            <button style="background: var(--ark-dark); color: white; border: none; padding: 0 15px; border-radius: 6px; font-weight: 700; cursor: pointer; height: 36px; font-size: 11px;" onclick="addSchedule()">SAVE</button>
         </div>
     </div>
 
-    <div style="margin-bottom: 15px; display: flex; align-items: center; gap: 12px; background: #fff; padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0;">
-        <span style="font-weight: 800; font-size: 11px; color: #64748b;">VIEW MODE:</span>
-        <select id="modeSelect" onchange="updateFilterList()" style="padding: 6px; font-size: 12px; border-radius: 4px; border: 1px solid #cbd5e1;">
-            <option value="section">Filter by Section</option>
-            <option value="teacher">Filter by Instructor</option>
-            <option value="room">Filter by Room</option>
+    <div style="margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
+        <span style="font-weight: 800; font-size: 10px; color: #64748b;">VIEW:</span>
+        <select id="modeSelect" onchange="updateFilterList()" style="padding: 4px; font-size: 11px; border-radius: 4px; border: 1px solid #cbd5e1;">
+            <option value="section">Section</option>
+            <option value="teacher">Instructor</option>
+            <option value="room">Room</option>
         </select>
-        <select id="filterSelector" onchange="renderMatrix()" style="padding: 6px; font-size: 12px; width: 250px; font-weight: bold; border-radius: 4px; border: 2px solid #3b82f6;"></select>
+        <select id="filterSelector" onchange="renderMatrix()" style="padding: 4px; font-size: 11px; width: 200px; border: 2px solid #3b82f6; border-radius: 4px;"></select>
     </div>
 
-    <div id="captureArea" style="background:white; padding:20px; border: 1px solid #e2e8f0; border-radius: 8px;">
+    <div id="captureArea" style="background:white; padding:10px; border: 1px solid #e2e8f0; border-radius: 4px;">
         <div class="matrix-header">
-            <img src="images/logo.png" alt="Logo" onerror="this.src='https://via.placeholder.com/70?text=ARK'">
-            <div class="matrix-header-text">
+            <img src="images/logo.png" alt="Logo" class="company-logo"> 
+            <div class="matrix-header-text" style="text-align: center;">
                 <h2>ARK TECHNOLOGICAL INSTITUTE EDUCATION SYSTEM INC.</h2>
-                <p>Class Schedule Matrix</p>
+                <p>Class Schedule Maker</p>
+                <h3 id="matrixTitle" style="margin: 5px 0; font-size: 14px; color: #3b82f6; text-transform: uppercase;"></h3>
             </div>
         </div>
-        <h3 id="matrixTitle" style="text-align: center; margin: 15px 0; font-size: 16px; color: #1e293b; text-transform: uppercase; font-weight: 800;"></h3>
         <table class="matrix-table">
             <thead>
                 <tr>
-                    <th style="width: 140px;">TIME SLOT</th>
-                    <th>MONDAY</th><th>TUESDAY</th><th>WEDNESDAY</th><th>THURSDAY</th><th>FRIDAY</th><th>SATURDAY</th><th>SUNDAY</th>
+                    <th style="width: 130px;">TIME SLOT</th>
+                    <th>MON</th><th>TUE</th><th>WED</th><th>THU</th><th>FRI</th><th>SAT</th><th>SUN</th>
                 </tr>
             </thead>
             <tbody id="matrixBody"></tbody>
         </table>
     </div>
 
-    <div class="manage-section" style="margin-top: 40px;">
-        <h3 style="font-size: 15px; display: flex; align-items: center; gap: 10px; color: #0f172a;">
-            <i class="fa-solid fa-database"></i> MASTER DATABASE MASTERLIST
-        </h3>
-        <table class="manage-table">
-            <thead>
-                <tr><th>DAY</th><th>TIME</th><th>SUBJECT</th><th>SECTION</th><th>TEACHER</th><th>ROOM</th><th>ACTION</th></tr>
-            </thead>
-            <tbody id="manageBody"></tbody>
-        </table>
+    <div style="margin-top: 25px;">
+        <h3 style="font-size: 13px; color: #0f172a; margin-bottom: 5px;"><i class="fa-solid fa-list-ul"></i> DATABASE MASTERLIST</h3>
+        <div style="max-height: 400px; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 6px;">
+            <table class="manage-table">
+                <thead>
+                    <tr><th>DAY</th><th>TIME</th><th>SUBJECT</th><th>SECTION</th><th>TEACHER</th><th>ROOM</th><th style="width: 40px;"></th></tr>
+                </thead>
+                <tbody id="manageBody"></tbody>
+            </table>
+        </div>
     </div>
 </div>
 
-<script>
-    function formatTimeAMPM(h) {
-        let hh = h % 12 || 12;
-        let suffix = h >= 12 ? "PM" : "AM";
-        return `${hh}:00 ${suffix}`;
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, onValue, push, remove, update, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyDm0zv5xTNWqSyj4w34Je2yH1Er91iqvKs",
+        authDomain: "myscheduler-624e9.firebaseapp.com",
+        databaseURL: "https://myscheduler-624e9-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "myscheduler-624e9",
+        storageBucket: "myscheduler-624e9.firebasestorage.app",
+        messagingSenderId: "967010876778",
+        appId: "1:967010876778:web:f427493c0aa40547383913"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const auth = getAuth(app);
+    const scheduleRef = ref(db, 'schedules');
+    window.schedules = [];
+
+    onAuthStateChanged(auth, (user) => {
+        if (user) { document.getElementById('loginOverlay').classList.add('hidden'); loadDatabase(); }
+        else { document.getElementById('loginOverlay').classList.remove('hidden'); }
+    });
+
+    window.handleLogin = () => {
+        const email = document.getElementById('loginEmail').value;
+        const pass = document.getElementById('loginPassword').value;
+        signInWithEmailAndPassword(auth, email, pass).catch(e => document.getElementById('loginError').innerText = "Failed: " + e.message);
+    };
+
+    window.handleLogout = () => signOut(auth);
+
+    function loadDatabase() {
+        onValue(scheduleRef, (snapshot) => {
+            const data = snapshot.val();
+            window.schedules = data ? Object.entries(data).map(([key, val]) => ({...val, firebaseKey: key})) : [];
+            updateFilterList(); updateDataLists(); renderManageTable();
+        });
     }
 
-    function getTeacherColor(name) {
-        let hash = 0; for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
-        const h = Math.abs(hash) % 360;
-        return { bg: `hsl(${h}, 80%, 97%)`, border: `hsl(${h}, 70%, 45%)`, text: `hsl(${h}, 70%, 15%)` };
+    // --- ACCURATE CONFLICT DETECTION ---
+    function checkConflict(newEntry, ignoreKey = null) {
+        let conflictFound = null;
+        window.schedules.some(existing => {
+            if (existing.firebaseKey === ignoreKey) return false;
+            if (existing.day !== newEntry.day) return false;
+
+            const isOverlapping = (newEntry.start < existing.end && newEntry.end > existing.start);
+            
+            if (isOverlapping) {
+                if (existing.teacher === newEntry.teacher && newEntry.teacher !== "") {
+                    conflictFound = `INSTRUCTOR: ${existing.teacher} is busy with ${existing.subject} (${existing.start}-${existing.end})`;
+                    return true;
+                }
+                if (existing.room === newEntry.room && newEntry.room !== "") {
+                    conflictFound = `ROOM: ${existing.room} is occupied by ${existing.section} for ${existing.subject}`;
+                    return true;
+                }
+                if (existing.section === newEntry.section) {
+                    conflictFound = `SECTION: ${existing.section} already has ${existing.subject} at this time`;
+                    return true;
+                }
+            }
+            return false;
+        });
+        return conflictFound;
     }
 
-    window.updateFilterList = (val) => {
+    window.addSchedule = () => {
+        const entry = {
+            subject: document.getElementById('subject').value.trim().toUpperCase(),
+            section: document.getElementById('section').value.trim().toUpperCase(),
+            teacher: document.getElementById('teacher').value.trim().toUpperCase(),
+            room: document.getElementById('room').value.trim().toUpperCase(),
+            day: document.getElementById('day').value,
+            start: document.getElementById('startTime').value,
+            end: document.getElementById('endTime').value
+        };
+        if(!entry.subject || !entry.section) return alert("Fill Subject & Section");
+        if(entry.start >= entry.end) return alert("End time must be after start time");
+
+        const errorMsg = checkConflict(entry);
+        if(errorMsg) return alert("❌ CONFLICT DETECTED\n\n" + errorMsg);
+
+        push(scheduleRef, entry);
+    };
+
+    window.resetDatabase = () => { if(confirm("Reset all data?")) set(scheduleRef, null); };
+    window.deleteEntry = (k) => remove(ref(db, `schedules/${k}`));
+
+    window.handleDragStart = (e, k) => { e.dataTransfer.setData("text", k); };
+    window.handleDragOver = (e) => e.preventDefault();
+    window.handleDrop = (e, day, start) => {
+        e.preventDefault();
+        const key = e.dataTransfer.getData("text");
+        const entry = window.schedules.find(s => s.firebaseKey === key);
+        if(!entry) return;
+
+        const [sh, sm] = entry.start.split(':').map(Number);
+        const [eh, em] = entry.end.split(':').map(Number);
+        const duration = (eh * 60 + em) - (sh * 60 + sm);
+        
+        const [nh, nm] = start.split(':').map(Number);
+        const totalEnd = (nh * 60 + nm) + duration;
+        const end = `${Math.floor(totalEnd/60).toString().padStart(2,'0')}:${(totalEnd%60).toString().padStart(2,'0')}`;
+
+        const updatedEntry = { ...entry, day, start, end };
+        const errorMsg = checkConflict(updatedEntry, key);
+        
+        if(errorMsg) return alert("❌ CANNOT MOVE\n\n" + errorMsg);
+        
+        update(ref(db, `schedules/${key}`), { day, start, end });
+    };
+
+    window.updateFilterList = () => {
         const m = document.getElementById('modeSelect').value;
         const vals = [...new Set(window.schedules.map(s => s[m]))].sort();
         const sel = document.getElementById('filterSelector');
         sel.innerHTML = vals.map(v => `<option value="${v}">${v}</option>`).join('');
-        if(val && vals.includes(val)) sel.value = val;
         renderMatrix();
     };
 
-    function renderMatrix() {
-        const m = document.getElementById('modeSelect').value;
-        const f = document.getElementById('filterSelector').value;
+    window.updateDataLists = () => {
+        ['subject', 'section', 'teacher', 'room'].forEach(f => {
+            const list = document.getElementById(`${f}List`);
+            const vals = [...new Set(window.schedules.map(s => s[f]))].sort();
+            list.innerHTML = vals.map(v => `<option value="${v}">`).join('');
+        });
+    };
+
+    window.renderMatrix = () => {
+        const mode = document.getElementById('modeSelect').value;
+        const filterVal = document.getElementById('filterSelector').value;
         const body = document.getElementById('matrixBody');
-        document.getElementById('matrixTitle').innerText = f ? `${m}: ${f}` : "--- SELECT A FILTER ---";
+        document.getElementById('matrixTitle').innerText = filterVal ? `${mode}: ${filterVal}` : "";
         body.innerHTML = '';
-        if(!f) return;
+        if(!filterVal) return;
 
         const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+        const formatTime = (hour) => {
+            const period = hour >= 12 ? 'PM' : 'AM';
+            const h12 = hour % 12 || 12;
+            return `${h12}:00 ${period}`;
+        };
+
         for (let h = 7; h <= 18; h++) {
             let tr = document.createElement('tr');
             let hourStr = h.toString().padStart(2, '0') + ":00";
-            let timeLabel = `${formatTimeAMPM(h)} - ${formatTimeAMPM(h+1)}`;
-            tr.innerHTML = `<td class="time-col">${timeLabel}</td>`;
+            tr.innerHTML = `<td class="time-col">${formatTime(h)} - ${formatTime(h+1)}</td>`;
             
             days.forEach(day => {
                 let td = document.createElement('td');
-                td.className = 'matrix-cell';
                 td.setAttribute('ondragover', 'handleDragOver(event)');
                 td.setAttribute('ondrop', `handleDrop(event, '${day}', '${hourStr}')`);
 
-                window.schedules.filter(s => s[m] === f && s.day === day && hourStr >= s.start && hourStr < s.end).forEach(item => {
-                    const c = getTeacherColor(item.teacher);
-                    let info = m === 'section' ? `${item.teacher}<br>${item.room}` : 
-                               (m === 'room' ? `${item.section}<br>${item.teacher}` : `${item.section}<br>${item.room}`);
-                    
+                window.schedules.filter(s => s[mode] === filterVal && s.day === day && hourStr >= s.start && hourStr < s.end).forEach(item => {
                     let div = document.createElement('div');
                     div.className = 'slot-box';
                     div.draggable = true;
-                    div.style.backgroundColor = c.bg;
-                    div.style.borderColor = c.border;
-                    div.style.color = c.text;
                     div.setAttribute('ondragstart', `handleDragStart(event, '${item.firebaseKey}')`);
-                    div.innerHTML = `<strong>${item.subject}</strong><span>${info}</span>`;
+
+                    let info1 = "", info2 = "";
+                    if (mode === "section") { info1 = item.teacher; info2 = "Room: " + item.room; }
+                    else if (mode === "teacher") { info1 = item.section; info2 = "Room: " + item.room; }
+                    else { info1 = item.section; info2 = "Ins: " + item.teacher; }
+                    
+                    div.innerHTML = `<strong>${item.subject}</strong><span>${info1}</span><span>${info2}</span>`;
                     td.appendChild(div);
                 });
                 tr.appendChild(td);
             });
             body.appendChild(tr);
         }
-    }
-
-    window.updateDataLists = () => {
-        ['subject', 'section', 'teacher', 'room'].forEach(f => {
-            const list = document.getElementById(`${f}List`);
-            const vals = [...new Set(window.schedules.map(s => s[f]))].sort();
-            if(list) list.innerHTML = vals.map(v => `<option value="${v}">`).join('');
-        });
     };
 
     function renderManageTable() {
         document.getElementById('manageBody').innerHTML = window.schedules.map(s => `
             <tr>
                 <td><b>${s.day.substring(0,3)}</b></td>
-                <td>${s.start} - ${s.end}</td>
-                <td><span style="color:#2563eb;font-weight:700;">${s.subject}</span></td>
+                <td>${s.start}-${s.end}</td>
+                <td style="color:#2563eb; font-weight:600">${s.subject}</td>
                 <td>${s.section}</td>
                 <td>${s.teacher}</td>
                 <td>${s.room}</td>
-                <td><button onclick="deleteEntry('${s.firebaseKey}')" style="background:none;border:none;color:#ef4444;cursor:pointer;"><i class="fa-solid fa-trash-can"></i></button></td>
-            </tr>
-        `).join('');
+                <td><button onclick="deleteEntry('${s.firebaseKey}')" class="btn-delete"><i class="fa-solid fa-trash-can"></i></button></td>
+            </tr>`).join('');
     }
 
     window.downloadFullMatrix = async (type) => {
-        const area = document.getElementById('captureArea');
-        const canvas = await html2canvas(area, { scale: 3 });
+        const canvas = await html2canvas(document.getElementById('captureArea'), { scale: 2 });
         const img = canvas.toDataURL('image/png');
         if(type === 'png') {
-            const l = document.createElement('a'); l.href = img; l.download = `Schedule_${document.getElementById('filterSelector').value}.png`; l.click();
+            const a = document.createElement('a'); a.href = img; a.download = 'schedule.png'; a.click();
         } else {
             const { jsPDF } = window.jspdf;
-            const p = new jsPDF('l', 'mm', 'a4'); 
-            p.addImage(img, 'PNG', 5, 5, 287, 0); 
-            p.save(`Schedule_${document.getElementById('filterSelector').value}.pdf`);
+            const pdf = new jsPDF('l', 'mm', 'a4');
+            pdf.addImage(img, 'PNG', 10, 10, 277, 0);
+            pdf.save('schedule.pdf');
         }
     };
 
