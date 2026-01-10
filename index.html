@@ -3,276 +3,256 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Academic Scheduler Pro - 7AM-7PM</title>
+    <title>Academic Scheduler - ARK Technological Institute</title>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf-plugin-autotable.min.js"></script>
+    
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, onValue, push } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        // Your Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDm0zv5xTNWqSyj4w34Je2yH1Er91iqvKs",
+            authDomain: "myscheduler-624e9.firebaseapp.com",
+            databaseURL: "https://myscheduler-624e9-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "myscheduler-624e9",
+            storageBucket: "myscheduler-624e9.firebasestorage.app",
+            messagingSenderId: "967010876778",
+            appId: "1:967010876778:web:f427493c0aa40547383913"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const scheduleRef = ref(db, 'schedules');
+        window.schedules = [];
+
+        onValue(scheduleRef, (snapshot) => {
+            const data = snapshot.val();
+            window.schedules = data ? Object.values(data) : [];
+            updateFilterList();
+            renderMatrix();
+        });
+
+        window.addSchedule = function() {
+            const entry = {
+                id: Date.now(),
+                subject: document.getElementById('subject').value,
+                section: document.getElementById('section').value,
+                teacher: document.getElementById('teacher').value,
+                room: document.getElementById('room').value,
+                day: document.getElementById('day').value,
+                start: document.getElementById('startTime').value,
+                end: document.getElementById('endTime').value
+            };
+            if(!entry.subject) return alert("Please enter a subject");
+            push(scheduleRef, entry);
+            alert("Saved Successfully!");
+        };
+    </script>
+
     <style>
-        :root {
-            --primary: #2563eb;
-            --danger: #e11d48;
-            --bg: #f1f5f9;
-            --text: #1e293b;
-            --grid-border: #cbd5e1;
+        :root { --pdf-red: #e11d48; --primary: #2563eb; --dark: #1e293b; }
+        body { font-family: 'Inter', sans-serif; background: #f1f5f9; padding: 20px; color: #334155; }
+        .container { max-width: 1100px; margin: auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        
+        /* DOWNLOAD PANEL */
+        .download-header { 
+            display: flex; justify-content: space-between; align-items: center;
+            background: #fff1f2; padding: 15px 25px; border: 2px solid var(--pdf-red);
+            border-radius: 10px; margin-bottom: 25px;
         }
+        .btn-pdf { 
+            background: var(--pdf-red); color: white; border: none; 
+            padding: 10px 20px; border-radius: 6px; cursor: pointer; 
+            font-weight: 800; display: flex; align-items: center; gap: 8px; font-size: 13px;
+        }
+        .btn-pdf:hover { background: #be123c; }
 
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); padding: 10px; }
-        .container { max-width: 1400px; margin: 0 auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 10px 15px rgba(0,0,0,0.1); }
+        /* FORM STYLING */
+        .form-card { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 25px; }
+        .input-group label { display: block; font-size: 11px; font-weight: bold; color: #64748b; margin-bottom: 4px; }
+        input, select { width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 13px; }
         
-        header { border-bottom: 2px solid #e2e8f0; margin-bottom: 20px; padding-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        /* MATRIX STYLING */
+        #captureArea { background: white; padding: 40px; border: 1px solid #e2e8f0; }
+        .inst-header { display: flex; align-items: center; justify-content: center; gap: 20px; border-bottom: 3px solid var(--dark); padding-bottom: 20px; margin-bottom: 20px; }
+        .inst-logo { height: 70px; width: auto; background: #f8fafc; border: 1px dashed #ccc; } /* Placeholder styling */
+        .inst-title h1 { margin: 0; font-size: 22px; color: var(--dark); text-transform: uppercase; }
+        .inst-title p { margin: 2px 0 0 0; font-size: 12px; color: #64748b; font-weight: 600; }
+
+        .matrix-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .matrix-table th, .matrix-table td { border: 1px solid #94a3b8; padding: 6px; font-size: 10px; text-align: center; height: 40px; }
+        .matrix-table th { background: #334155; color: white; text-transform: uppercase; }
+        .time-col { background: #f1f5f9; font-weight: bold; width: 80px; color: #1e293b; }
+        .sched-item { background: #dbeafe; border-left: 3px solid var(--primary); padding: 4px; font-size: 9px; border-radius: 2px; color: #1e40af; font-weight: 600; line-height: 1.2; }
         
-        .form-card { background: #f8fafc; border: 1px solid #e2e8f0; padding: 15px; border-radius: 8px; margin-bottom: 25px; }
-        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; }
-        
-        .input-group { display: flex; flex-direction: column; }
-        label { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; margin-bottom: 4px; color: #64748b; }
-        input, select { padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.85rem; }
-        
-        .btn-add { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: 600; margin-top: 15px; width: 100%; transition: 0.2s; }
-        .btn-add:hover { background: #1d4ed8; }
-
-        #conflictAlert { display: none; background: #fff1f2; border: 1px solid #fda4af; color: var(--danger); padding: 12px; border-radius: 6px; margin-bottom: 15px; font-weight: 500; font-size: 0.85rem; white-space: pre-line; }
-
-        /* Matrix Styles */
-        .matrix-header { display: flex; justify-content: space-between; align-items: center; margin-top: 30px; border-top: 2px solid #eee; pt: 20px; padding-top: 20px;}
-        .tabs { display: flex; gap: 5px; background: #f1f5f9; padding: 5px; border-radius: 8px; }
-        .tab-btn { padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: 600; transition: 0.2s; }
-        .tab-btn.active { background: white; color: var(--primary); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-
-        .download-btn { background: #059669; color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 0.85rem; }
-        .download-btn:hover { background: #047857; }
-        
-        .matrix-container { margin-top: 15px; background: white; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px; }
-        .matrix-table { width: 100%; border-collapse: collapse; table-layout: fixed; min-width: 1000px; border: 2px solid #334155; }
-        .matrix-table th, .matrix-table td { border: 1px solid var(--grid-border); padding: 6px; font-size: 0.7rem; vertical-align: top; height: 60px; }
-        .matrix-table th { background: #334155; color: white; text-align: center; padding: 10px; text-transform: uppercase; letter-spacing: 1px; }
-        .time-col { width: 90px; background: #f8fafc; font-weight: bold; text-align: center; vertical-align: middle; color: #1e293b; font-size: 0.8rem; border-right: 2px solid #334155; }
-
-        .sched-item { background: #eff6ff; border-left: 4px solid var(--primary); padding: 5px; border-radius: 3px; margin-bottom: 3px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
-        .sched-item b { color: #1e40af; display: block; font-size: 0.75rem; border-bottom: 1px solid #dbeafe; margin-bottom: 2px; padding-bottom: 2px; }
-        .sched-details { color: #475569; font-size: 0.65rem; font-style: italic; }
-
-        .master-list-summary { cursor: pointer; color: var(--primary); font-size: 0.9rem; margin-bottom: 10px; font-weight: bold; }
+        hr { border: 0; border-top: 1px solid #e2e8f0; margin: 20px 0; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <header>
-        <h1>Academic Scheduler <span style="font-weight: 300; font-size: 0.9rem;">| Matrix 7AM-7PM</span></h1>
-        <button onclick="clearAll()" style="font-size: 0.7rem; color: #ef4444; border: 1px solid #ef4444; background: none; padding: 4px 8px; border-radius: 4px; cursor: pointer;">Clear Database</button>
-    </header>
-    
-    <div id="conflictAlert"></div>
+    <div class="download-header">
+        <div>
+            <h2 style="margin:0; color: var(--pdf-red); font-size: 18px;">REPORT GENERATOR</h2>
+            <small style="color: #be123c;">Export institutional schedules to PDF</small>
+        </div>
+        <div style="display: flex; gap: 10px;">
+            <button class="btn-pdf" onclick="downloadMatrixPDF()">📄 EXPORT MATRIX</button>
+            <button class="btn-pdf" onclick="downloadMasterPDF()" style="background: #1e293b;">📄 EXPORT MASTERLIST</button>
+        </div>
+    </div>
 
     <div class="form-card">
-        <div class="form-grid">
-            <div class="input-group">
-                <label>Subject</label>
-                <input type="text" id="subject" placeholder="Physics 101">
-            </div>
-            <div class="input-group">
-                <label>Section</label>
-                <input type="text" id="section" placeholder="SEC-A">
-            </div>
-            <div class="input-group">
-                <label>Teacher</label>
-                <input type="text" id="teacher" placeholder="Prof. Aris">
-            </div>
-            <div class="input-group">
-                <label>Room</label>
-                <input type="text" id="room" placeholder="Lab 1">
-            </div>
-            <div class="input-group">
-                <label>Day</label>
-                <select id="day">
-                    <option value="Monday">Monday</option><option value="Tuesday">Tuesday</option>
-                    <option value="Wednesday">Wednesday</option><option value="Thursday">Thursday</option>
-                    <option value="Friday">Friday</option><option value="Saturday">Saturday</option>
-                    <option value="Sunday">Sunday</option>
-                </select>
-            </div>
-            <div class="input-group">
-                <label>Start (Min 07:00)</label><input type="time" id="startTime" value="07:00">
-            </div>
-            <div class="input-group">
-                <label>End (Max 19:00)</label><input type="time" id="endTime" value="08:00">
-            </div>
+        <div class="input-group"><label>Subject</label><input id="subject" type="text" placeholder="e.g. Math 101"></div>
+        <div class="input-group"><label>Section</label><input id="section" type="text" placeholder="BSIT-1A"></div>
+        <div class="input-group"><label>Teacher</label><input id="teacher" type="text" placeholder="D. Smith"></div>
+        <div class="input-group"><label>Room</label><input id="room" type="text" placeholder="Lab 1"></div>
+        <div class="input-group"><label>Day</label>
+            <select id="day">
+                <option>Monday</option><option>Tuesday</option><option>Wednesday</option>
+                <option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option>
+            </select>
         </div>
-        <button class="btn-add" onclick="addSchedule()">Validate & Add to Matrix</button>
+        <div class="input-group"><label>Start</label><input id="startTime" type="time" value="07:00"></div>
+        <div class="input-group"><label>End</label><input id="endTime" type="time" value="08:00"></div>
+        <button onclick="addSchedule()" style="background:var(--primary); color:white; border:none; border-radius:4px; cursor:pointer; font-weight:bold; height: 35px; align-self: end;">SAVE</button>
     </div>
 
-    <details>
-        <summary class="master-list-summary">View Data Table (Master List)</summary>
-        <table style="width:100%; font-size: 0.8rem; margin-top: 10px; border-collapse: collapse;">
-            <thead><tr style="background:#f1f5f9; text-align: left;"><th>Day</th><th>Time</th><th>Subject</th><th>Teacher</th><th>Room</th><th>Section</th><th>Action</th></tr></thead>
-            <tbody id="masterBody"></tbody>
+    <hr>
+
+    <div style="margin: 20px 0; display: flex; gap: 10px; align-items: center;">
+        <span style="font-size: 13px; font-weight: bold;">View Schedule For:</span>
+        <select id="modeSelect" onchange="updateFilterList()" style="width: 150px;">
+            <option value="section">Section</option>
+            <option value="teacher">Teacher</option>
+            <option value="room">Room</option>
+        </select>
+        <select id="filterSelector" onchange="renderMatrix()" style="width: 200px; border-color: var(--primary);"></select>
+    </div>
+
+    <div id="captureArea">
+        <div class="inst-header">
+            <img src="images/logo.png" alt="Logo" class="inst-logo">
+            <div class="inst-title">
+                <h1>ARK Technological Institute Education System Inc.</h1>
+                <p>ACADEMIC MANAGEMENT INFORMATION SYSTEM</p>
+            </div>
+        </div>
+
+        <h2 id="matrixTitle" style="text-align: center; text-transform: uppercase; color: #1e293b; margin: 10px 0 20px 0; font-size: 18px; text-decoration: underline;"></h2>
+        
+        <table class="matrix-table">
+            <thead>
+                <tr><th class="time-col">TIME</th><th>MON</th><th>TUE</th><th>WED</th><th>THU</th><th>FRI</th><th>SAT</th><th>SUN</th></tr>
+            </thead>
+            <tbody id="matrixBody"></tbody>
         </table>
-    </details>
-
-    <div class="matrix-header">
-        <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab('section', this)">Sections</button>
-            <button class="tab-btn" onclick="switchTab('teacher', this)">Teachers</button>
-            <button class="tab-btn" onclick="switchTab('room', this)">Rooms</button>
-        </div>
-        <div style="display:flex; gap: 10px; align-items: center;">
-            <select id="filterSelector" onchange="renderMatrix()" style="padding: 8px; border-radius: 4px; border: 1px solid #cbd5e1; font-weight: bold; color: var(--primary);"></select>
-            <button class="download-btn" onclick="downloadMatrix()">
-                <span>📥</span> Download Schedule
-            </button>
-        </div>
-    </div>
-
-    <div class="matrix-container" id="captureArea">
-        <h2 id="matrixTitle" style="margin-top:0; color: #1e293b; text-align: center; text-transform: uppercase; letter-spacing: 2px;"></h2>
-        <div style="overflow-x: auto;">
-            <table class="matrix-table">
-                <thead>
-                    <tr>
-                        <th class="time-col">Time</th>
-                        <th>Monday</th><th>Tuesday</th><th>Wednesday</th><th>Thursday</th><th>Friday</th><th>Saturday</th><th>Sunday</th>
-                    </tr>
-                </thead>
-                <tbody id="matrixBody"></tbody>
-            </table>
+        
+        <div style="margin-top: 20px; font-size: 9px; color: #94a3b8; display: flex; justify-content: space-between;">
+            <span>Generated on: <span id="genDate"></span></span>
+            <span>ARK Technological Institute - Official Document</span>
         </div>
     </div>
 </div>
 
 <script>
-    let schedules = JSON.parse(localStorage.getItem('eduStrictMatrix')) || [];
-    let currentMode = 'section';
-
-    window.onload = () => { updateFilterList(); renderMaster(); renderMatrix(); };
-
-    function addSchedule() {
-        document.getElementById('conflictAlert').style.display = 'none';
-        const entry = {
-            id: Date.now(),
-            subject: document.getElementById('subject').value.trim(),
-            section: document.getElementById('section').value.trim(),
-            teacher: document.getElementById('teacher').value.trim(),
-            room: document.getElementById('room').value.trim(),
-            day: document.getElementById('day').value,
-            start: document.getElementById('startTime').value,
-            end: document.getElementById('endTime').value
-        };
-
-        if (!entry.subject || !entry.section || !entry.teacher || !entry.room || !entry.start || !entry.end) {
-            showConflict("⚠️ Fill all fields first."); return;
-        }
-
-        const conflict = checkConflicts(entry);
-        if (conflict) { showConflict(conflict); return; }
-
-        schedules.push(entry);
-        localStorage.setItem('eduStrictMatrix', JSON.stringify(schedules));
-        updateFilterList(); renderMaster(); renderMatrix();
-        clearInputs();
-    }
-
-    function checkConflicts(n) {
-        for (let e of schedules) {
-            const sameSub = e.subject.toLowerCase() === n.subject.toLowerCase();
-            const sameSec = e.section.toLowerCase() === n.section.toLowerCase();
-            const sameTea = e.teacher.toLowerCase() === n.teacher.toLowerCase();
-            const sameRom = e.room.toLowerCase() === n.room.toLowerCase();
-
-            // Teacher Ownership Rule
-            if (sameSec && sameSub && !sameTea) return `❌ DATA ERROR: Section ${n.section} already has ${e.teacher} for ${e.subject}.`;
-            
-            // Overlap Rule
-            if (e.day === n.day && (n.start < e.end && n.end > e.start)) {
-                if (sameTea) return `❌ TEACHER BUSY: ${n.teacher} is teaching ${e.subject} at this time.`;
-                if (sameRom) return `❌ ROOM BUSY: ${n.room} is occupied by ${e.teacher}.`;
-                if (sameSec) return `❌ SECTION BUSY: ${n.section} is in another class.`;
-            }
-        }
-        return null;
-    }
-
-    function switchTab(mode, btn) {
-        currentMode = mode;
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        updateFilterList(); renderMatrix();
-    }
+    const { jsPDF } = window.jspdf;
 
     function updateFilterList() {
+        const mode = document.getElementById('modeSelect').value;
         const sel = document.getElementById('filterSelector');
-        const vals = [...new Set(schedules.map(s => s[currentMode]))].sort();
+        const vals = [...new Set(window.schedules.map(s => s[mode]))].sort();
         sel.innerHTML = vals.map(v => `<option value="${v}">${v}</option>`).join('');
+        renderMatrix();
     }
 
     function renderMatrix() {
+        const mode = document.getElementById('modeSelect').value;
         const filter = document.getElementById('filterSelector').value;
         const tbody = document.getElementById('matrixBody');
-        const title = document.getElementById('matrixTitle');
-        title.innerText = filter ? `${currentMode}: ${filter}` : "Select Item to View Schedule";
+        document.getElementById('matrixTitle').innerText = filter ? `${mode} SCHEDULE: ${filter}` : "Select Item";
+        document.getElementById('genDate').innerText = new Date().toLocaleString();
         tbody.innerHTML = '';
         
         if(!filter) return;
 
         const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-        
-        // Loop from 7 AM (07:00) to 7 PM (19:00)
         for (let h = 7; h <= 19; h++) {
             let hourStr = h.toString().padStart(2, '0') + ":00";
             let displayTime = h > 12 ? (h - 12) + ":00 PM" : (h === 12 ? "12:00 PM" : h + ":00 AM");
-            
             let row = `<tr><td class="time-col">${displayTime}</td>`;
+            
             days.forEach(day => {
-                const matches = schedules.filter(s => 
-                    s[currentMode] === filter && 
+                const matches = window.schedules.filter(s => 
+                    s[mode] === filter && 
                     s.day === day && 
                     hourStr >= s.start && hourStr < s.end
                 );
                 
-                row += `<td>${matches.map(m => `
+                let content = matches.map(m => `
                     <div class="sched-item">
-                        <b>${m.subject}</b>
-                        <div class="sched-details">
-                            ${currentMode !== 'teacher' ? '👤 ' + m.teacher : ''}
-                            ${currentMode !== 'room' ? '📍 ' + m.room : ''}
-                            ${currentMode !== 'section' ? '👥 ' + m.section : ''}
-                        </div>
+                        ${m.subject}<br>
+                        <span style="font-size:7px; font-weight:normal;">${m.room} | ${m.teacher}</span>
                     </div>
-                `).join('')}</td>`;
+                `).join('');
+                
+                row += `<td>${content}</td>`;
             });
             tbody.innerHTML += row + "</tr>";
         }
     }
 
-    function renderMaster() {
-        const b = document.getElementById('masterBody'); b.innerHTML = '';
-        schedules.forEach(s => {
-            b.innerHTML += `<tr style="border-bottom: 1px solid #eee;">
-                <td>${s.day}</td><td>${s.start}-${s.end}</td><td>${s.subject}</td>
-                <td>${s.teacher}</td><td>${s.room}</td><td>${s.section}</td>
-                <td><button onclick="del(${s.id})" style="color:red; border:none; background:none; cursor:pointer;">🗑️</button></td></tr>`;
-        });
-    }
-
-    function del(id) { 
-        if(confirm("Remove this schedule?")) {
-            schedules = schedules.filter(s => s.id !== id); 
-            localStorage.setItem('eduStrictMatrix', JSON.stringify(schedules)); 
-            updateFilterList(); renderMaster(); renderMatrix(); 
-        }
-    }
-
-    function downloadMatrix() {
+    // 1. PDF DOWNLOAD: Matrix View (Captures the Header + Table)
+    async function downloadMatrixPDF() {
         const area = document.getElementById('captureArea');
-        html2canvas(area, { scale: 2 }).then(canvas => {
-            const link = document.createElement('a');
-            link.download = `Schedule_${document.getElementById('filterSelector').value}.png`;
-            link.href = canvas.toDataURL("image/png");
-            link.click();
-        });
+        const canvas = await html2canvas(area, { scale: 2, useCORS: true });
+        const imgData = canvas.toDataURL('image/png');
+        
+        const pdf = new jsPDF('l', 'mm', 'a4');
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        const pageHeight = pdf.internal.pageSize.getHeight();
+        
+        // Calculate width to fit page while maintaining aspect ratio
+        const imgProps = pdf.getImageProperties(imgData);
+        const pdfWidth = pageWidth - 20;
+        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+        pdf.addImage(imgData, 'PNG', 10, 10, pdfWidth, pdfHeight);
+        pdf.save(`ARK_Matrix_${document.getElementById('filterSelector').value}.pdf`);
     }
 
-    function showConflict(m) { const a = document.getElementById('conflictAlert'); a.innerText = m; a.style.display = 'block'; window.scrollTo(0,0); }
-    function clearInputs() { document.querySelectorAll('.form-grid input').forEach(i => { if(i.type !== 'time') i.value = ''; }); }
-    function clearAll() { if(confirm("Wipe all data?")) { localStorage.clear(); location.reload(); } }
+    // 2. PDF DOWNLOAD: Masterlist with custom header
+    function downloadMasterPDF() {
+        const pdf = new jsPDF('l', 'mm', 'a4');
+        
+        // Institutional Header for Table View
+        pdf.setFontSize(16);
+        pdf.setTextColor(30, 41, 59);
+        pdf.text("ARK Technological Institute Education System Inc.", 14, 15);
+        
+        pdf.setFontSize(10);
+        pdf.setTextColor(100, 116, 139);
+        pdf.text("OFFICIAL ACADEMIC MASTERLIST REPORT", 14, 21);
+        pdf.line(14, 23, 283, 23); // Header Underline
+        
+        const data = window.schedules.map(s => [s.day, `${s.start} - ${s.end}`, s.subject, s.teacher, s.section, s.room]);
+        
+        pdf.autoTable({
+            head: [['Day', 'Time Slot', 'Subject Name', 'Instructor', 'Section', 'Room']],
+            body: data,
+            startY: 28,
+            theme: 'striped',
+            headStyles: { fillColor: [30, 41, 59], fontSize: 10 },
+            styles: { fontSize: 9, cellPadding: 3 }
+        });
+        
+        pdf.save("ARK_Master_Schedule_Report.pdf");
+    }
 </script>
+
 </body>
 </html>
