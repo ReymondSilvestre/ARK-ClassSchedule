@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Scheduler Pro - 7AM-7PM</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --danger: #e11d48;
+            --bg: #f1f5f9;
+            --text: #1e293b;
+            --grid-border: #cbd5e1;
+        }
+
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); padding: 10px; }
+        .container { max-width: 1400px; margin: 0 auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 10px 15px rgba(0,0,0,0.1); }
+        
+        header { border-bottom: 2px solid #e2e8f0; margin-bottom: 20px; padding-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        
+        .form-card { background: #f8fafc; border: 1px solid #e2e8f0; padding: 15px; border-radius: 8px; margin-bottom: 25px; }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; }
+        
+        .input-group { display: flex; flex-direction: column; }
+        label { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; margin-bottom: 4px; color: #64748b; }
+        input, select { padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.85rem; }
+        
+        .btn-add { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: 600; margin-top: 15px; width: 100%; transition: 0.2s; }
+        .btn-add:hover { background: #1d4ed8; }
+
+        #conflictAlert { display: none; background: #fff1f2; border: 1px solid #fda4af; color: var(--danger); padding: 12px; border-radius: 6px; margin-bottom: 15px; font-weight: 500; font-size: 0.85rem; white-space: pre-line; }
+
+        /* Matrix Styles */
+        .matrix-header { display: flex; justify-content: space-between; align-items: center; margin-top: 30px; border-top: 2px solid #eee; pt: 20px; padding-top: 20px;}
+        .tabs { display: flex; gap: 5px; background: #f1f5f9; padding: 5px; border-radius: 8px; }
+        .tab-btn { padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: 600; transition: 0.2s; }
+        .tab-btn.active { background: white; color: var(--primary); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+
+        .download-btn { background: #059669; color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 0.85rem; }
+        .download-btn:hover { background: #047857; }
+        
+        .matrix-container { margin-top: 15px; background: white; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px; }
+        .matrix-table { width: 100%; border-collapse: collapse; table-layout: fixed; min-width: 1000px; border: 2px solid #334155; }
+        .matrix-table th, .matrix-table td { border: 1px solid var(--grid-border); padding: 6px; font-size: 0.7rem; vertical-align: top; height: 60px; }
+        .matrix-table th { background: #334155; color: white; text-align: center; padding: 10px; text-transform: uppercase; letter-spacing: 1px; }
+        .time-col { width: 90px; background: #f8fafc; font-weight: bold; text-align: center; vertical-align: middle; color: #1e293b; font-size: 0.8rem; border-right: 2px solid #334155; }
+
+        .sched-item { background: #eff6ff; border-left: 4px solid var(--primary); padding: 5px; border-radius: 3px; margin-bottom: 3px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+        .sched-item b { color: #1e40af; display: block; font-size: 0.75rem; border-bottom: 1px solid #dbeafe; margin-bottom: 2px; padding-bottom: 2px; }
+        .sched-details { color: #475569; font-size: 0.65rem; font-style: italic; }
+
+        .master-list-summary { cursor: pointer; color: var(--primary); font-size: 0.9rem; margin-bottom: 10px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Academic Scheduler <span style="font-weight: 300; font-size: 0.9rem;">| Matrix 7AM-7PM</span></h1>
+        <button onclick="clearAll()" style="font-size: 0.7rem; color: #ef4444; border: 1px solid #ef4444; background: none; padding: 4px 8px; border-radius: 4px; cursor: pointer;">Clear Database</button>
+    </header>
+    
+    <div id="conflictAlert"></div>
+
+    <div class="form-card">
+        <div class="form-grid">
+            <div class="input-group">
+                <label>Subject</label>
+                <input type="text" id="subject" placeholder="Physics 101">
+            </div>
+            <div class="input-group">
+                <label>Section</label>
+                <input type="text" id="section" placeholder="SEC-A">
+            </div>
+            <div class="input-group">
+                <label>Teacher</label>
+                <input type="text" id="teacher" placeholder="Prof. Aris">
+            </div>
+            <div class="input-group">
+                <label>Room</label>
+                <input type="text" id="room" placeholder="Lab 1">
+            </div>
+            <div class="input-group">
+                <label>Day</label>
+                <select id="day">
+                    <option value="Monday">Monday</option><option value="Tuesday">Tuesday</option>
+                    <option value="Wednesday">Wednesday</option><option value="Thursday">Thursday</option>
+                    <option value="Friday">Friday</option><option value="Saturday">Saturday</option>
+                    <option value="Sunday">Sunday</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Start (Min 07:00)</label><input type="time" id="startTime" value="07:00">
+            </div>
+            <div class="input-group">
+                <label>End (Max 19:00)</label><input type="time" id="endTime" value="08:00">
+            </div>
+        </div>
+        <button class="btn-add" onclick="addSchedule()">Validate & Add to Matrix</button>
+    </div>
+
+    <details>
+        <summary class="master-list-summary">View Data Table (Master List)</summary>
+        <table style="width:100%; font-size: 0.8rem; margin-top: 10px; border-collapse: collapse;">
+            <thead><tr style="background:#f1f5f9; text-align: left;"><th>Day</th><th>Time</th><th>Subject</th><th>Teacher</th><th>Room</th><th>Section</th><th>Action</th></tr></thead>
+            <tbody id="masterBody"></tbody>
+        </table>
+    </details>
+
+    <div class="matrix-header">
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('section', this)">Sections</button>
+            <button class="tab-btn" onclick="switchTab('teacher', this)">Teachers</button>
+            <button class="tab-btn" onclick="switchTab('room', this)">Rooms</button>
+        </div>
+        <div style="display:flex; gap: 10px; align-items: center;">
+            <select id="filterSelector" onchange="renderMatrix()" style="padding: 8px; border-radius: 4px; border: 1px solid #cbd5e1; font-weight: bold; color: var(--primary);"></select>
+            <button class="download-btn" onclick="downloadMatrix()">
+                <span>📥</span> Download Schedule
+            </button>
+        </div>
+    </div>
+
+    <div class="matrix-container" id="captureArea">
+        <h2 id="matrixTitle" style="margin-top:0; color: #1e293b; text-align: center; text-transform: uppercase; letter-spacing: 2px;"></h2>
+        <div style="overflow-x: auto;">
+            <table class="matrix-table">
+                <thead>
+                    <tr>
+                        <th class="time-col">Time</th>
+                        <th>Monday</th><th>Tuesday</th><th>Wednesday</th><th>Thursday</th><th>Friday</th><th>Saturday</th><th>Sunday</th>
+                    </tr>
+                </thead>
+                <tbody id="matrixBody"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    let schedules = JSON.parse(localStorage.getItem('eduStrictMatrix')) || [];
+    let currentMode = 'section';
+
+    window.onload = () => { updateFilterList(); renderMaster(); renderMatrix(); };
+
+    function addSchedule() {
+        document.getElementById('conflictAlert').style.display = 'none';
+        const entry = {
+            id: Date.now(),
+            subject: document.getElementById('subject').value.trim(),
+            section: document.getElementById('section').value.trim(),
+            teacher: document.getElementById('teacher').value.trim(),
+            room: document.getElementById('room').value.trim(),
+            day: document.getElementById('day').value,
+            start: document.getElementById('startTime').value,
+            end: document.getElementById('endTime').value
+        };
+
+        if (!entry.subject || !entry.section || !entry.teacher || !entry.room || !entry.start || !entry.end) {
+            showConflict("⚠️ Fill all fields first."); return;
+        }
+
+        const conflict = checkConflicts(entry);
+        if (conflict) { showConflict(conflict); return; }
+
+        schedules.push(entry);
+        localStorage.setItem('eduStrictMatrix', JSON.stringify(schedules));
+        updateFilterList(); renderMaster(); renderMatrix();
+        clearInputs();
+    }
+
+    function checkConflicts(n) {
+        for (let e of schedules) {
+            const sameSub = e.subject.toLowerCase() === n.subject.toLowerCase();
+            const sameSec = e.section.toLowerCase() === n.section.toLowerCase();
+            const sameTea = e.teacher.toLowerCase() === n.teacher.toLowerCase();
+            const sameRom = e.room.toLowerCase() === n.room.toLowerCase();
+
+            // Teacher Ownership Rule
+            if (sameSec && sameSub && !sameTea) return `❌ DATA ERROR: Section ${n.section} already has ${e.teacher} for ${e.subject}.`;
+            
+            // Overlap Rule
+            if (e.day === n.day && (n.start < e.end && n.end > e.start)) {
+                if (sameTea) return `❌ TEACHER BUSY: ${n.teacher} is teaching ${e.subject} at this time.`;
+                if (sameRom) return `❌ ROOM BUSY: ${n.room} is occupied by ${e.teacher}.`;
+                if (sameSec) return `❌ SECTION BUSY: ${n.section} is in another class.`;
+            }
+        }
+        return null;
+    }
+
+    function switchTab(mode, btn) {
+        currentMode = mode;
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        updateFilterList(); renderMatrix();
+    }
+
+    function updateFilterList() {
+        const sel = document.getElementById('filterSelector');
+        const vals = [...new Set(schedules.map(s => s[currentMode]))].sort();
+        sel.innerHTML = vals.map(v => `<option value="${v}">${v}</option>`).join('');
+    }
+
+    function renderMatrix() {
+        const filter = document.getElementById('filterSelector').value;
+        const tbody = document.getElementById('matrixBody');
+        const title = document.getElementById('matrixTitle');
+        title.innerText = filter ? `${currentMode}: ${filter}` : "Select Item to View Schedule";
+        tbody.innerHTML = '';
+        
+        if(!filter) return;
+
+        const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+        
+        // Loop from 7 AM (07:00) to 7 PM (19:00)
+        for (let h = 7; h <= 19; h++) {
+            let hourStr = h.toString().padStart(2, '0') + ":00";
+            let displayTime = h > 12 ? (h - 12) + ":00 PM" : (h === 12 ? "12:00 PM" : h + ":00 AM");
+            
+            let row = `<tr><td class="time-col">${displayTime}</td>`;
+            days.forEach(day => {
+                const matches = schedules.filter(s => 
+                    s[currentMode] === filter && 
+                    s.day === day && 
+                    hourStr >= s.start && hourStr < s.end
+                );
+                
+                row += `<td>${matches.map(m => `
+                    <div class="sched-item">
+                        <b>${m.subject}</b>
+                        <div class="sched-details">
+                            ${currentMode !== 'teacher' ? '👤 ' + m.teacher : ''}
+                            ${currentMode !== 'room' ? '📍 ' + m.room : ''}
+                            ${currentMode !== 'section' ? '👥 ' + m.section : ''}
+                        </div>
+                    </div>
+                `).join('')}</td>`;
+            });
+            tbody.innerHTML += row + "</tr>";
+        }
+    }
+
+    function renderMaster() {
+        const b = document.getElementById('masterBody'); b.innerHTML = '';
+        schedules.forEach(s => {
+            b.innerHTML += `<tr style="border-bottom: 1px solid #eee;">
+                <td>${s.day}</td><td>${s.start}-${s.end}</td><td>${s.subject}</td>
+                <td>${s.teacher}</td><td>${s.room}</td><td>${s.section}</td>
+                <td><button onclick="del(${s.id})" style="color:red; border:none; background:none; cursor:pointer;">🗑️</button></td></tr>`;
+        });
+    }
+
+    function del(id) { 
+        if(confirm("Remove this schedule?")) {
+            schedules = schedules.filter(s => s.id !== id); 
+            localStorage.setItem('eduStrictMatrix', JSON.stringify(schedules)); 
+            updateFilterList(); renderMaster(); renderMatrix(); 
+        }
+    }
+
+    function downloadMatrix() {
+        const area = document.getElementById('captureArea');
+        html2canvas(area, { scale: 2 }).then(canvas => {
+            const link = document.createElement('a');
+            link.download = `Schedule_${document.getElementById('filterSelector').value}.png`;
+            link.href = canvas.toDataURL("image/png");
+            link.click();
+        });
+    }
+
+    function showConflict(m) { const a = document.getElementById('conflictAlert'); a.innerText = m; a.style.display = 'block'; window.scrollTo(0,0); }
+    function clearInputs() { document.querySelectorAll('.form-grid input').forEach(i => { if(i.type !== 'time') i.value = ''; }); }
+    function clearAll() { if(confirm("Wipe all data?")) { localStorage.clear(); location.reload(); } }
+</script>
+</body>
+</html>
