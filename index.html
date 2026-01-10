@@ -13,7 +13,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getDatabase, ref, onValue, push } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-        // Your Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyDm0zv5xTNWqSyj4w34Je2yH1Er91iqvKs",
             authDomain: "myscheduler-624e9.firebaseapp.com",
@@ -54,63 +53,67 @@
     </script>
 
     <style>
-        :root { --pdf-red: #e11d48; --primary: #2563eb; --dark: #1e293b; }
-        body { font-family: 'Inter', sans-serif; background: #f1f5f9; padding: 20px; color: #334155; }
-        .container { max-width: 1100px; margin: auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        :root { --ark-red: #e11d48; --ark-blue: #1e293b; --accent: #2563eb; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f8fafc; padding: 20px; }
+        .container { max-width: 1200px; margin: auto; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
         
-        /* DOWNLOAD PANEL */
-        .download-header { 
-            display: flex; justify-content: space-between; align-items: center;
-            background: #fff1f2; padding: 15px 25px; border: 2px solid var(--pdf-red);
-            border-radius: 10px; margin-bottom: 25px;
+        /* HEADER & DOWNLOAD BUTTONS */
+        .admin-panel { 
+            display: flex; justify-content: space-between; align-items: center; 
+            background: var(--ark-blue); color: white; padding: 20px; border-radius: 12px; margin-bottom: 25px;
         }
-        .btn-pdf { 
-            background: var(--pdf-red); color: white; border: none; 
-            padding: 10px 20px; border-radius: 6px; cursor: pointer; 
-            font-weight: 800; display: flex; align-items: center; gap: 8px; font-size: 13px;
+        .btn-group { display: flex; gap: 8px; flex-wrap: wrap; }
+        .btn-export { 
+            border: none; padding: 10px 16px; border-radius: 6px; cursor: pointer; 
+            font-weight: bold; font-size: 12px; display: flex; align-items: center; gap: 6px;
+            transition: 0.3s;
         }
-        .btn-pdf:hover { background: #be123c; }
+        .btn-pdf { background: var(--ark-red); color: white; }
+        .btn-png { background: #059669; color: white; }
+        .btn-master { background: #f59e0b; color: white; }
+        .btn-export:hover { opacity: 0.8; transform: translateY(-2px); }
 
-        /* FORM STYLING */
-        .form-card { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 25px; }
-        .input-group label { display: block; font-size: 11px; font-weight: bold; color: #64748b; margin-bottom: 4px; }
-        input, select { width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 13px; }
+        /* FORM */
+        .form-card { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 30px; background: #f1f5f9; padding: 20px; border-radius: 8px; }
+        .input-group label { display: block; font-size: 12px; font-weight: 700; color: #475569; margin-bottom: 5px; }
+        input, select { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; outline: none; }
         
-        /* MATRIX STYLING */
-        #captureArea { background: white; padding: 40px; border: 1px solid #e2e8f0; }
-        .inst-header { display: flex; align-items: center; justify-content: center; gap: 20px; border-bottom: 3px solid var(--dark); padding-bottom: 20px; margin-bottom: 20px; }
-        .inst-logo { height: 70px; width: auto; background: #f8fafc; border: 1px dashed #ccc; } /* Placeholder styling */
-        .inst-title h1 { margin: 0; font-size: 22px; color: var(--dark); text-transform: uppercase; }
-        .inst-title p { margin: 2px 0 0 0; font-size: 12px; color: #64748b; font-weight: 600; }
+        /* THE VISUAL SCHEDULE (CAPTURE AREA) */
+        #captureArea { background: white; padding: 30px; border: 1px solid #e2e8f0; width: 100%; box-sizing: border-box; }
+        .inst-header { display: flex; align-items: center; justify-content: center; gap: 25px; border-bottom: 4px solid var(--ark-blue); padding-bottom: 20px; margin-bottom: 25px; }
+        .inst-logo { height: 90px; width: auto; }
+        .inst-title h1 { margin: 0; font-size: 26px; color: var(--ark-blue); text-transform: uppercase; letter-spacing: 1px; }
+        .inst-title p { margin: 5px 0 0 0; font-size: 14px; color: #64748b; font-weight: bold; }
 
-        .matrix-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        .matrix-table th, .matrix-table td { border: 1px solid #94a3b8; padding: 6px; font-size: 10px; text-align: center; height: 40px; }
-        .matrix-table th { background: #334155; color: white; text-transform: uppercase; }
-        .time-col { background: #f1f5f9; font-weight: bold; width: 80px; color: #1e293b; }
-        .sched-item { background: #dbeafe; border-left: 3px solid var(--primary); padding: 4px; font-size: 9px; border-radius: 2px; color: #1e40af; font-weight: 600; line-height: 1.2; }
+        .matrix-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        .matrix-table th, .matrix-table td { border: 1px solid #cbd5e1; padding: 8px; font-size: 11px; text-align: center; overflow: hidden; }
+        .matrix-table th { background: #334155; color: white; height: 40px; }
+        .time-col { background: #f8fafc; font-weight: bold; width: 100px; color: var(--ark-blue); border-right: 2px solid #94a3b8; }
+        .sched-item { background: #eff6ff; border-left: 4px solid var(--accent); padding: 6px; font-size: 10px; border-radius: 4px; color: #1e40af; margin-bottom: 2px; }
         
-        hr { border: 0; border-top: 1px solid #e2e8f0; margin: 20px 0; }
+        .footer-note { margin-top: 25px; border-top: 1px solid #eee; padding-top: 10px; font-size: 10px; color: #94a3b8; display: flex; justify-content: space-between; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="download-header">
+    <div class="admin-panel">
         <div>
-            <h2 style="margin:0; color: var(--pdf-red); font-size: 18px;">REPORT GENERATOR</h2>
-            <small style="color: #be123c;">Export institutional schedules to PDF</small>
+            <h2 style="margin:0; font-size: 20px;">SYSTEM EXPORTER</h2>
+            <p style="margin:0; font-size: 12px; opacity: 0.8;">ARK Technological Institute Education System Inc.</p>
         </div>
-        <div style="display: flex; gap: 10px;">
-            <button class="btn-pdf" onclick="downloadMatrixPDF()">📄 EXPORT MATRIX</button>
-            <button class="btn-pdf" onclick="downloadMasterPDF()" style="background: #1e293b;">📄 EXPORT MASTERLIST</button>
+        <div class="btn-group">
+            <button class="btn-export btn-pdf" onclick="exportMatrix('pdf')">📄 MATRIX PDF</button>
+            <button class="btn-export btn-png" onclick="exportMatrix('png')">🖼️ MATRIX PNG</button>
+            <button class="btn-export btn-master" onclick="downloadMasterPDF()">📊 MASTERLIST PDF</button>
         </div>
     </div>
 
     <div class="form-card">
-        <div class="input-group"><label>Subject</label><input id="subject" type="text" placeholder="e.g. Math 101"></div>
-        <div class="input-group"><label>Section</label><input id="section" type="text" placeholder="BSIT-1A"></div>
-        <div class="input-group"><label>Teacher</label><input id="teacher" type="text" placeholder="D. Smith"></div>
-        <div class="input-group"><label>Room</label><input id="room" type="text" placeholder="Lab 1"></div>
+        <div class="input-group"><label>Subject</label><input id="subject" type="text" placeholder="Subject Code"></div>
+        <div class="input-group"><label>Section</label><input id="section" type="text" placeholder="Section"></div>
+        <div class="input-group"><label>Teacher</label><input id="teacher" type="text" placeholder="Instructor"></div>
+        <div class="input-group"><label>Room</label><input id="room" type="text" placeholder="Room No."></div>
         <div class="input-group"><label>Day</label>
             <select id="day">
                 <option>Monday</option><option>Tuesday</option><option>Wednesday</option>
@@ -119,42 +122,39 @@
         </div>
         <div class="input-group"><label>Start</label><input id="startTime" type="time" value="07:00"></div>
         <div class="input-group"><label>End</label><input id="endTime" type="time" value="08:00"></div>
-        <button onclick="addSchedule()" style="background:var(--primary); color:white; border:none; border-radius:4px; cursor:pointer; font-weight:bold; height: 35px; align-self: end;">SAVE</button>
+        <button onclick="addSchedule()" style="background:var(--accent); color:white; border:none; border-radius:6px; cursor:pointer; font-weight:bold; height: 40px; align-self: end;">SAVE DATA</button>
     </div>
 
-    <hr>
-
-    <div style="margin: 20px 0; display: flex; gap: 10px; align-items: center;">
-        <span style="font-size: 13px; font-weight: bold;">View Schedule For:</span>
-        <select id="modeSelect" onchange="updateFilterList()" style="width: 150px;">
-            <option value="section">Section</option>
-            <option value="teacher">Teacher</option>
-            <option value="room">Room</option>
-        </select>
-        <select id="filterSelector" onchange="renderMatrix()" style="width: 200px; border-color: var(--primary);"></select>
+    <div style="margin-bottom: 20px; display: flex; gap: 15px; align-items: center; background: white; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0;">
+        <span style="font-weight: bold; color: var(--ark-blue);">Filtering:</span>
+        <select id="modeSelect" onchange="updateFilterList()" style="width: 150px;"><option value="section">By Section</option><option value="teacher">By Teacher</option><option value="room">By Room</option></select>
+        <select id="filterSelector" onchange="renderMatrix()" style="width: 250px; border-color: var(--accent);"></select>
     </div>
 
     <div id="captureArea">
         <div class="inst-header">
-            <img src="images/logo.png" alt="Logo" class="inst-logo">
+            <img src="images/logo.png" alt="ARK LOGO" class="inst-logo" onerror="this.src='https://via.placeholder.com/100x100?text=ARK+LOGO'">
             <div class="inst-title">
                 <h1>ARK Technological Institute Education System Inc.</h1>
-                <p>ACADEMIC MANAGEMENT INFORMATION SYSTEM</p>
+                <p>OFFICIAL ACADEMIC SCHEDULE REPORT</p>
             </div>
         </div>
 
-        <h2 id="matrixTitle" style="text-align: center; text-transform: uppercase; color: #1e293b; margin: 10px 0 20px 0; font-size: 18px; text-decoration: underline;"></h2>
+        <h2 id="matrixTitle" style="text-align: center; color: var(--ark-blue); margin: 0 0 20px 0; font-size: 22px; text-transform: uppercase;"></h2>
         
         <table class="matrix-table">
             <thead>
-                <tr><th class="time-col">TIME</th><th>MON</th><th>TUE</th><th>WED</th><th>THU</th><th>FRI</th><th>SAT</th><th>SUN</th></tr>
+                <tr>
+                    <th class="time-col">TIME SLOT</th>
+                    <th>MON</th><th>TUE</th><th>WED</th><th>THU</th><th>FRI</th><th>SAT</th><th>SUN</th>
+                </tr>
             </thead>
             <tbody id="matrixBody"></tbody>
         </table>
         
-        <div style="margin-top: 20px; font-size: 9px; color: #94a3b8; display: flex; justify-content: space-between;">
-            <span>Generated on: <span id="genDate"></span></span>
-            <span>ARK Technological Institute - Official Document</span>
+        <div class="footer-note">
+            <span>Generated on: <b id="genDate"></b></span>
+            <span>This is an official document of ARK Technological Institute Education System Inc.</span>
         </div>
     </div>
 </div>
@@ -174,29 +174,28 @@
         const mode = document.getElementById('modeSelect').value;
         const filter = document.getElementById('filterSelector').value;
         const tbody = document.getElementById('matrixBody');
-        document.getElementById('matrixTitle').innerText = filter ? `${mode} SCHEDULE: ${filter}` : "Select Item";
+        document.getElementById('matrixTitle').innerText = filter ? `${mode}: ${filter}` : "Please Select Item";
         document.getElementById('genDate').innerText = new Date().toLocaleString();
         tbody.innerHTML = '';
         
         if(!filter) return;
 
         const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-        for (let h = 7; h <= 19; h++) {
+        // Schedule from 7 AM to 8 PM (20:00)
+        for (let h = 7; h <= 20; h++) {
             let hourStr = h.toString().padStart(2, '0') + ":00";
             let displayTime = h > 12 ? (h - 12) + ":00 PM" : (h === 12 ? "12:00 PM" : h + ":00 AM");
             let row = `<tr><td class="time-col">${displayTime}</td>`;
             
             days.forEach(day => {
                 const matches = window.schedules.filter(s => 
-                    s[mode] === filter && 
-                    s.day === day && 
-                    hourStr >= s.start && hourStr < s.end
+                    s[mode] === filter && s.day === day && hourStr >= s.start && hourStr < s.end
                 );
                 
                 let content = matches.map(m => `
                     <div class="sched-item">
-                        ${m.subject}<br>
-                        <span style="font-size:7px; font-weight:normal;">${m.room} | ${m.teacher}</span>
+                        <b>${m.subject}</b><br>
+                        ${m.room} | ${m.teacher}
                     </div>
                 `).join('');
                 
@@ -206,51 +205,79 @@
         }
     }
 
-    // 1. PDF DOWNLOAD: Matrix View (Captures the Header + Table)
-    async function downloadMatrixPDF() {
+    // ENHANCED EXPORT: Matrix View (Full Cover)
+    async function exportMatrix(format) {
         const area = document.getElementById('captureArea');
-        const canvas = await html2canvas(area, { scale: 2, useCORS: true });
-        const imgData = canvas.toDataURL('image/png');
+        const filterVal = document.getElementById('filterSelector').value || "Schedule";
         
-        const pdf = new jsPDF('l', 'mm', 'a4');
-        const pageWidth = pdf.internal.pageSize.getWidth();
-        const pageHeight = pdf.internal.pageSize.getHeight();
-        
-        // Calculate width to fit page while maintaining aspect ratio
-        const imgProps = pdf.getImageProperties(imgData);
-        const pdfWidth = pageWidth - 20;
-        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+        // Capture everything without cropping
+        const canvas = await html2canvas(area, {
+            scale: 3, // High resolution
+            useCORS: true,
+            logging: false,
+            windowWidth: area.scrollWidth,
+            windowHeight: area.scrollHeight
+        });
 
-        pdf.addImage(imgData, 'PNG', 10, 10, pdfWidth, pdfHeight);
-        pdf.save(`ARK_Matrix_${document.getElementById('filterSelector').value}.pdf`);
+        const imgData = canvas.toDataURL('image/png');
+
+        if (format === 'png') {
+            const link = document.createElement('a');
+            link.download = `ARK_Schedule_${filterVal}.png`;
+            link.href = imgData;
+            link.click();
+        } else {
+            const pdf = new jsPDF('l', 'mm', 'a4');
+            const pageWidth = pdf.internal.pageSize.getWidth();
+            const pageHeight = pdf.internal.pageSize.getHeight();
+            
+            const imgProps = pdf.getImageProperties(imgData);
+            const pdfWidth = pageWidth - 20;
+            const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+            // If the schedule is very long, adjust PDF page height to fit everything (No Cropping)
+            if (pdfHeight > pageHeight) {
+                const longPdf = new jsPDF('l', 'mm', [pdfHeight + 20, pageWidth]);
+                longPdf.addImage(imgData, 'PNG', 10, 10, pdfWidth, pdfHeight);
+                longPdf.save(`ARK_Schedule_${filterVal}.pdf`);
+            } else {
+                pdf.addImage(imgData, 'PNG', 10, 10, pdfWidth, pdfHeight);
+                pdf.save(`ARK_Schedule_${filterVal}.pdf`);
+            }
+        }
     }
 
-    // 2. PDF DOWNLOAD: Masterlist with custom header
+    // EXPORT: Masterlist Table View
     function downloadMasterPDF() {
         const pdf = new jsPDF('l', 'mm', 'a4');
         
-        // Institutional Header for Table View
-        pdf.setFontSize(16);
+        // Institutional Header
+        pdf.setFontSize(18);
         pdf.setTextColor(30, 41, 59);
         pdf.text("ARK Technological Institute Education System Inc.", 14, 15);
         
-        pdf.setFontSize(10);
+        pdf.setFontSize(11);
         pdf.setTextColor(100, 116, 139);
-        pdf.text("OFFICIAL ACADEMIC MASTERLIST REPORT", 14, 21);
-        pdf.line(14, 23, 283, 23); // Header Underline
+        pdf.text("ACADEMIC MASTERLIST - FULL DATABASE REPORT", 14, 22);
+        pdf.line(14, 25, 283, 25); 
         
         const data = window.schedules.map(s => [s.day, `${s.start} - ${s.end}`, s.subject, s.teacher, s.section, s.room]);
         
         pdf.autoTable({
-            head: [['Day', 'Time Slot', 'Subject Name', 'Instructor', 'Section', 'Room']],
+            head: [['Day', 'Time Slot', 'Subject', 'Instructor', 'Section', 'Room/Lab']],
             body: data,
-            startY: 28,
-            theme: 'striped',
-            headStyles: { fillColor: [30, 41, 59], fontSize: 10 },
-            styles: { fontSize: 9, cellPadding: 3 }
+            startY: 30,
+            theme: 'grid',
+            headStyles: { fillColor: [30, 41, 59], fontSize: 10, halign: 'center' },
+            styles: { fontSize: 9, cellPadding: 4 },
+            columnStyles: {
+                0: { cellWidth: 30 },
+                1: { cellWidth: 40 },
+                2: { fontStyle: 'bold' }
+            }
         });
         
-        pdf.save("ARK_Master_Schedule_Report.pdf");
+        pdf.save("ARK_Masterlist_Database.pdf");
     }
 </script>
 
