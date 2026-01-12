@@ -14,16 +14,13 @@
         :root { --ark-dark: #0f172a; --ark-accent: #3b82f6; --ark-border: #e2e8f0; --row-height: 60px; }
         body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background: #f8fafc; margin: 0; padding: 15px; color: #1e293b; line-height: 1.2; }
         
-        /* Login Overlay */
         #loginOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--ark-dark); display: flex; align-items: center; justify-content: center; z-index: 10000; }
         .login-card { background: white; padding: 30px; border-radius: 12px; width: 100%; max-width: 320px; text-align: center; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
         .login-card input { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; }
         .btn-login { width: 100%; padding: 10px; background: var(--ark-accent); color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
 
-        /* Layout */
         .main-container { max-width: 1440px; margin: auto; background: white; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); padding: 15px; }
         
-        /* Header with Logo */
         .matrix-header { display: flex; align-items: center; justify-content: center; gap: 20px; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid var(--ark-dark); }
         .company-logo { width: 80px; height: 80px; object-fit: contain; }
         .matrix-header-text h2 { margin: 0; font-size: 18px; color: var(--ark-dark); }
@@ -37,7 +34,6 @@
         .input-group label { display: block; font-size: 10px; font-weight: 800; color: #64748b; text-transform: uppercase; margin-bottom: 4px; }
         .input-group input, .input-group select { width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; height: 36px; box-sizing: border-box; }
         
-        /* Matrix Table */
         .matrix-table { width: 100%; border-collapse: collapse; table-layout: fixed; border: 1px solid #cbd5e1; background: #fff; }
         .matrix-table th, .matrix-table td { border: 1px solid #e2e8f0; padding: 2px; text-align: center; height: var(--row-height); font-size: 11px; }
         .matrix-table th { background: #334155; color: white; height: 30px; font-size: 10px; }
@@ -47,7 +43,6 @@
         .slot-box strong { font-size: 10px; color: #1e293b; display: block; }
         .slot-box span { color: #64748b; font-size: 8.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
 
-        /* Masterlist Table */
         .manage-table { width: 100%; border-collapse: collapse; font-size: 11.5px; margin-top: 10px; }
         .manage-table th { background: #f1f5f9; padding: 8px; text-align: left; border-bottom: 2px solid #e2e8f0; font-weight: 700; }
         .manage-table td { padding: 6px 8px; border-bottom: 1px solid #f1f5f9; }
@@ -55,14 +50,14 @@
         
         .hidden { display: none !important; }
         .btn-delete { color: #ef4444; background: none; border: none; cursor: pointer; padding: 4px; }
+        .btn-edit { color: #3b82f6; background: none; border: none; cursor: pointer; padding: 4px; margin-right: 5px; }
     </style>
 </head>
 <body>
 
 <div id="loginOverlay">
     <div class="login-card">
-	            <img src="images/logo.png" alt="Logo" class="company-logo"> 
-
+        <img src="images/logo.png" alt="Logo" class="company-logo"> 
         <h2 style="margin: 0 0 5px 0; color: var(--ark-dark); font-size: 18px;">ARK LOGIN</h2>
         <p style="font-size: 11px; color: #64748b; margin-bottom: 15px;">Enter credentials to Access Class Schedule Maker</p>
         <input type="email" id="loginEmail" placeholder="Email">
@@ -86,6 +81,7 @@
 
     <div class="input-card">
         <div class="input-row">
+            <input type="hidden" id="editKey">
             <div class="input-group"><label>Subject</label><input id="subject" type="text" list="subjectList"><datalist id="subjectList"></datalist></div>
             <div class="input-group"><label>Section</label><input id="section" type="text" list="sectionList"><datalist id="sectionList"></datalist></div>
             <div class="input-group"><label>Instructor</label><input id="teacher" type="text" list="teacherList"><datalist id="teacherList"></datalist></div>
@@ -99,13 +95,13 @@
             </div>
             <div class="input-group"><label>Start</label><input id="startTime" type="time" value="07:00"></div>
             <div class="input-group"><label>End</label><input id="endTime" type="time" value="08:00"></div>
-            <button style="background: var(--ark-dark); color: white; border: none; padding: 0 15px; border-radius: 6px; font-weight: 700; cursor: pointer; height: 36px; font-size: 11px;" onclick="addSchedule()">SAVE</button>
+            <button id="saveBtn" style="background: var(--ark-dark); color: white; border: none; padding: 0 15px; border-radius: 6px; font-weight: 700; cursor: pointer; height: 36px; font-size: 11px;" onclick="addSchedule()">SAVE</button>
         </div>
     </div>
 
     <div style="margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
         <span style="font-weight: 800; font-size: 10px; color: #64748b;">VIEW:</span>
-        <select id="modeSelect" onchange="updateFilterList()" style="padding: 4px; font-size: 11px; border-radius: 4px; border: 1px solid #cbd5e1;">
+        <select id="modeSelect" onchange="updateFilterList(true)" style="padding: 4px; font-size: 11px; border-radius: 4px; border: 1px solid #cbd5e1;">
             <option value="section">Section</option>
             <option value="teacher">Instructor</option>
             <option value="room">Room</option>
@@ -138,7 +134,7 @@
         <div style="max-height: 400px; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 6px;">
             <table class="manage-table">
                 <thead>
-                    <tr><th>DAY</th><th>TIME</th><th>SUBJECT</th><th>SECTION</th><th>TEACHER</th><th>ROOM</th><th style="width: 40px;"></th></tr>
+                    <tr><th>DAY</th><th>TIME</th><th>SUBJECT</th><th>SECTION</th><th>TEACHER</th><th>ROOM</th><th style="width: 70px; text-align: center;">ACTIONS</th></tr>
                 </thead>
                 <tbody id="manageBody"></tbody>
             </table>
@@ -184,19 +180,18 @@
         onValue(scheduleRef, (snapshot) => {
             const data = snapshot.val();
             window.schedules = data ? Object.entries(data).map(([key, val]) => ({...val, firebaseKey: key})) : [];
-            updateFilterList(); updateDataLists(); renderManageTable();
+            updateFilterList(false); 
+            updateDataLists(); 
+            renderManageTable();
         });
     }
 
-    // --- ACCURATE CONFLICT DETECTION ---
     function checkConflict(newEntry, ignoreKey = null) {
         let conflictFound = null;
         window.schedules.some(existing => {
             if (existing.firebaseKey === ignoreKey) return false;
             if (existing.day !== newEntry.day) return false;
-
             const isOverlapping = (newEntry.start < existing.end && newEntry.end > existing.start);
-            
             if (isOverlapping) {
                 if (existing.teacher === newEntry.teacher && newEntry.teacher !== "") {
                     conflictFound = `INSTRUCTOR: ${existing.teacher} is busy with ${existing.subject} (${existing.start}-${existing.end})`;
@@ -217,6 +212,7 @@
     }
 
     window.addSchedule = () => {
+        const key = document.getElementById('editKey').value;
         const entry = {
             subject: document.getElementById('subject').value.trim().toUpperCase(),
             section: document.getElementById('section').value.trim().toUpperCase(),
@@ -226,17 +222,52 @@
             start: document.getElementById('startTime').value,
             end: document.getElementById('endTime').value
         };
+
         if(!entry.subject || !entry.section) return alert("Fill Subject & Section");
         if(entry.start >= entry.end) return alert("End time must be after start time");
 
-        const errorMsg = checkConflict(entry);
+        const errorMsg = checkConflict(entry, key || null);
         if(errorMsg) return alert("❌ CONFLICT DETECTED\n\n" + errorMsg);
 
-        push(scheduleRef, entry);
+        if(key) {
+            update(ref(db, `schedules/${key}`), entry);
+            clearInputs();
+        } else {
+            push(scheduleRef, entry);
+            clearInputs();
+        }
+    };
+
+    function clearInputs() {
+        document.getElementById('editKey').value = '';
+        document.getElementById('subject').value = '';
+        document.getElementById('section').value = '';
+        document.getElementById('teacher').value = '';
+        document.getElementById('room').value = '';
+        document.getElementById('saveBtn').innerText = 'SAVE';
+        document.getElementById('saveBtn').style.background = 'var(--ark-dark)';
+    }
+
+    window.editEntry = (key) => {
+        const item = window.schedules.find(s => s.firebaseKey === key);
+        if(!item) return;
+        document.getElementById('editKey').value = key;
+        document.getElementById('subject').value = item.subject;
+        document.getElementById('section').value = item.section;
+        document.getElementById('teacher').value = item.teacher;
+        document.getElementById('room').value = item.room;
+        document.getElementById('day').value = item.day;
+        document.getElementById('startTime').value = item.start;
+        document.getElementById('endTime').value = item.end;
+        
+        const saveBtn = document.getElementById('saveBtn');
+        saveBtn.innerText = 'UPDATE';
+        saveBtn.style.background = '#3b82f6';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     window.resetDatabase = () => { if(confirm("Reset all data?")) set(scheduleRef, null); };
-    window.deleteEntry = (k) => remove(ref(db, `schedules/${k}`));
+    window.deleteEntry = (k) => { if(confirm("Delete this entry?")) remove(ref(db, `schedules/${k}`)); };
 
     window.handleDragStart = (e, k) => { e.dataTransfer.setData("text", k); };
     window.handleDragOver = (e) => e.preventDefault();
@@ -245,28 +276,27 @@
         const key = e.dataTransfer.getData("text");
         const entry = window.schedules.find(s => s.firebaseKey === key);
         if(!entry) return;
-
         const [sh, sm] = entry.start.split(':').map(Number);
         const [eh, em] = entry.end.split(':').map(Number);
         const duration = (eh * 60 + em) - (sh * 60 + sm);
-        
         const [nh, nm] = start.split(':').map(Number);
         const totalEnd = (nh * 60 + nm) + duration;
         const end = `${Math.floor(totalEnd/60).toString().padStart(2,'0')}:${(totalEnd%60).toString().padStart(2,'0')}`;
-
         const updatedEntry = { ...entry, day, start, end };
         const errorMsg = checkConflict(updatedEntry, key);
-        
         if(errorMsg) return alert("❌ CANNOT MOVE\n\n" + errorMsg);
-        
         update(ref(db, `schedules/${key}`), { day, start, end });
     };
 
-    window.updateFilterList = () => {
+    window.updateFilterList = (forceReset = false) => {
         const m = document.getElementById('modeSelect').value;
-        const vals = [...new Set(window.schedules.map(s => s[m]))].sort();
         const sel = document.getElementById('filterSelector');
+        const previousValue = sel.value;
+        const vals = [...new Set(window.schedules.map(s => s[m]))].sort();
         sel.innerHTML = vals.map(v => `<option value="${v}">${v}</option>`).join('');
+        if (!forceReset && previousValue && vals.includes(previousValue)) {
+            sel.value = previousValue;
+        }
         renderMatrix();
     };
 
@@ -282,38 +312,32 @@
         const mode = document.getElementById('modeSelect').value;
         const filterVal = document.getElementById('filterSelector').value;
         const body = document.getElementById('matrixBody');
-        document.getElementById('matrixTitle').innerText = filterVal ? `${mode}: ${filterVal}` : "";
+        document.getElementById('matrixTitle').innerText = filterVal ? `${mode.toUpperCase()}: ${filterVal}` : "";
         body.innerHTML = '';
         if(!filterVal) return;
-
         const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
         const formatTime = (hour) => {
             const period = hour >= 12 ? 'PM' : 'AM';
             const h12 = hour % 12 || 12;
             return `${h12}:00 ${period}`;
         };
-
         for (let h = 7; h <= 18; h++) {
             let tr = document.createElement('tr');
             let hourStr = h.toString().padStart(2, '0') + ":00";
             tr.innerHTML = `<td class="time-col">${formatTime(h)} - ${formatTime(h+1)}</td>`;
-            
             days.forEach(day => {
                 let td = document.createElement('td');
                 td.setAttribute('ondragover', 'handleDragOver(event)');
                 td.setAttribute('ondrop', `handleDrop(event, '${day}', '${hourStr}')`);
-
                 window.schedules.filter(s => s[mode] === filterVal && s.day === day && hourStr >= s.start && hourStr < s.end).forEach(item => {
                     let div = document.createElement('div');
                     div.className = 'slot-box';
                     div.draggable = true;
                     div.setAttribute('ondragstart', `handleDragStart(event, '${item.firebaseKey}')`);
-
                     let info1 = "", info2 = "";
                     if (mode === "section") { info1 = item.teacher; info2 = "Room: " + item.room; }
                     else if (mode === "teacher") { info1 = item.section; info2 = "Room: " + item.room; }
                     else { info1 = item.section; info2 = "Ins: " + item.teacher; }
-                    
                     div.innerHTML = `<strong>${item.subject}</strong><span>${info1}</span><span>${info2}</span>`;
                     td.appendChild(div);
                 });
@@ -332,7 +356,10 @@
                 <td>${s.section}</td>
                 <td>${s.teacher}</td>
                 <td>${s.room}</td>
-                <td><button onclick="deleteEntry('${s.firebaseKey}')" class="btn-delete"><i class="fa-solid fa-trash-can"></i></button></td>
+                <td style="text-align: center;">
+                    <button onclick="editEntry('${s.firebaseKey}')" class="btn-edit" title="Modify"><i class="fa-solid fa-pen-to-square"></i></button>
+                    <button onclick="deleteEntry('${s.firebaseKey}')" class="btn-delete" title="Delete"><i class="fa-solid fa-trash-can"></i></button>
+                </td>
             </tr>`).join('');
     }
 
