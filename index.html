@@ -14,10 +14,14 @@
         :root { --ark-dark: #0f172a; --ark-accent: #3b82f6; --ark-border: #e2e8f0; --row-height: 60px; }
         body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background: #f8fafc; margin: 0; padding: 15px; color: #1e293b; line-height: 1.2; }
         
-        #loginOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--ark-dark); display: flex; align-items: center; justify-content: center; z-index: 10000; }
-        .login-card { background: white; padding: 30px; border-radius: 12px; width: 100%; max-width: 320px; text-align: center; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
-        .login-card input { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; }
-        .btn-login { width: 100%; padding: 10px; background: var(--ark-accent); color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
+        /* Auth Overlay Styles */
+        #loginOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--ark-dark); display: flex; align-items: center; justify-content: center; z-index: 10000; transition: 0.3s; }
+        .login-card { background: white; padding: 35px; border-radius: 16px; width: 100%; max-width: 350px; text-align: center; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
+        .login-card input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box; font-size: 14px; }
+        .btn-primary { width: 100%; padding: 12px; background: var(--ark-accent); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.2s; }
+        .btn-primary:hover { background: #2563eb; }
+        .auth-toggle { margin-top: 20px; font-size: 12px; color: #64748b; }
+        .auth-toggle span { color: var(--ark-accent); cursor: pointer; font-weight: 700; text-decoration: underline; }
 
         .main-container { max-width: 1440px; margin: auto; background: white; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); padding: 15px; }
         
@@ -46,7 +50,6 @@
         .manage-table { width: 100%; border-collapse: collapse; font-size: 11.5px; margin-top: 10px; }
         .manage-table th { background: #f1f5f9; padding: 8px; text-align: left; border-bottom: 2px solid #e2e8f0; font-weight: 700; }
         .manage-table td { padding: 6px 8px; border-bottom: 1px solid #f1f5f9; }
-        .manage-table tr:nth-child(even) { background-color: #f8fafc; }
         
         .hidden { display: none !important; }
         .btn-delete { color: #ef4444; background: none; border: none; cursor: pointer; padding: 4px; }
@@ -58,12 +61,21 @@
 <div id="loginOverlay">
     <div class="login-card">
         <img src="images/logo.png" alt="Logo" class="company-logo"> 
-        <h2 style="margin: 0 0 5px 0; color: var(--ark-dark); font-size: 18px;">ARK LOGIN</h2>
-        <p style="font-size: 11px; color: #64748b; margin-bottom: 15px;">Enter credentials to Access Class Schedule Maker</p>
-        <input type="email" id="loginEmail" placeholder="Email">
-        <input type="password" id="loginPassword" placeholder="Password">
-        <button class="btn-login" onclick="handleLogin()">SIGN IN</button>
-        <p id="loginError" style="color: #ef4444; font-size: 10px; margin-top: 10px;"></p>
+        <h2 id="authTitle" style="margin: 0 0 5px 0; color: var(--ark-dark); font-size: 18px;">ARK LOGIN</h2>
+        <p id="authDesc" style="font-size: 11px; color: #64748b; margin-bottom: 15px;">Enter credentials to Access Class Schedule Maker</p>
+        
+        <input type="email" id="authEmail" placeholder="Email Address">
+        <input type="password" id="authPassword" placeholder="Password">
+        <input type="password" id="authConfirmPassword" placeholder="Confirm Password" class="hidden">
+        
+        <button id="authBtn" class="btn-primary" onclick="handleAuth()">SIGN IN</button>
+        
+        <p id="authError" style="color: #ef4444; font-size: 10px; margin-top: 10px; min-height: 12px;"></p>
+        
+        <div class="auth-toggle">
+            <span id="toggleText">Don't have an account?</span> 
+            <span id="toggleLink" onclick="toggleAuthMode()">Create Account</span>
+        </div>
     </div>
 </div>
 
@@ -145,7 +157,7 @@
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getDatabase, ref, onValue, push, remove, update, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyDm0zv5xTNWqSyj4w34Je2yH1Er91iqvKs",
@@ -161,21 +173,73 @@
     const db = getDatabase(app);
     const auth = getAuth(app);
     const scheduleRef = ref(db, 'schedules');
+    
+    let isLoginMode = true;
     window.schedules = [];
 
+    // --- AUTH LOGIC ---
     onAuthStateChanged(auth, (user) => {
-        if (user) { document.getElementById('loginOverlay').classList.add('hidden'); loadDatabase(); }
-        else { document.getElementById('loginOverlay').classList.remove('hidden'); }
+        if (user) { 
+            document.getElementById('loginOverlay').classList.add('hidden'); 
+            loadDatabase(); 
+        } else { 
+            document.getElementById('loginOverlay').classList.remove('hidden'); 
+        }
     });
 
-    window.handleLogin = () => {
-        const email = document.getElementById('loginEmail').value;
-        const pass = document.getElementById('loginPassword').value;
-        signInWithEmailAndPassword(auth, email, pass).catch(e => document.getElementById('loginError').innerText = "Failed: " + e.message);
+    window.toggleAuthMode = () => {
+        isLoginMode = !isLoginMode;
+        const title = document.getElementById('authTitle');
+        const desc = document.getElementById('authDesc');
+        const btn = document.getElementById('authBtn');
+        const confirmField = document.getElementById('authConfirmPassword');
+        const toggleText = document.getElementById('toggleText');
+        const toggleLink = document.getElementById('toggleLink');
+        const errorMsg = document.getElementById('authError');
+
+        errorMsg.innerText = "";
+        
+        if (isLoginMode) {
+            title.innerText = "ARK LOGIN";
+            desc.innerText = "Enter credentials to Access Class Schedule Maker";
+            btn.innerText = "SIGN IN";
+            confirmField.classList.add('hidden');
+            toggleText.innerText = "Don't have an account?";
+            toggleLink.innerText = "Create Account";
+        } else {
+            title.innerText = "CREATE ACCOUNT";
+            desc.innerText = "Join ARK to start managing your schedules";
+            btn.innerText = "REGISTER";
+            confirmField.classList.remove('hidden');
+            toggleText.innerText = "Already have an account?";
+            toggleLink.innerText = "Log In Here";
+        }
+    };
+
+    window.handleAuth = () => {
+        const email = document.getElementById('authEmail').value;
+        const pass = document.getElementById('authPassword').value;
+        const confirmPass = document.getElementById('authConfirmPassword').value;
+        const errorMsg = document.getElementById('authError');
+
+        if (!email || !pass) return errorMsg.innerText = "Please fill all fields.";
+
+        if (isLoginMode) {
+            signInWithEmailAndPassword(auth, email, pass)
+                .catch(e => errorMsg.innerText = "Login Failed: " + e.message);
+        } else {
+            if (pass !== confirmPass) return errorMsg.innerText = "Passwords do not match.";
+            if (pass.length < 6) return errorMsg.innerText = "Password must be at least 6 characters.";
+            
+            createUserWithEmailAndPassword(auth, email, pass)
+                .then(() => alert("Account Created Successfully!"))
+                .catch(e => errorMsg.innerText = "Sign Up Failed: " + e.message);
+        }
     };
 
     window.handleLogout = () => signOut(auth);
 
+    // --- DATABASE & RENDERING LOGIC ---
     function loadDatabase() {
         onValue(scheduleRef, (snapshot) => {
             const data = snapshot.val();
@@ -185,6 +249,9 @@
             renderManageTable();
         });
     }
+
+    // (Remaining functions: checkConflict, addSchedule, clearInputs, editEntry, etc. 
+    // from your original code are preserved below)
 
     function checkConflict(newEntry, ignoreKey = null) {
         let conflictFound = null;
@@ -222,13 +289,10 @@
             start: document.getElementById('startTime').value,
             end: document.getElementById('endTime').value
         };
-
         if(!entry.subject || !entry.section) return alert("Fill Subject & Section");
         if(entry.start >= entry.end) return alert("End time must be after start time");
-
         const errorMsg = checkConflict(entry, key || null);
         if(errorMsg) return alert("❌ CONFLICT DETECTED\n\n" + errorMsg);
-
         if(key) {
             update(ref(db, `schedules/${key}`), entry);
             clearInputs();
@@ -259,7 +323,6 @@
         document.getElementById('day').value = item.day;
         document.getElementById('startTime').value = item.start;
         document.getElementById('endTime').value = item.end;
-        
         const saveBtn = document.getElementById('saveBtn');
         saveBtn.innerText = 'UPDATE';
         saveBtn.style.background = '#3b82f6';
@@ -294,9 +357,7 @@
         const previousValue = sel.value;
         const vals = [...new Set(window.schedules.map(s => s[m]))].sort();
         sel.innerHTML = vals.map(v => `<option value="${v}">${v}</option>`).join('');
-        if (!forceReset && previousValue && vals.includes(previousValue)) {
-            sel.value = previousValue;
-        }
+        if (!forceReset && previousValue && vals.includes(previousValue)) { sel.value = previousValue; }
         renderMatrix();
     };
 
