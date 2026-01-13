@@ -14,17 +14,19 @@
         :root { --ark-dark: #0f172a; --ark-accent: #3b82f6; --ark-border: #e2e8f0; --row-height: 60px; }
         body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background: #f8fafc; margin: 0; padding: 15px; color: #1e293b; line-height: 1.2; }
         
-        /* Auth Overlay Styles */
         #loginOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--ark-dark); display: flex; align-items: center; justify-content: center; z-index: 10000; transition: 0.3s; }
         .login-card { background: white; padding: 35px; border-radius: 16px; width: 100%; max-width: 350px; text-align: center; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
-        .login-card input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box; font-size: 14px; }
+        .login-card input, .login-card select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box; font-size: 14px; }
         .btn-primary { width: 100%; padding: 12px; background: var(--ark-accent); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.2s; }
         .btn-primary:hover { background: #2563eb; }
         .auth-toggle { margin-top: 20px; font-size: 12px; color: #64748b; }
         .auth-toggle span { color: var(--ark-accent); cursor: pointer; font-weight: 700; text-decoration: underline; }
+        
+        /* New Forget Password Styling */
+        .forgot-password { display: block; text-align: right; font-size: 11px; color: var(--ark-accent); cursor: pointer; margin-top: -5px; margin-bottom: 10px; font-weight: 600; }
+        .forgot-password:hover { text-decoration: underline; }
 
         .main-container { max-width: 1440px; margin: auto; background: white; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); padding: 15px; }
-        
         .matrix-header { display: flex; align-items: center; justify-content: center; gap: 20px; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid var(--ark-dark); }
         .company-logo { width: 80px; height: 80px; object-fit: contain; }
         .matrix-header-text h2 { margin: 0; font-size: 18px; color: var(--ark-dark); }
@@ -54,6 +56,8 @@
         .hidden { display: none !important; }
         .btn-delete { color: #ef4444; background: none; border: none; cursor: pointer; padding: 4px; }
         .btn-edit { color: #3b82f6; background: none; border: none; cursor: pointer; padding: 4px; margin-right: 5px; }
+
+        #adminPanel { background: #fff1f2; border: 2px solid #fda4af; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
     </style>
 </head>
 <body>
@@ -66,10 +70,20 @@
         
         <input type="email" id="authEmail" placeholder="Email Address">
         <input type="password" id="authPassword" placeholder="Password">
+        
+        <span id="forgotPassLink" class="forgot-password" onclick="handleForgotPassword()">Forgot Password?</span>
+
         <input type="password" id="authConfirmPassword" placeholder="Confirm Password" class="hidden">
         
-        <button id="authBtn" class="btn-primary" onclick="handleAuth()">SIGN IN</button>
+        <div id="roleSelection" class="hidden">
+            <label style="font-size: 10px; font-weight: 800; color: #64748b; display: block; text-align: left; margin-bottom: -5px;">ACCOUNT TYPE</label>
+            <select id="authRole">
+                <option value="viewer">Viewer Account (Automatic Access)</option>
+                <option value="operator">Operator Account (Requires Approval)</option>
+            </select>
+        </div>
         
+        <button id="authBtn" class="btn-primary" onclick="handleAuth()">SIGN IN</button>
         <p id="authError" style="color: #ef4444; font-size: 10px; margin-top: 10px; min-height: 12px;"></p>
         
         <div class="auth-toggle">
@@ -80,18 +94,26 @@
 </div>
 
 <div class="main-container">
+    <div id="adminPanel" class="hidden">
+        <h3 style="margin-top: 0; color: #9f1239; font-size: 14px;"><i class="fa-solid fa-user-shield"></i> ADMIN DASHBOARD: PENDING APPROVALS</h3>
+        <table class="manage-table" style="background: white;">
+            <thead><tr><th>Email</th><th>Requested Role</th><th>Action</th></tr></thead>
+            <tbody id="pendingUsersBody"></tbody>
+        </table>
+    </div>
+
     <div class="action-bar">
-        <div style="font-size: 11px; font-weight: 700;"><i class="fa-solid fa-calendar-check"></i> SCHEDULER</div>
+        <div style="font-size: 11px; font-weight: 700;"><i class="fa-solid fa-calendar-check"></i> SCHEDULER <span id="userRoleTag" style="margin-left:10px; background: #3b82f6; padding: 2px 6px; border-radius: 4px; font-size: 9px;"></span></div>
         <div style="display:flex; gap:6px;">
             <button class="btn-export" style="background:#64748b;" onclick="handleLogout()">LOGOUT</button>
-            <button class="btn-export" style="background:#ef4444;" onclick="resetDatabase()">RESET</button>
+            <button id="resetBtn" class="btn-export operator-only" style="background:#ef4444;" onclick="resetDatabase()">RESET</button>
             <button class="btn-export" style="background:#dc2626;" onclick="downloadFullMatrix('pdf')">PDF</button>
             <button class="btn-export" style="background:#16a34a;" onclick="downloadFullMatrix('png')">PNG</button>
             <button class="btn-export" style="background:#15803d;" onclick="downloadExcelMasterlist()">EXCEL</button>
         </div>
     </div>
 
-    <div class="input-card">
+    <div class="input-card operator-only" id="inputSection">
         <div class="input-row">
             <input type="hidden" id="editKey">
             <div class="input-group"><label>Subject</label><input id="subject" type="text" list="subjectList"><datalist id="subjectList"></datalist></div>
@@ -146,7 +168,7 @@
         <div style="max-height: 400px; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 6px;">
             <table class="manage-table">
                 <thead>
-                    <tr><th>DAY</th><th>TIME</th><th>SUBJECT</th><th>SECTION</th><th>TEACHER</th><th>ROOM</th><th style="width: 70px; text-align: center;">ACTIONS</th></tr>
+                    <tr><th>DAY</th><th>TIME</th><th>SUBJECT</th><th>SECTION</th><th>TEACHER</th><th>ROOM</th><th class="operator-only" style="width: 70px; text-align: center;">ACTIONS</th></tr>
                 </thead>
                 <tbody id="manageBody"></tbody>
             </table>
@@ -157,7 +179,7 @@
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getDatabase, ref, onValue, push, remove, update, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyDm0zv5xTNWqSyj4w34Je2yH1Er91iqvKs",
@@ -173,19 +195,74 @@
     const db = getDatabase(app);
     const auth = getAuth(app);
     const scheduleRef = ref(db, 'schedules');
+    const usersRef = ref(db, 'users');
     
     let isLoginMode = true;
+    let currentUserRole = 'viewer';
+    const ADMIN_EMAIL = "reymonde.silvestre@gmail.com";
     window.schedules = [];
 
-    // --- AUTH LOGIC ---
+    // --- NEW: HANDLE FORGOT PASSWORD ---
+    window.handleForgotPassword = () => {
+        const email = document.getElementById('authEmail').value;
+        const errorMsg = document.getElementById('authError');
+        
+        if (!email) {
+            errorMsg.innerText = "Please enter your email address first.";
+            errorMsg.style.color = "#ef4444";
+            return;
+        }
+
+        sendPasswordResetEmail(auth, email)
+            .then(() => {
+                alert("Password reset email sent! Check your Gmail inbox.");
+                errorMsg.innerText = "Reset link sent to " + email;
+                errorMsg.style.color = "#22c55e";
+            })
+            .catch((error) => {
+                errorMsg.innerText = "Error: " + error.message;
+                errorMsg.style.color = "#ef4444";
+            });
+    };
+
+    // --- ROLE-BASED AUTH LOGIC ---
     onAuthStateChanged(auth, (user) => {
-        if (user) { 
-            document.getElementById('loginOverlay').classList.add('hidden'); 
-            loadDatabase(); 
+        if (user) {
+            onValue(ref(db, `users/${user.uid}`), (snapshot) => {
+                const userData = snapshot.val();
+                if (user.email === ADMIN_EMAIL) {
+                    currentUserRole = 'operator';
+                    document.getElementById('adminPanel').classList.remove('hidden');
+                    document.getElementById('loginOverlay').classList.add('hidden');
+                    setupAdminDashboard();
+                    initAppUI();
+                    return;
+                }
+                if (!userData) { signOut(auth); return; }
+                if (userData.role === 'operator' && userData.status !== 'approved') {
+                    alert("Your Operator account is pending approval from Reymonde Silvestre.");
+                    signOut(auth);
+                } else {
+                    currentUserRole = userData.role;
+                    document.getElementById('loginOverlay').classList.add('hidden');
+                    initAppUI();
+                }
+            });
         } else { 
             document.getElementById('loginOverlay').classList.remove('hidden'); 
+            document.getElementById('adminPanel').classList.add('hidden');
         }
     });
+
+    function initAppUI() {
+        document.getElementById('userRoleTag').innerText = currentUserRole.toUpperCase();
+        const opElements = document.querySelectorAll('.operator-only');
+        opElements.forEach(el => {
+            if (currentUserRole === 'viewer') el.classList.add('hidden');
+            else el.classList.remove('hidden');
+        });
+        loadDatabase(); 
+    }
 
     window.toggleAuthMode = () => {
         isLoginMode = !isLoginMode;
@@ -193,17 +270,18 @@
         const desc = document.getElementById('authDesc');
         const btn = document.getElementById('authBtn');
         const confirmField = document.getElementById('authConfirmPassword');
+        const roleSel = document.getElementById('roleSelection');
         const toggleText = document.getElementById('toggleText');
         const toggleLink = document.getElementById('toggleLink');
-        const errorMsg = document.getElementById('authError');
+        const forgotLink = document.getElementById('forgotPassLink');
 
-        errorMsg.innerText = "";
-        
         if (isLoginMode) {
             title.innerText = "ARK LOGIN";
             desc.innerText = "Enter credentials to Access Class Schedule Maker";
             btn.innerText = "SIGN IN";
             confirmField.classList.add('hidden');
+            roleSel.classList.add('hidden');
+            forgotLink.classList.remove('hidden');
             toggleText.innerText = "Don't have an account?";
             toggleLink.innerText = "Create Account";
         } else {
@@ -211,6 +289,8 @@
             desc.innerText = "Join ARK to start managing your schedules";
             btn.innerText = "REGISTER";
             confirmField.classList.remove('hidden');
+            roleSel.classList.remove('hidden');
+            forgotLink.classList.add('hidden');
             toggleText.innerText = "Already have an account?";
             toggleLink.innerText = "Log In Here";
         }
@@ -220,6 +300,7 @@
         const email = document.getElementById('authEmail').value;
         const pass = document.getElementById('authPassword').value;
         const confirmPass = document.getElementById('authConfirmPassword').value;
+        const role = document.getElementById('authRole').value;
         const errorMsg = document.getElementById('authError');
 
         if (!email || !pass) return errorMsg.innerText = "Please fill all fields.";
@@ -232,12 +313,60 @@
             if (pass.length < 6) return errorMsg.innerText = "Password must be at least 6 characters.";
             
             createUserWithEmailAndPassword(auth, email, pass)
-                .then(() => alert("Account Created Successfully!"))
+                .then((userCredential) => {
+                    set(ref(db, 'users/' + userCredential.user.uid), {
+                        email: email,
+                        role: role,
+                        status: role === 'viewer' ? 'approved' : 'pending'
+                    });
+                    
+                    if(role === 'operator') {
+                        alert("Account request sent! Please wait for approval.");
+                        signOut(auth);
+                    } else {
+                        alert("Account Created Successfully!");
+                    }
+                })
                 .catch(e => errorMsg.innerText = "Sign Up Failed: " + e.message);
         }
     };
 
     window.handleLogout = () => signOut(auth);
+
+    // --- ADMIN ACTIONS ---
+    function setupAdminDashboard() {
+        onValue(usersRef, (snapshot) => {
+            const users = snapshot.val();
+            const body = document.getElementById('pendingUsersBody');
+            body.innerHTML = '';
+            if (!users) return;
+
+            Object.entries(users).forEach(([uid, val]) => {
+                if (val.role === 'operator' && val.status === 'pending') {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${val.email}</td>
+                        <td style="color:#f59e0b; font-weight:bold;">OPERATOR</td>
+                        <td>
+                            <button onclick="approveUser('${uid}')" style="background:#22c55e; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;">APPROVE</button>
+                            <button onclick="rejectUser('${uid}')" style="background:#ef4444; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;">REJECT</button>
+                        </td>
+                    `;
+                    body.appendChild(tr);
+                }
+            });
+        });
+    }
+
+    window.approveUser = (uid) => {
+        update(ref(db, `users/${uid}`), { status: 'approved' });
+        alert("User Approved.");
+    };
+
+    window.rejectUser = (uid) => {
+        remove(ref(db, `users/${uid}`));
+        alert("User request removed.");
+    };
 
     // --- DATABASE & RENDERING LOGIC ---
     function loadDatabase() {
@@ -249,9 +378,6 @@
             renderManageTable();
         });
     }
-
-    // (Remaining functions: checkConflict, addSchedule, clearInputs, editEntry, etc. 
-    // from your original code are preserved below)
 
     function checkConflict(newEntry, ignoreKey = null) {
         let conflictFound = null;
@@ -279,6 +405,7 @@
     }
 
     window.addSchedule = () => {
+        if(currentUserRole === 'viewer') return;
         const key = document.getElementById('editKey').value;
         const entry = {
             subject: document.getElementById('subject').value.trim().toUpperCase(),
@@ -313,6 +440,7 @@
     }
 
     window.editEntry = (key) => {
+        if(currentUserRole === 'viewer') return;
         const item = window.schedules.find(s => s.firebaseKey === key);
         if(!item) return;
         document.getElementById('editKey').value = key;
@@ -329,12 +457,23 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
-    window.resetDatabase = () => { if(confirm("Reset all data?")) set(scheduleRef, null); };
-    window.deleteEntry = (k) => { if(confirm("Delete this entry?")) remove(ref(db, `schedules/${k}`)); };
+    window.resetDatabase = () => { 
+        if(currentUserRole === 'viewer') return;
+        if(confirm("Reset all data?")) set(scheduleRef, null); 
+    };
+    
+    window.deleteEntry = (k) => { 
+        if(currentUserRole === 'viewer') return;
+        if(confirm("Delete this entry?")) remove(ref(db, `schedules/${k}`)); 
+    };
 
-    window.handleDragStart = (e, k) => { e.dataTransfer.setData("text", k); };
+    window.handleDragStart = (e, k) => { 
+        if(currentUserRole === 'viewer') { e.preventDefault(); return; }
+        e.dataTransfer.setData("text", k); 
+    };
     window.handleDragOver = (e) => e.preventDefault();
     window.handleDrop = (e, day, start) => {
+        if(currentUserRole === 'viewer') return;
         e.preventDefault();
         const key = e.dataTransfer.getData("text");
         const entry = window.schedules.find(s => s.firebaseKey === key);
@@ -393,7 +532,7 @@
                 window.schedules.filter(s => s[mode] === filterVal && s.day === day && hourStr >= s.start && hourStr < s.end).forEach(item => {
                     let div = document.createElement('div');
                     div.className = 'slot-box';
-                    div.draggable = true;
+                    div.draggable = (currentUserRole === 'operator');
                     div.setAttribute('ondragstart', `handleDragStart(event, '${item.firebaseKey}')`);
                     let info1 = "", info2 = "";
                     if (mode === "section") { info1 = item.teacher; info2 = "Room: " + item.room; }
@@ -417,7 +556,7 @@
                 <td>${s.section}</td>
                 <td>${s.teacher}</td>
                 <td>${s.room}</td>
-                <td style="text-align: center;">
+                <td class="${currentUserRole === 'viewer' ? 'hidden' : ''}" style="text-align: center;">
                     <button onclick="editEntry('${s.firebaseKey}')" class="btn-edit" title="Modify"><i class="fa-solid fa-pen-to-square"></i></button>
                     <button onclick="deleteEntry('${s.firebaseKey}')" class="btn-delete" title="Delete"><i class="fa-solid fa-trash-can"></i></button>
                 </td>
