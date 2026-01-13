@@ -22,7 +22,6 @@
         .auth-toggle { margin-top: 20px; font-size: 12px; color: #64748b; }
         .auth-toggle span { color: var(--ark-accent); cursor: pointer; font-weight: 700; text-decoration: underline; }
         
-        /* New Forget Password Styling */
         .forgot-password { display: block; text-align: right; font-size: 11px; color: var(--ark-accent); cursor: pointer; margin-top: -5px; margin-bottom: 10px; font-weight: 600; }
         .forgot-password:hover { text-decoration: underline; }
 
@@ -57,7 +56,13 @@
         .btn-delete { color: #ef4444; background: none; border: none; cursor: pointer; padding: 4px; }
         .btn-edit { color: #3b82f6; background: none; border: none; cursor: pointer; padding: 4px; margin-right: 5px; }
 
+        /* Admin Styles */
         #adminPanel { background: #fff1f2; border: 2px solid #fda4af; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+        .admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media (max-width: 768px) { .admin-grid { grid-template-columns: 1fr; } }
+        .role-badge { padding: 2px 6px; border-radius: 4px; font-size: 9px; font-weight: bold; text-transform: uppercase; }
+        .badge-pending { background: #fef3c7; color: #92400e; }
+        .badge-approved { background: #dcfce7; color: #166534; }
     </style>
 </head>
 <body>
@@ -95,11 +100,29 @@
 
 <div class="main-container">
     <div id="adminPanel" class="hidden">
-        <h3 style="margin-top: 0; color: #9f1239; font-size: 14px;"><i class="fa-solid fa-user-shield"></i> ADMIN DASHBOARD: PENDING APPROVALS</h3>
-        <table class="manage-table" style="background: white;">
-            <thead><tr><th>Email</th><th>Requested Role</th><th>Action</th></tr></thead>
-            <tbody id="pendingUsersBody"></tbody>
-        </table>
+        <h3 style="margin-top: 0; color: #9f1239; font-size: 14px;"><i class="fa-solid fa-user-shield"></i> ADMIN CONSOLE</h3>
+        
+        <div class="admin-grid">
+            <div>
+                <p style="font-size: 11px; font-weight: bold; color: #be123c; margin-bottom: 5px;">PENDING APPROVALS</p>
+                <div style="max-height: 200px; overflow-y: auto; border: 1px solid #fda4af; border-radius: 6px;">
+                    <table class="manage-table" style="background: white; margin-top: 0;">
+                        <thead><tr><th>Email</th><th>Action</th></tr></thead>
+                        <tbody id="pendingUsersBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div>
+                <p style="font-size: 11px; font-weight: bold; color: #1e293b; margin-bottom: 5px;">MANAGE ALL USERS</p>
+                <div style="max-height: 200px; overflow-y: auto; border: 1px solid #cbd5e1; border-radius: 6px;">
+                    <table class="manage-table" style="background: white; margin-top: 0;">
+                        <thead><tr><th>Email</th><th>Role</th><th>Modify</th></tr></thead>
+                        <tbody id="allUsersBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="action-bar">
@@ -202,30 +225,17 @@
     const ADMIN_EMAIL = "reymonde.silvestre@gmail.com";
     window.schedules = [];
 
-    // --- NEW: HANDLE FORGOT PASSWORD ---
+    // --- FORGOT PASSWORD ---
     window.handleForgotPassword = () => {
         const email = document.getElementById('authEmail').value;
         const errorMsg = document.getElementById('authError');
-        
-        if (!email) {
-            errorMsg.innerText = "Please enter your email address first.";
-            errorMsg.style.color = "#ef4444";
-            return;
-        }
-
-        sendPasswordResetEmail(auth, email)
-            .then(() => {
-                alert("Password reset email sent! Check your Gmail inbox.");
-                errorMsg.innerText = "Reset link sent to " + email;
-                errorMsg.style.color = "#22c55e";
-            })
-            .catch((error) => {
-                errorMsg.innerText = "Error: " + error.message;
-                errorMsg.style.color = "#ef4444";
-            });
+        if (!email) { errorMsg.innerText = "Please enter your email address first."; return; }
+        sendPasswordResetEmail(auth, email).then(() => {
+            alert("Password reset email sent! Check your Gmail inbox.");
+        }).catch(e => errorMsg.innerText = e.message);
     };
 
-    // --- ROLE-BASED AUTH LOGIC ---
+    // --- AUTH OBSERVER ---
     onAuthStateChanged(auth, (user) => {
         if (user) {
             onValue(ref(db, `users/${user.uid}`), (snapshot) => {
@@ -264,10 +274,63 @@
         loadDatabase(); 
     }
 
+    // --- ADMIN DASHBOARD LOGIC ---
+    function setupAdminDashboard() {
+        onValue(usersRef, (snapshot) => {
+            const users = snapshot.val();
+            const pendingBody = document.getElementById('pendingUsersBody');
+            const allUsersBody = document.getElementById('allUsersBody');
+            pendingBody.innerHTML = '';
+            allUsersBody.innerHTML = '';
+            if (!users) return;
+
+            Object.entries(users).forEach(([uid, val]) => {
+                // Skip admin themselves
+                if (val.email === ADMIN_EMAIL) return;
+
+                // Pending Table
+                if (val.role === 'operator' && val.status === 'pending') {
+                    pendingBody.innerHTML += `
+                        <tr>
+                            <td>${val.email}</td>
+                            <td>
+                                <button onclick="approveUser('${uid}')" style="background:#22c55e; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;"><i class="fa-solid fa-check"></i></button>
+                                <button onclick="rejectUser('${uid}')" style="background:#ef4444; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
+                            </td>
+                        </tr>`;
+                }
+
+                // All Users Table
+                allUsersBody.innerHTML += `
+                    <tr>
+                        <td style="font-size:10px;">${val.email}</td>
+                        <td>
+                            <select onchange="changeUserRole('${uid}', this.value)" style="font-size:10px; padding:2px;">
+                                <option value="viewer" ${val.role === 'viewer' ? 'selected' : ''}>VIEWER</option>
+                                <option value="operator" ${val.role === 'operator' ? 'selected' : ''}>OPERATOR</option>
+                            </select>
+                        </td>
+                        <td>
+                             <button onclick="rejectUser('${uid}')" class="btn-delete" style="font-size:10px;"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>`;
+            });
+        });
+    }
+
+    window.approveUser = (uid) => update(ref(db, `users/${uid}`), { status: 'approved' });
+    window.rejectUser = (uid) => { if(confirm("Permanently delete this user access?")) remove(ref(db, `users/${uid}`)); };
+    window.changeUserRole = (uid, newRole) => {
+        const updateData = { role: newRole };
+        if(newRole === 'operator') updateData.status = 'approved'; // Auto approve if admin changes it
+        update(ref(db, `users/${uid}`), updateData);
+        alert("Role updated to " + newRole);
+    };
+
+    // --- LOGIN / REGISTER UI TOGGLES ---
     window.toggleAuthMode = () => {
         isLoginMode = !isLoginMode;
         const title = document.getElementById('authTitle');
-        const desc = document.getElementById('authDesc');
         const btn = document.getElementById('authBtn');
         const confirmField = document.getElementById('authConfirmPassword');
         const roleSel = document.getElementById('roleSelection');
@@ -277,7 +340,6 @@
 
         if (isLoginMode) {
             title.innerText = "ARK LOGIN";
-            desc.innerText = "Enter credentials to Access Class Schedule Maker";
             btn.innerText = "SIGN IN";
             confirmField.classList.add('hidden');
             roleSel.classList.add('hidden');
@@ -286,7 +348,6 @@
             toggleLink.innerText = "Create Account";
         } else {
             title.innerText = "CREATE ACCOUNT";
-            desc.innerText = "Join ARK to start managing your schedules";
             btn.innerText = "REGISTER";
             confirmField.classList.remove('hidden');
             roleSel.classList.remove('hidden');
@@ -306,69 +367,22 @@
         if (!email || !pass) return errorMsg.innerText = "Please fill all fields.";
 
         if (isLoginMode) {
-            signInWithEmailAndPassword(auth, email, pass)
-                .catch(e => errorMsg.innerText = "Login Failed: " + e.message);
+            signInWithEmailAndPassword(auth, email, pass).catch(e => errorMsg.innerText = "Login Failed: " + e.message);
         } else {
             if (pass !== confirmPass) return errorMsg.innerText = "Passwords do not match.";
-            if (pass.length < 6) return errorMsg.innerText = "Password must be at least 6 characters.";
-            
-            createUserWithEmailAndPassword(auth, email, pass)
-                .then((userCredential) => {
-                    set(ref(db, 'users/' + userCredential.user.uid), {
-                        email: email,
-                        role: role,
-                        status: role === 'viewer' ? 'approved' : 'pending'
-                    });
-                    
-                    if(role === 'operator') {
-                        alert("Account request sent! Please wait for approval.");
-                        signOut(auth);
-                    } else {
-                        alert("Account Created Successfully!");
-                    }
-                })
-                .catch(e => errorMsg.innerText = "Sign Up Failed: " + e.message);
+            createUserWithEmailAndPassword(auth, email, pass).then((userCredential) => {
+                set(ref(db, 'users/' + userCredential.user.uid), {
+                    email: email, role: role,
+                    status: role === 'viewer' ? 'approved' : 'pending'
+                });
+                if(role === 'operator') { alert("Account request sent! Please wait for approval."); signOut(auth); }
+            }).catch(e => errorMsg.innerText = "Sign Up Failed: " + e.message);
         }
     };
 
     window.handleLogout = () => signOut(auth);
 
-    // --- ADMIN ACTIONS ---
-    function setupAdminDashboard() {
-        onValue(usersRef, (snapshot) => {
-            const users = snapshot.val();
-            const body = document.getElementById('pendingUsersBody');
-            body.innerHTML = '';
-            if (!users) return;
-
-            Object.entries(users).forEach(([uid, val]) => {
-                if (val.role === 'operator' && val.status === 'pending') {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>${val.email}</td>
-                        <td style="color:#f59e0b; font-weight:bold;">OPERATOR</td>
-                        <td>
-                            <button onclick="approveUser('${uid}')" style="background:#22c55e; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;">APPROVE</button>
-                            <button onclick="rejectUser('${uid}')" style="background:#ef4444; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;">REJECT</button>
-                        </td>
-                    `;
-                    body.appendChild(tr);
-                }
-            });
-        });
-    }
-
-    window.approveUser = (uid) => {
-        update(ref(db, `users/${uid}`), { status: 'approved' });
-        alert("User Approved.");
-    };
-
-    window.rejectUser = (uid) => {
-        remove(ref(db, `users/${uid}`));
-        alert("User request removed.");
-    };
-
-    // --- DATABASE & RENDERING LOGIC ---
+    // --- SCHEDULE LOGIC ---
     function loadDatabase() {
         onValue(scheduleRef, (snapshot) => {
             const data = snapshot.val();
@@ -387,15 +401,15 @@
             const isOverlapping = (newEntry.start < existing.end && newEntry.end > existing.start);
             if (isOverlapping) {
                 if (existing.teacher === newEntry.teacher && newEntry.teacher !== "") {
-                    conflictFound = `INSTRUCTOR: ${existing.teacher} is busy with ${existing.subject} (${existing.start}-${existing.end})`;
+                    conflictFound = `INSTRUCTOR: ${existing.teacher} is busy with ${existing.subject}`;
                     return true;
                 }
                 if (existing.room === newEntry.room && newEntry.room !== "") {
-                    conflictFound = `ROOM: ${existing.room} is occupied by ${existing.section} for ${existing.subject}`;
+                    conflictFound = `ROOM: ${existing.room} is occupied by ${existing.section}`;
                     return true;
                 }
                 if (existing.section === newEntry.section) {
-                    conflictFound = `SECTION: ${existing.section} already has ${existing.subject} at this time`;
+                    conflictFound = `SECTION: ${existing.section} already has ${existing.subject}`;
                     return true;
                 }
             }
@@ -405,7 +419,6 @@
     }
 
     window.addSchedule = () => {
-        if(currentUserRole === 'viewer') return;
         const key = document.getElementById('editKey').value;
         const entry = {
             subject: document.getElementById('subject').value.trim().toUpperCase(),
@@ -417,16 +430,11 @@
             end: document.getElementById('endTime').value
         };
         if(!entry.subject || !entry.section) return alert("Fill Subject & Section");
-        if(entry.start >= entry.end) return alert("End time must be after start time");
         const errorMsg = checkConflict(entry, key || null);
-        if(errorMsg) return alert("❌ CONFLICT DETECTED\n\n" + errorMsg);
-        if(key) {
-            update(ref(db, `schedules/${key}`), entry);
-            clearInputs();
-        } else {
-            push(scheduleRef, entry);
-            clearInputs();
-        }
+        if(errorMsg) return alert("❌ CONFLICT\n" + errorMsg);
+        if(key) update(ref(db, `schedules/${key}`), entry);
+        else push(scheduleRef, entry);
+        clearInputs();
     };
 
     function clearInputs() {
@@ -436,11 +444,9 @@
         document.getElementById('teacher').value = '';
         document.getElementById('room').value = '';
         document.getElementById('saveBtn').innerText = 'SAVE';
-        document.getElementById('saveBtn').style.background = 'var(--ark-dark)';
     }
 
     window.editEntry = (key) => {
-        if(currentUserRole === 'viewer') return;
         const item = window.schedules.find(s => s.firebaseKey === key);
         if(!item) return;
         document.getElementById('editKey').value = key;
@@ -451,29 +457,17 @@
         document.getElementById('day').value = item.day;
         document.getElementById('startTime').value = item.start;
         document.getElementById('endTime').value = item.end;
-        const saveBtn = document.getElementById('saveBtn');
-        saveBtn.innerText = 'UPDATE';
-        saveBtn.style.background = '#3b82f6';
+        document.getElementById('saveBtn').innerText = 'UPDATE';
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
-    window.resetDatabase = () => { 
-        if(currentUserRole === 'viewer') return;
-        if(confirm("Reset all data?")) set(scheduleRef, null); 
-    };
-    
-    window.deleteEntry = (k) => { 
-        if(currentUserRole === 'viewer') return;
-        if(confirm("Delete this entry?")) remove(ref(db, `schedules/${k}`)); 
-    };
+    window.deleteEntry = (k) => { if(confirm("Delete this entry?")) remove(ref(db, `schedules/${k}`)); };
+    window.resetDatabase = () => { if(confirm("Reset all data?")) set(scheduleRef, null); };
 
-    window.handleDragStart = (e, k) => { 
-        if(currentUserRole === 'viewer') { e.preventDefault(); return; }
-        e.dataTransfer.setData("text", k); 
-    };
+    // --- DRAG AND DROP ---
+    window.handleDragStart = (e, k) => { if(currentUserRole === 'viewer') e.preventDefault(); else e.dataTransfer.setData("text", k); };
     window.handleDragOver = (e) => e.preventDefault();
     window.handleDrop = (e, day, start) => {
-        if(currentUserRole === 'viewer') return;
         e.preventDefault();
         const key = e.dataTransfer.getData("text");
         const entry = window.schedules.find(s => s.firebaseKey === key);
@@ -485,18 +479,18 @@
         const totalEnd = (nh * 60 + nm) + duration;
         const end = `${Math.floor(totalEnd/60).toString().padStart(2,'0')}:${(totalEnd%60).toString().padStart(2,'0')}`;
         const updatedEntry = { ...entry, day, start, end };
-        const errorMsg = checkConflict(updatedEntry, key);
-        if(errorMsg) return alert("❌ CANNOT MOVE\n\n" + errorMsg);
+        if(checkConflict(updatedEntry, key)) return alert("❌ CONFLICT AT NEW POSITION");
         update(ref(db, `schedules/${key}`), { day, start, end });
     };
 
+    // --- RENDERING ---
     window.updateFilterList = (forceReset = false) => {
         const m = document.getElementById('modeSelect').value;
         const sel = document.getElementById('filterSelector');
-        const previousValue = sel.value;
+        const prev = sel.value;
         const vals = [...new Set(window.schedules.map(s => s[m]))].sort();
         sel.innerHTML = vals.map(v => `<option value="${v}">${v}</option>`).join('');
-        if (!forceReset && previousValue && vals.includes(previousValue)) { sel.value = previousValue; }
+        if (!forceReset && prev && vals.includes(prev)) sel.value = prev;
         renderMatrix();
     };
 
@@ -516,15 +510,11 @@
         body.innerHTML = '';
         if(!filterVal) return;
         const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-        const formatTime = (hour) => {
-            const period = hour >= 12 ? 'PM' : 'AM';
-            const h12 = hour % 12 || 12;
-            return `${h12}:00 ${period}`;
-        };
         for (let h = 7; h <= 18; h++) {
             let tr = document.createElement('tr');
             let hourStr = h.toString().padStart(2, '0') + ":00";
-            tr.innerHTML = `<td class="time-col">${formatTime(h)} - ${formatTime(h+1)}</td>`;
+            let h12 = h % 12 || 12;
+            tr.innerHTML = `<td class="time-col">${h12}:00 ${h >= 12 ? 'PM' : 'AM'}</td>`;
             days.forEach(day => {
                 let td = document.createElement('td');
                 td.setAttribute('ondragover', 'handleDragOver(event)');
@@ -534,11 +524,8 @@
                     div.className = 'slot-box';
                     div.draggable = (currentUserRole === 'operator');
                     div.setAttribute('ondragstart', `handleDragStart(event, '${item.firebaseKey}')`);
-                    let info1 = "", info2 = "";
-                    if (mode === "section") { info1 = item.teacher; info2 = "Room: " + item.room; }
-                    else if (mode === "teacher") { info1 = item.section; info2 = "Room: " + item.room; }
-                    else { info1 = item.section; info2 = "Ins: " + item.teacher; }
-                    div.innerHTML = `<strong>${item.subject}</strong><span>${info1}</span><span>${info2}</span>`;
+                    let info1 = (mode === "section") ? item.teacher : item.section;
+                    div.innerHTML = `<strong>${item.subject}</strong><span>${info1}</span>`;
                     td.appendChild(div);
                 });
                 tr.appendChild(td);
@@ -557,12 +544,13 @@
                 <td>${s.teacher}</td>
                 <td>${s.room}</td>
                 <td class="${currentUserRole === 'viewer' ? 'hidden' : ''}" style="text-align: center;">
-                    <button onclick="editEntry('${s.firebaseKey}')" class="btn-edit" title="Modify"><i class="fa-solid fa-pen-to-square"></i></button>
-                    <button onclick="deleteEntry('${s.firebaseKey}')" class="btn-delete" title="Delete"><i class="fa-solid fa-trash-can"></i></button>
+                    <button onclick="editEntry('${s.firebaseKey}')" class="btn-edit"><i class="fa-solid fa-pen"></i></button>
+                    <button onclick="deleteEntry('${s.firebaseKey}')" class="btn-delete"><i class="fa-solid fa-trash"></i></button>
                 </td>
             </tr>`).join('');
     }
 
+    // --- EXPORTS ---
     window.downloadFullMatrix = async (type) => {
         const canvas = await html2canvas(document.getElementById('captureArea'), { scale: 2 });
         const img = canvas.toDataURL('image/png');
