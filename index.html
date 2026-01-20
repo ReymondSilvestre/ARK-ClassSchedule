@@ -14,10 +14,10 @@
         :root { --ark-dark: #0f172a; --ark-accent: #3b82f6; --ark-border: #e2e8f0; --row-height: 60px; }
         body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background: #f8fafc; margin: 0; padding: 15px; color: #1e293b; line-height: 1.2; }
 
-        #loginOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15,23,42,0.95); display: flex; align-items: center; justify-content: center; z-index: 10000; transition: opacity .2s ease; }
+        #loginOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15,23,42,0.95); display: flex; align-items: center; justify-content: center; z-index: 10000; transition: 0.2s ease; }
         .login-card { background: white; padding: 35px; border-radius: 16px; width: 100%; max-width: 350px; text-align: center; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
         .login-card input, .login-card select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box; font-size: 14px; }
-        .btn-primary { width: 100%; padding: 12px; background: var(--ark-accent); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.2s ease; }
+        .btn-primary { width: 100%; padding: 12px; background: var(--ark-accent); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.2s; }
         .btn-primary:hover { background: #2563eb; }
         .auth-toggle { margin-top: 20px; font-size: 12px; color: #64748b; }
         .auth-toggle span { color: var(--ark-accent); cursor: pointer; font-weight: 700; text-decoration: underline; }
@@ -44,7 +44,7 @@
         .matrix-table th { background: #334155; color: white; height: 30px; font-size: 10px; }
         .time-col { background: #f8fafc !important; font-weight: 800; color: #0f172a; width: 200px !important; border-right: 2px solid #cbd5e1; font-size: 11px; padding: 10px; text-align: left; }
 
-        .slot-box { padding: 6px; border-radius: 4px; font-size: 10px; margin: 4px; cursor: grab; border-left: 3px solid #22c55e; background: #f0fdf4; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; box-sizing: border-box; }
+        .slot-box { padding: 6px; border-radius: 4px; font-size: 10px; margin: 4px; cursor: grab; border-left: 3px solid #22c55e; background: #f0fdf4; display: flex; flex-direction: column; justify-content: center; }
         .slot-box strong { font-size: 11px; color: #1e293b; display: block; }
         .slot-box span { color: #64748b; font-size: 9px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
 
@@ -63,6 +63,10 @@
         .role-badge { padding: 2px 6px; border-radius: 4px; font-size: 9px; font-weight: bold; text-transform: uppercase; }
         .badge-pending { background: #fef3c7; color: #92400e; }
         .badge-approved { background: #dcfce7; color: #166534; }
+
+        /* Search box */
+        #searchBox { padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 6px; width: 320px; font-size: 13px; }
+        #clearSearchBtn { padding: 6px 10px; border-radius: 6px; font-size: 12px; }
     </style>
 </head>
 <body>
@@ -126,7 +130,7 @@
     </div>
 
     <div class="action-bar">
-        <div style="font-size: 11px; font-weight: 700;"><i class="fa-solid fa-calendar-check"></i> SCHEDULER <span id="userRoleTag" style="margin-left:10px; background: #3b82f6; padding: 2px 6px; border-radius:4px; font-size:10px;">VIEWER</span></div>
+        <div style="font-size: 11px; font-weight: 700;"><i class="fa-solid fa-calendar-check"></i> SCHEDULER <span id="userRoleTag" style="margin-left:10px; background: #3b82f6; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight:700;">VIEWER</span></div>
         <div style="display:flex; gap:6px;">
             <button class="btn-export" style="background:#64748b;" onclick="handleLogout()">LOGOUT</button>
             <button id="resetBtn" class="btn-export operator-only" style="background:#ef4444;" onclick="resetDatabase()">RESET</button>
@@ -189,7 +193,14 @@
     </div>
 
     <div style="margin-top: 25px;">
-        <h3 style="font-size: 13px; color: #0f172a; margin-bottom: 5px;"><i class="fa-solid fa-list-ul"></i> DATABASE MASTERLIST</h3>
+        <div style="display:flex; justify-content:space-between; align-items:center; gap: 8px; margin-bottom: 6px;">
+            <h3 style="font-size: 13px; color: #0f172a; margin: 0;"><i class="fa-solid fa-list-ul"></i> DATABASE MASTERLIST</h3>
+            <div style="display:flex; gap:8px; align-items:center;">
+                <input id="searchBox" type="search" placeholder="Search masterlist (subject, section, teacher, room, day, time)" />
+                <button id="clearSearchBtn" class="btn-export" style="background:#64748b;" onclick="clearSearch()">CLEAR</button>
+            </div>
+        </div>
+
         <div style="max-height: 400px; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 6px;">
             <table class="manage-table">
                 <thead>
@@ -593,7 +604,23 @@
     };
 
     function renderManageTable() {
-        document.getElementById('manageBody').innerHTML = window.schedules.map(s => {
+        const q = (document.getElementById('searchBox') ? document.getElementById('searchBox').value.trim().toLowerCase() : '');
+        const filtered = window.schedules.filter(s => {
+            if (!q) return true;
+            // Combine searchable fields
+            const combined = [
+                s.subject || '',
+                s.section || '',
+                s.teacher || '',
+                s.room || '',
+                s.day || '',
+                `${s.start || ''}-${s.end || ''}`,
+                s.firebaseKey || ''
+            ].join(' ').toLowerCase();
+            return combined.includes(q);
+        });
+
+        document.getElementById('manageBody').innerHTML = filtered.map(s => {
             const actionsClass = currentUserRole === 'viewer' ? 'hidden' : '';
             return `
             <tr>
@@ -610,6 +637,25 @@
             </tr>`;
         }).join('');
     }
+
+    // Clear search input
+    window.clearSearch = () => {
+        const sb = document.getElementById('searchBox');
+        if (sb) {
+            sb.value = '';
+            renderManageTable();
+        }
+    };
+
+    // Listen for search input changes
+    document.addEventListener('DOMContentLoaded', () => {
+        const sb = document.getElementById('searchBox');
+        if (sb) {
+            sb.addEventListener('input', () => {
+                renderManageTable();
+            });
+        }
+    });
 
     // --- EXPORTS ---
     window.downloadFullMatrix = async (type) => {
