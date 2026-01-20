@@ -1,27 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>ARK - Academic Scheduler</title>
-    
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    
+
     <style>
         :root { --ark-dark: #0f172a; --ark-accent: #3b82f6; --ark-border: #e2e8f0; --row-height: 60px; }
         body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background: #f8fafc; margin: 0; padding: 15px; color: #1e293b; line-height: 1.2; }
-        
-        #loginOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--ark-dark); display: flex; align-items: center; justify-content: center; z-index: 10000; transition: 0.3s; }
+
+        #loginOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15,23,42,0.95); display: flex; align-items: center; justify-content: center; z-index: 10000; transition: opacity .2s ease; }
         .login-card { background: white; padding: 35px; border-radius: 16px; width: 100%; max-width: 350px; text-align: center; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
         .login-card input, .login-card select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box; font-size: 14px; }
-        .btn-primary { width: 100%; padding: 12px; background: var(--ark-accent); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.2s; }
+        .btn-primary { width: 100%; padding: 12px; background: var(--ark-accent); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.2s ease; }
         .btn-primary:hover { background: #2563eb; }
         .auth-toggle { margin-top: 20px; font-size: 12px; color: #64748b; }
         .auth-toggle span { color: var(--ark-accent); cursor: pointer; font-weight: 700; text-decoration: underline; }
-        
+
         .forgot-password { display: block; text-align: right; font-size: 11px; color: var(--ark-accent); cursor: pointer; margin-top: -5px; margin-bottom: 10px; font-weight: 600; }
         .forgot-password:hover { text-decoration: underline; }
 
@@ -38,20 +38,20 @@
         .input-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; align-items: end; }
         .input-group label { display: block; font-size: 10px; font-weight: 800; color: #64748b; text-transform: uppercase; margin-bottom: 4px; }
         .input-group input, .input-group select { width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; height: 36px; box-sizing: border-box; }
-        
-        .matrix-table { width: 100%; border-collapse: collapse; table-layout: fixed; border: 1px solid #cbd5e1; background: #fff; }
-        .matrix-table th, .matrix-table td { border: 1px solid #e2e8f0; padding: 2px; text-align: center; height: var(--row-height); font-size: 11px; }
-        .matrix-table th { background: #334155; color: white; height: 30px; font-size: 10px; }
-        .time-col { background: #f8fafc !important; font-weight: 800; color: #0f172a; width: 130px !important; border-right: 2px solid #cbd5e1; font-size: 9px; }
 
-        .slot-box { padding: 4px; border-radius: 3px; font-size: 9px; margin: 1px; cursor: grab; border-left: 3px solid #22c55e; background: #f0fdf4; display: flex; flex-direction: column; justify-content: center; align-items: center; line-height: 1.1; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
-        .slot-box strong { font-size: 10px; color: #1e293b; display: block; }
-        .slot-box span { color: #64748b; font-size: 8.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+        .matrix-table { width: 100%; border-collapse: collapse; table-layout: fixed; border: 1px solid #cbd5e1; background: #fff; }
+        .matrix-table th, .matrix-table td { border: 1px solid #e2e8f0; padding: 2px; text-align: center; height: var(--row-height); font-size: 11px; vertical-align: top; }
+        .matrix-table th { background: #334155; color: white; height: 30px; font-size: 10px; }
+        .time-col { background: #f8fafc !important; font-weight: 800; color: #0f172a; width: 200px !important; border-right: 2px solid #cbd5e1; font-size: 11px; padding: 10px; text-align: left; }
+
+        .slot-box { padding: 6px; border-radius: 4px; font-size: 10px; margin: 4px; cursor: grab; border-left: 3px solid #22c55e; background: #f0fdf4; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; box-sizing: border-box; }
+        .slot-box strong { font-size: 11px; color: #1e293b; display: block; }
+        .slot-box span { color: #64748b; font-size: 9px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
 
         .manage-table { width: 100%; border-collapse: collapse; font-size: 11.5px; margin-top: 10px; }
         .manage-table th { background: #f1f5f9; padding: 8px; text-align: left; border-bottom: 2px solid #e2e8f0; font-weight: 700; }
         .manage-table td { padding: 6px 8px; border-bottom: 1px solid #f1f5f9; }
-        
+
         .hidden { display: none !important; }
         .btn-delete { color: #ef4444; background: none; border: none; cursor: pointer; padding: 4px; }
         .btn-edit { color: #3b82f6; background: none; border: none; cursor: pointer; padding: 4px; margin-right: 5px; }
@@ -69,17 +69,17 @@
 
 <div id="loginOverlay">
     <div class="login-card">
-        <img src="images/logo.png" alt="Logo" class="company-logo"> 
+        <img src="images/logo.png" alt="Logo" class="company-logo">
         <h2 id="authTitle" style="margin: 0 0 5px 0; color: var(--ark-dark); font-size: 18px;">ARK LOGIN</h2>
         <p id="authDesc" style="font-size: 11px; color: #64748b; margin-bottom: 15px;">Enter credentials to Access Class Schedule Maker</p>
-        
+
         <input type="email" id="authEmail" placeholder="Email Address">
         <input type="password" id="authPassword" placeholder="Password">
-        
+
         <span id="forgotPassLink" class="forgot-password" onclick="handleForgotPassword()">Forgot Password?</span>
 
         <input type="password" id="authConfirmPassword" placeholder="Confirm Password" class="hidden">
-        
+
         <div id="roleSelection" class="hidden">
             <label style="font-size: 10px; font-weight: 800; color: #64748b; display: block; text-align: left; margin-bottom: -5px;">ACCOUNT TYPE</label>
             <select id="authRole">
@@ -87,12 +87,12 @@
                 <option value="operator">Operator Account (Requires Approval)</option>
             </select>
         </div>
-        
+
         <button id="authBtn" class="btn-primary" onclick="handleAuth()">SIGN IN</button>
         <p id="authError" style="color: #ef4444; font-size: 10px; margin-top: 10px; min-height: 12px;"></p>
-        
+
         <div class="auth-toggle">
-            <span id="toggleText">Don't have an account?</span> 
+            <span id="toggleText">Don't have an account?</span>
             <span id="toggleLink" onclick="toggleAuthMode()">Create Account</span>
         </div>
     </div>
@@ -101,7 +101,7 @@
 <div class="main-container">
     <div id="adminPanel" class="hidden">
         <h3 style="margin-top: 0; color: #9f1239; font-size: 14px;"><i class="fa-solid fa-user-shield"></i> ADMIN CONSOLE</h3>
-        
+
         <div class="admin-grid">
             <div>
                 <p style="font-size: 11px; font-weight: bold; color: #be123c; margin-bottom: 5px;">PENDING APPROVALS</p>
@@ -126,7 +126,7 @@
     </div>
 
     <div class="action-bar">
-        <div style="font-size: 11px; font-weight: 700;"><i class="fa-solid fa-calendar-check"></i> SCHEDULER <span id="userRoleTag" style="margin-left:10px; background: #3b82f6; padding: 2px 6px; border-radius: 4px; font-size: 9px;"></span></div>
+        <div style="font-size: 11px; font-weight: 700;"><i class="fa-solid fa-calendar-check"></i> SCHEDULER <span id="userRoleTag" style="margin-left:10px; background: #3b82f6; padding: 2px 6px; border-radius:4px; font-size:10px;">VIEWER</span></div>
         <div style="display:flex; gap:6px;">
             <button class="btn-export" style="background:#64748b;" onclick="handleLogout()">LOGOUT</button>
             <button id="resetBtn" class="btn-export operator-only" style="background:#ef4444;" onclick="resetDatabase()">RESET</button>
@@ -152,7 +152,9 @@
             </div>
             <div class="input-group"><label>Start</label><input id="startTime" type="time" value="07:00"></div>
             <div class="input-group"><label>End</label><input id="endTime" type="time" value="08:00"></div>
-            <button id="saveBtn" style="background: var(--ark-dark); color: white; border: none; padding: 0 15px; border-radius: 6px; font-weight: 700; cursor: pointer; height: 36px; font-size: 11px;" onclick="addSchedule()">SAVE</button>
+            <div style="display:flex; align-items:flex-end;">
+                <button id="saveBtn" style="background: var(--ark-dark); color: white; border: none; padding: 0 15px; border-radius: 6px; font-weight: 700; cursor: pointer; height: 36px; font-size: 11px;" onclick="addSchedule()">SAVE</button>
+            </div>
         </div>
     </div>
 
@@ -168,7 +170,7 @@
 
     <div id="captureArea" style="background:white; padding:10px; border: 1px solid #e2e8f0; border-radius: 4px;">
         <div class="matrix-header">
-            <img src="images/logo.png" alt="Logo" class="company-logo"> 
+            <img src="images/logo.png" alt="Logo" class="company-logo">
             <div class="matrix-header-text" style="text-align: center;">
                 <h2>ARK TECHNOLOGICAL INSTITUTE EDUCATION SYSTEM INC.</h2>
                 <p>Class Schedule Maker</p>
@@ -178,7 +180,7 @@
         <table class="matrix-table">
             <thead>
                 <tr>
-                    <th style="width: 130px;">TIME SLOT</th>
+                    <th style="width: 200px;">TIME SLOT</th>
                     <th>MON</th><th>TUE</th><th>WED</th><th>THU</th><th>FRI</th><th>SAT</th><th>SUN</th>
                 </tr>
             </thead>
@@ -219,11 +221,30 @@
     const auth = getAuth(app);
     const scheduleRef = ref(db, 'schedules');
     const usersRef = ref(db, 'users');
-    
+
     let isLoginMode = true;
     let currentUserRole = 'viewer';
     const ADMIN_EMAIL = "reymonde.silvestre@gmail.com";
     window.schedules = [];
+
+    // --- UTILITIES ---
+    function timeToMinutes(t) { // "HH:MM" -> minutes from 00:00
+        if (!t) return 0;
+        const [hh, mm] = t.split(':').map(Number);
+        return hh * 60 + mm;
+    }
+    function minutesTo12Hr(mins) {
+        const h = Math.floor(mins / 60);
+        const m = mins % 60;
+        const ampm = h >= 12 ? 'PM' : 'AM';
+        const h12 = h % 12 || 12;
+        return `${h12}:${m.toString().padStart(2,'0')} ${ampm}`;
+    }
+    function formatHourRange(h) {
+        const startMin = h * 60;
+        const endMin = (h + 1) * 60;
+        return `${minutesTo12Hr(startMin)} - ${minutesTo12Hr(endMin)}`;
+    }
 
     // --- FORGOT PASSWORD ---
     window.handleForgotPassword = () => {
@@ -258,8 +279,8 @@
                     initAppUI();
                 }
             });
-        } else { 
-            document.getElementById('loginOverlay').classList.remove('hidden'); 
+        } else {
+            document.getElementById('loginOverlay').classList.remove('hidden');
             document.getElementById('adminPanel').classList.add('hidden');
         }
     });
@@ -271,7 +292,7 @@
             if (currentUserRole === 'viewer') el.classList.add('hidden');
             else el.classList.remove('hidden');
         });
-        loadDatabase(); 
+        loadDatabase();
     }
 
     // --- ADMIN DASHBOARD LOGIC ---
@@ -295,7 +316,7 @@
                             <td>${val.email}</td>
                             <td>
                                 <button onclick="approveUser('${uid}')" style="background:#22c55e; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;"><i class="fa-solid fa-check"></i></button>
-                                <button onclick="rejectUser('${uid}')" style="background:#ef4444; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
+                                <button onclick="rejectUser('${uid}')" style="background:#ef4444; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;"><i class="fa-solid fa-x"></i></button>
                             </td>
                         </tr>`;
                 }
@@ -387,35 +408,58 @@
         onValue(scheduleRef, (snapshot) => {
             const data = snapshot.val();
             window.schedules = data ? Object.entries(data).map(([key, val]) => ({...val, firebaseKey: key})) : [];
-            updateFilterList(false); 
-            updateDataLists(); 
+            updateFilterList(false);
+            updateDataLists();
             renderManageTable();
+            renderMatrix();
         });
     }
 
     function checkConflict(newEntry, ignoreKey = null) {
-        let conflictFound = null;
-        window.schedules.some(existing => {
-            if (existing.firebaseKey === ignoreKey) return false;
-            if (existing.day !== newEntry.day) return false;
-            const isOverlapping = (newEntry.start < existing.end && newEntry.end > existing.start);
-            if (isOverlapping) {
-                if (existing.teacher === newEntry.teacher && newEntry.teacher !== "") {
-                    conflictFound = `INSTRUCTOR: ${existing.teacher} is busy with ${existing.subject}`;
-                    return true;
-                }
-                if (existing.room === newEntry.room && newEntry.room !== "") {
-                    conflictFound = `ROOM: ${existing.room} is occupied by ${existing.section}`;
-                    return true;
-                }
-                if (existing.section === newEntry.section) {
-                    conflictFound = `SECTION: ${existing.section} already has ${existing.subject}`;
-                    return true;
-                }
+        // Returns null if no conflict, otherwise returns a detailed string listing all conflicts
+        const conflicts = [];
+        const newStart = timeToMinutes(newEntry.start);
+        const newEnd = timeToMinutes(newEntry.end);
+
+        if (newEnd <= newStart) { // invalid time
+            conflicts.push("INVALID TIME RANGE: End time must be after start time.");
+            return conflicts.join("\n");
+        }
+
+        window.schedules.forEach(existing => {
+            if (existing.firebaseKey === ignoreKey) return;
+            if (existing.day !== newEntry.day) return;
+            const exStart = timeToMinutes(existing.start);
+            const exEnd = timeToMinutes(existing.end);
+            const overlapping = (newStart < exEnd && newEnd > exStart);
+            if (!overlapping) return;
+
+            // Teacher conflict
+            if (existing.teacher && newEntry.teacher && existing.teacher === newEntry.teacher) {
+                conflicts.push(`Instructor Conflict:
+  - Instructor: ${existing.teacher}
+  - Existing: ${existing.subject} (${existing.section}) at ${existing.start} - ${existing.end}
+  - New: ${newEntry.subject} (${newEntry.section}) at ${newEntry.start} - ${newEntry.end}`);
             }
-            return false;
+
+            // Room conflict
+            if (existing.room && newEntry.room && existing.room === newEntry.room) {
+                conflicts.push(`Room Conflict:
+  - Room: ${existing.room}
+  - Existing: ${existing.subject} (${existing.section}) at ${existing.start} - ${existing.end}
+  - New: ${newEntry.subject} (${newEntry.section}) at ${newEntry.start} - ${newEntry.end}`);
+            }
+
+            // Section conflict
+            if (existing.section && newEntry.section && existing.section === newEntry.section) {
+                conflicts.push(`Section Conflict:
+  - Section: ${existing.section}
+  - Existing: ${existing.subject} by ${existing.teacher} at ${existing.start} - ${existing.end}
+  - New: ${newEntry.subject} by ${newEntry.teacher} at ${newEntry.start} - ${newEntry.end}`);
+            }
         });
-        return conflictFound;
+
+        return conflicts.length ? conflicts.join("\n\n") : null;
     }
 
     window.addSchedule = () => {
@@ -431,7 +475,7 @@
         };
         if(!entry.subject || !entry.section) return alert("Fill Subject & Section");
         const errorMsg = checkConflict(entry, key || null);
-        if(errorMsg) return alert("❌ CONFLICT\n" + errorMsg);
+        if(errorMsg) return alert("❌ CONFLICT(S) FOUND\n\n" + errorMsg);
         if(key) update(ref(db, `schedules/${key}`), entry);
         else push(scheduleRef, entry);
         clearInputs();
@@ -472,15 +516,17 @@
         const key = e.dataTransfer.getData("text");
         const entry = window.schedules.find(s => s.firebaseKey === key);
         if(!entry) return;
-        const [sh, sm] = entry.start.split(':').map(Number);
-        const [eh, em] = entry.end.split(':').map(Number);
-        const duration = (eh * 60 + em) - (sh * 60 + sm);
         const [nh, nm] = start.split(':').map(Number);
-        const totalEnd = (nh * 60 + nm) + duration;
-        const end = `${Math.floor(totalEnd/60).toString().padStart(2,'0')}:${(totalEnd%60).toString().padStart(2,'0')}`;
-        const updatedEntry = { ...entry, day, start, end };
-        if(checkConflict(updatedEntry, key)) return alert("❌ CONFLICT AT NEW POSITION");
-        update(ref(db, `schedules/${key}`), { day, start, end });
+        const duration = timeToMinutes(entry.end) - timeToMinutes(entry.start);
+        const newStartMin = nh * 60 + nm;
+        const newEndMin = newStartMin + duration;
+        const endHours = Math.floor(newEndMin/60).toString().padStart(2,'0');
+        const endMins = (newEndMin%60).toString().padStart(2,'0');
+        const endTime = `${endHours}:${endMins}`;
+        const updatedEntry = { ...entry, day, start: start, end: endTime };
+        const errorMsg = checkConflict(updatedEntry, key);
+        if(errorMsg) return alert("❌ CONFLICT AT NEW POSITION\n\n" + errorMsg);
+        update(ref(db, `schedules/${key}`), { day, start: start, end: endTime });
     };
 
     // --- RENDERING ---
@@ -488,7 +534,7 @@
         const m = document.getElementById('modeSelect').value;
         const sel = document.getElementById('filterSelector');
         const prev = sel.value;
-        const vals = [...new Set(window.schedules.map(s => s[m]))].sort();
+        const vals = [...new Set(window.schedules.map(s => (s[m] || '').trim()))].filter(v => v).sort();
         sel.innerHTML = vals.map(v => `<option value="${v}">${v}</option>`).join('');
         if (!forceReset && prev && vals.includes(prev)) sel.value = prev;
         renderMatrix();
@@ -497,7 +543,7 @@
     window.updateDataLists = () => {
         ['subject', 'section', 'teacher', 'room'].forEach(f => {
             const list = document.getElementById(`${f}List`);
-            const vals = [...new Set(window.schedules.map(s => s[f]))].sort();
+            const vals = [...new Set(window.schedules.map(s => s[f]))].filter(v => v).sort();
             list.innerHTML = vals.map(v => `<option value="${v}">`).join('');
         });
     };
@@ -510,23 +556,35 @@
         body.innerHTML = '';
         if(!filterVal) return;
         const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+
+        // Create hourly slots from 7:00 - 19:00 (7am - 7pm); previous code used 7..18 inclusive; keep same range but show full hour ranges
         for (let h = 7; h <= 18; h++) {
             let tr = document.createElement('tr');
-            let hourStr = h.toString().padStart(2, '0') + ":00";
-            let h12 = h % 12 || 12;
-            tr.innerHTML = `<td class="time-col">${h12}:00 ${h >= 12 ? 'PM' : 'AM'}</td>`;
+            let slotStart = `${h.toString().padStart(2,'0')}:00`;
+            let slotEnd = `${(h+1).toString().padStart(2,'0')}:00`;
+            tr.innerHTML = `<td class="time-col">${formatHourRange(h)}</td>`;
             days.forEach(day => {
                 let td = document.createElement('td');
                 td.setAttribute('ondragover', 'handleDragOver(event)');
-                td.setAttribute('ondrop', `handleDrop(event, '${day}', '${hourStr}')`);
-                window.schedules.filter(s => s[mode] === filterVal && s.day === day && hourStr >= s.start && hourStr < s.end).forEach(item => {
-                    let div = document.createElement('div');
-                    div.className = 'slot-box';
-                    div.draggable = (currentUserRole === 'operator');
-                    div.setAttribute('ondragstart', `handleDragStart(event, '${item.firebaseKey}')`);
-                    let info1 = (mode === "section") ? item.teacher : item.section;
-                    div.innerHTML = `<strong>${item.subject}</strong><span>${info1}</span>`;
-                    td.appendChild(div);
+                td.setAttribute('ondrop', `handleDrop(event, '${day}', '${slotStart}')`);
+                // Find schedules that overlap this slot and match filter
+                const slotStartMin = timeToMinutes(slotStart);
+                const slotEndMin = timeToMinutes(slotEnd);
+                window.schedules.filter(s => (s[mode] || '') === filterVal && s.day === day).forEach(item => {
+                    const itemStartMin = timeToMinutes(item.start);
+                    const itemEndMin = timeToMinutes(item.end);
+                    const overlapsSlot = (slotStartMin < itemEndMin && slotEndMin > itemStartMin);
+                    if (overlapsSlot) {
+                        let div = document.createElement('div');
+                        div.className = 'slot-box';
+                        div.draggable = (currentUserRole === 'operator');
+                        div.setAttribute('ondragstart', `handleDragStart(event, '${item.firebaseKey}')`);
+                        let info1 = (mode === "section") ? item.teacher : item.section;
+                        // Show time segment inside the slot to make overlapping entries clearer
+                        let displayTime = `${item.start} - ${item.end}`;
+                        div.innerHTML = `<strong>${item.subject}</strong><span style="font-weight:600">${info1} • ${displayTime}</span>`;
+                        td.appendChild(div);
+                    }
                 });
                 tr.appendChild(td);
             });
@@ -535,19 +593,22 @@
     };
 
     function renderManageTable() {
-        document.getElementById('manageBody').innerHTML = window.schedules.map(s => `
+        document.getElementById('manageBody').innerHTML = window.schedules.map(s => {
+            const actionsClass = currentUserRole === 'viewer' ? 'hidden' : '';
+            return `
             <tr>
-                <td><b>${s.day.substring(0,3)}</b></td>
+                <td><b>${s.day ? s.day.substring(0,3) : ''}</b></td>
                 <td>${s.start}-${s.end}</td>
                 <td style="color:#2563eb; font-weight:600">${s.subject}</td>
                 <td>${s.section}</td>
                 <td>${s.teacher}</td>
                 <td>${s.room}</td>
-                <td class="${currentUserRole === 'viewer' ? 'hidden' : ''}" style="text-align: center;">
+                <td class="${actionsClass}" style="text-align: center;">
                     <button onclick="editEntry('${s.firebaseKey}')" class="btn-edit"><i class="fa-solid fa-pen"></i></button>
                     <button onclick="deleteEntry('${s.firebaseKey}')" class="btn-delete"><i class="fa-solid fa-trash"></i></button>
                 </td>
-            </tr>`).join('');
+            </tr>`;
+        }).join('');
     }
 
     // --- EXPORTS ---
@@ -559,7 +620,10 @@
         } else {
             const { jsPDF } = window.jspdf;
             const pdf = new jsPDF('l', 'mm', 'a4');
-            pdf.addImage(img, 'PNG', 10, 10, 277, 0);
+            const imgProps = pdf.getImageProperties(img);
+            const pdfWidth = pdf.internal.pageSize.getWidth() - 20;
+            const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+            pdf.addImage(img, 'PNG', 10, 10, pdfWidth, pdfHeight);
             pdf.save('schedule.pdf');
         }
     };
