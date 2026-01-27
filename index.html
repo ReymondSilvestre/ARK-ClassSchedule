@@ -317,7 +317,7 @@
     }
 
     // ────────────────────────────────────────────────
-    // ADMIN DASHBOARD (unchanged)
+    // ADMIN DASHBOARD
     // ────────────────────────────────────────────────
     function setupAdminDashboard() {
         onValue(usersRef, (snapshot) => {
@@ -365,7 +365,7 @@
     };
 
     // ────────────────────────────────────────────────
-    // AUTH TOGGLE & LOGIN/REGISTER
+    // AUTH TOGGLE & HANDLER
     // ────────────────────────────────────────────────
     window.toggleAuthMode = () => {
         isLoginMode = !isLoginMode;
@@ -410,7 +410,7 @@
     window.handleLogout = () => signOut(auth);
 
     // ────────────────────────────────────────────────
-    // SCHEDULE & CONFLICT LOGIC
+    // SCHEDULE LOGIC + LIMIT CHECK
     // ────────────────────────────────────────────────
     function loadDatabase() {
         onValue(scheduleRef, (snapshot) => {
@@ -421,7 +421,7 @@
             updateDataLists();
             renderManageTable();
             renderMatrix();
-            updateTeacherStats();           // ← important: refresh stats after data change
+            updateTeacherStats();  // Refresh stats on any data change
         });
     }
 
@@ -520,7 +520,6 @@
     window.deleteEntry = (k) => { if (confirm("Delete this entry?")) remove(ref(db, `schedules/${k}`)); };
     window.resetDatabase = () => { if (confirm("Reset ALL schedules?")) set(scheduleRef, null); };
 
-    // Drag & Drop (unchanged)
     window.handleDragStart = (e, k) => {
         if (currentUserRole !== 'operator') e.preventDefault();
         else e.dataTransfer.setData("text", k);
@@ -548,7 +547,7 @@
     };
 
     // ────────────────────────────────────────────────
-    // RENDERING & STATS
+    // RENDERING & STATS (FIXED WITH SORTED DAYS)
     // ────────────────────────────────────────────────
     window.updateFilterList = (forceReset = false) => {
         const mode = document.getElementById('modeSelect').value;
@@ -562,7 +561,7 @@
         if (!forceReset && prev && uniqueVals.includes(prev)) sel.value = prev;
 
         renderMatrix();
-        updateTeacherStats();           // Always refresh stats when filter changes
+        updateTeacherStats();
     };
 
     function updateTeacherStats() {
@@ -577,9 +576,15 @@
 
         const { totalH, daily } = getTeacherTotalAndDaily(teacher);
 
-        let dailyText = Object.entries(daily)
-            .map(([d, h]) => `${d}: ${h.toFixed(1)}h`)
-            .join(" • ");
+        const dayOrder = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+        const sortedDays = dayOrder.filter(day => daily[day] !== undefined && daily[day] > 0);
+
+        let dailyText = '';
+        if (sortedDays.length > 0) {
+            dailyText = sortedDays.map(day => `${day}: ${daily[day].toFixed(1)}h`).join(" • ");
+        } else {
+            dailyText = 'No assignments';
+        }
 
         statsEl.innerHTML = `Total: <strong>${totalH.toFixed(1)} hrs</strong> (${dailyText})`;
         statsEl.classList.remove('hidden');
@@ -685,7 +690,7 @@
     });
 
     // ────────────────────────────────────────────────
-    // EXPORTS (unchanged)
+    // EXPORTS
     // ────────────────────────────────────────────────
     window.downloadFullMatrix = async (type) => {
         const canvas = await html2canvas(document.getElementById('captureArea'), { scale: 2 });
