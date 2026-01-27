@@ -44,15 +44,13 @@
         .hidden { display: none !important; }
         .btn-delete { color: #ef4444; background: none; border: none; cursor: pointer; padding: 4px; }
         .btn-edit { color: #3b82f6; background: none; border: none; cursor: pointer; padding: 4px; margin-right: 5px; }
-        #teacherStats { font-size: 12px; font-weight: 700; color: #1e293b; margin-left: 15px; background: #e0f2fe; padding: 6px 12px; border-radius: 6px; border: 1px solid #3b82f6; }
+        #teacherStats { font-size: 12px; font-weight: 700; color: #1e293b; background: #e0f2fe; padding: 6px 12px; border-radius: 6px; border: 1px solid #3b82f6; white-space: nowrap; }
         #teacherStats strong { color: #dc2626; }
+        .filter-controls { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 12px; }
         /* Admin Styles */
         #adminPanel { background: #fff1f2; border: 2px solid #fda4af; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
         .admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         @media (max-width: 768px) { .admin-grid { grid-template-columns: 1fr; } }
-        .role-badge { padding: 2px 6px; border-radius: 4px; font-size: 9px; font-weight: bold; text-transform: uppercase; }
-        .badge-pending { background: #fef3c7; color: #92400e; }
-        .badge-approved { background: #dcfce7; color: #166534; }
         /* Search box */
         #searchBox { padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 6px; width: 320px; font-size: 13px; }
         #clearSearchBtn { padding: 6px 10px; border-radius: 6px; font-size: 12px; }
@@ -142,14 +140,14 @@
         </div>
     </div>
 
-    <div style="margin-bottom: 10px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+    <div class="filter-controls">
         <span style="font-weight: 800; font-size: 10px; color: #64748b;">VIEW:</span>
         <select id="modeSelect" onchange="updateFilterList(true)" style="padding: 4px; font-size: 11px; border-radius: 4px; border: 1px solid #cbd5e1;">
             <option value="section">Section</option>
             <option value="teacher">Instructor</option>
             <option value="room">Room</option>
         </select>
-        <select id="filterSelector" onchange="renderMatrix()" style="padding: 4px; font-size: 11px; width: 200px; border: 2px solid #3b82f6; border-radius: 4px;"></select>
+        <select id="filterSelector" onchange="renderMatrix(); updateTeacherStats();" style="padding: 4px; font-size: 11px; width: 220px; border: 2px solid #3b82f6; border-radius: 4px;"></select>
         <span id="teacherStats" class="hidden"></span>
     </div>
 
@@ -222,7 +220,6 @@
     // ────────────────────────────────────────────────
     // UTILITIES
     // ────────────────────────────────────────────────
-
     function timeToMinutes(t) {
         if (!t) return 0;
         const [hh, mm] = t.split(':').map(Number);
@@ -258,10 +255,22 @@
         return total;
     }
 
-    // ────────────────────────────────────────────────
-    // FORGOT PASSWORD & AUTH
-    // ────────────────────────────────────────────────
+    function getTeacherTotalAndDaily(teacher) {
+        let totalH = 0;
+        let daily = {};
+        window.schedules.forEach(s => {
+            if (s.teacher === teacher) {
+                const h = (timeToMinutes(s.end) - timeToMinutes(s.start)) / 60;
+                totalH += h;
+                daily[s.day] = (daily[s.day] || 0) + h;
+            }
+        });
+        return { totalH, daily };
+    }
 
+    // ────────────────────────────────────────────────
+    // AUTH & UI INIT
+    // ────────────────────────────────────────────────
     window.handleForgotPassword = () => {
         const email = document.getElementById('authEmail').value;
         const errorMsg = document.getElementById('authError');
@@ -308,9 +317,8 @@
     }
 
     // ────────────────────────────────────────────────
-    // ADMIN DASHBOARD
+    // ADMIN DASHBOARD (unchanged)
     // ────────────────────────────────────────────────
-
     function setupAdminDashboard() {
         onValue(usersRef, (snapshot) => {
             const users = snapshot.val() || {};
@@ -318,10 +326,8 @@
             const allUsersBody = document.getElementById('allUsersBody');
             pendingBody.innerHTML = '';
             allUsersBody.innerHTML = '';
-
             Object.entries(users).forEach(([uid, val]) => {
                 if (val.email === ADMIN_EMAIL) return;
-
                 if (val.role === 'operator' && val.status === 'pending') {
                     pendingBody.innerHTML += `
                         <tr>
@@ -332,7 +338,6 @@
                             </td>
                         </tr>`;
                 }
-
                 allUsersBody.innerHTML += `
                     <tr>
                         <td style="font-size:10px;">${val.email}</td>
@@ -360,9 +365,8 @@
     };
 
     // ────────────────────────────────────────────────
-    // AUTH TOGGLE & HANDLER
+    // AUTH TOGGLE & LOGIN/REGISTER
     // ────────────────────────────────────────────────
-
     window.toggleAuthMode = () => {
         isLoginMode = !isLoginMode;
         document.getElementById('authTitle').innerText = isLoginMode ? "ARK LOGIN" : "CREATE ACCOUNT";
@@ -406,9 +410,8 @@
     window.handleLogout = () => signOut(auth);
 
     // ────────────────────────────────────────────────
-    // SCHEDULE LOGIC + NEW LIMIT CHECK
+    // SCHEDULE & CONFLICT LOGIC
     // ────────────────────────────────────────────────
-
     function loadDatabase() {
         onValue(scheduleRef, (snapshot) => {
             window.schedules = snapshot.val()
@@ -418,6 +421,7 @@
             updateDataLists();
             renderManageTable();
             renderMatrix();
+            updateTeacherStats();           // ← important: refresh stats after data change
         });
     }
 
@@ -431,15 +435,14 @@
             conflicts.push("INVALID TIME: End time must be after start time.");
         }
 
-        // Teacher daily hour limit check
         if (newEntry.teacher) {
             const currentDaily = getDailyTeacherHours(newEntry.teacher, newEntry.day, ignoreKey);
             const wouldBeTotal = currentDaily + durationHours;
             if (wouldBeTotal > MAX_DAILY_HOURS_PER_TEACHER) {
                 conflicts.push(
                     `TEACHER DAILY LIMIT EXCEEDED (max 8 hrs/day)\n` +
-                    `  → ${newEntry.teacher} already has ${currentDaily.toFixed(1)} hrs on ${newEntry.day}\n` +
-                    `  → This adds ${durationHours.toFixed(1)} hrs → Total would be ${wouldBeTotal.toFixed(1)} hrs`
+                    ` → ${newEntry.teacher} already has ${currentDaily.toFixed(1)} hrs on ${newEntry.day}\n` +
+                    ` → This adds ${durationHours.toFixed(1)} hrs → Total would be ${wouldBeTotal.toFixed(1)} hrs`
                 );
             }
         }
@@ -447,19 +450,18 @@
         window.schedules.forEach(ex => {
             if (ex.firebaseKey === ignoreKey) return;
             if (ex.day !== newEntry.day) return;
-
             const exStart = timeToMinutes(ex.start);
             const exEnd = timeToMinutes(ex.end);
             if (newStartMin >= exEnd || newEndMin <= exStart) return;
 
             if (ex.teacher && newEntry.teacher && ex.teacher === newEntry.teacher) {
-                conflicts.push(`Instructor Conflict:\n  ${ex.subject} (${ex.section}) ${ex.start}-${ex.end}\n  vs\n  ${newEntry.subject} (${newEntry.section}) ${newEntry.start}-${newEntry.end}`);
+                conflicts.push(`Instructor Conflict:\n ${ex.subject} (${ex.section}) ${ex.start}-${ex.end}\n vs\n ${newEntry.subject} (${newEntry.section}) ${newEntry.start}-${newEntry.end}`);
             }
             if (ex.room && newEntry.room && ex.room === newEntry.room) {
-                conflicts.push(`Room Conflict:\n  ${ex.subject} (${ex.section}) ${ex.start}-${ex.end}\n  vs\n  ${newEntry.subject} (${newEntry.section}) ${newEntry.start}-${newEntry.end}`);
+                conflicts.push(`Room Conflict:\n ${ex.subject} (${ex.section}) ${ex.start}-${ex.end}\n vs\n ${newEntry.subject} (${newEntry.section}) ${newEntry.start}-${newEntry.end}`);
             }
             if (ex.section && newEntry.section && ex.section === newEntry.section) {
-                conflicts.push(`Section Conflict:\n  ${ex.subject} by ${ex.teacher} ${ex.start}-${ex.end}\n  vs\n  ${newEntry.subject} by ${newEntry.teacher} ${newEntry.start}-${newEntry.end}`);
+                conflicts.push(`Section Conflict:\n ${ex.subject} by ${ex.teacher} ${ex.start}-${ex.end}\n vs\n ${newEntry.subject} by ${newEntry.teacher} ${newEntry.start}-${newEntry.end}`);
             }
         });
 
@@ -518,10 +520,7 @@
     window.deleteEntry = (k) => { if (confirm("Delete this entry?")) remove(ref(db, `schedules/${k}`)); };
     window.resetDatabase = () => { if (confirm("Reset ALL schedules?")) set(scheduleRef, null); };
 
-    // ────────────────────────────────────────────────
-    // DRAG & DROP
-    // ────────────────────────────────────────────────
-
+    // Drag & Drop (unchanged)
     window.handleDragStart = (e, k) => {
         if (currentUserRole !== 'operator') e.preventDefault();
         else e.dataTransfer.setData("text", k);
@@ -549,42 +548,42 @@
     };
 
     // ────────────────────────────────────────────────
-    // RENDERING
+    // RENDERING & STATS
     // ────────────────────────────────────────────────
-
     window.updateFilterList = (forceReset = false) => {
         const mode = document.getElementById('modeSelect').value;
         const sel = document.getElementById('filterSelector');
         const prev = sel.value;
+
         const uniqueVals = [...new Set(window.schedules.map(s => (s[mode] || '').trim()))]
             .filter(v => v).sort();
-        
+
         sel.innerHTML = uniqueVals.map(v => `<option value="${v}">${v}</option>`).join('');
         if (!forceReset && prev && uniqueVals.includes(prev)) sel.value = prev;
 
-        // Show teacher stats if in teacher mode
+        renderMatrix();
+        updateTeacherStats();           // Always refresh stats when filter changes
+    };
+
+    function updateTeacherStats() {
+        const mode = document.getElementById('modeSelect').value;
+        const teacher = document.getElementById('filterSelector').value;
         const statsEl = document.getElementById('teacherStats');
-        if (mode === 'teacher' && sel.value) {
-            let totalH = 0;
-            let daily = {};
-            window.schedules.forEach(s => {
-                if (s.teacher === sel.value) {
-                    const h = (timeToMinutes(s.end) - timeToMinutes(s.start)) / 60;
-                    totalH += h;
-                    daily[s.day] = (daily[s.day] || 0) + h;
-                }
-            });
-            let dailyText = Object.entries(daily)
-                .map(([d, h]) => `${d}: ${h.toFixed(1)}h`)
-                .join(" | ");
-            statsEl.innerHTML = `Total: <strong>${totalH.toFixed(1)} hrs</strong>  (${dailyText})`;
-            statsEl.classList.remove('hidden');
-        } else {
+
+        if (mode !== 'teacher' || !teacher) {
             statsEl.classList.add('hidden');
+            return;
         }
 
-        renderMatrix();
-    };
+        const { totalH, daily } = getTeacherTotalAndDaily(teacher);
+
+        let dailyText = Object.entries(daily)
+            .map(([d, h]) => `${d}: ${h.toFixed(1)}h`)
+            .join(" • ");
+
+        statsEl.innerHTML = `Total: <strong>${totalH.toFixed(1)} hrs</strong> (${dailyText})`;
+        statsEl.classList.remove('hidden');
+    }
 
     window.updateDataLists = () => {
         ['subject','section','teacher','room'].forEach(f => {
@@ -686,9 +685,8 @@
     });
 
     // ────────────────────────────────────────────────
-    // EXPORTS
+    // EXPORTS (unchanged)
     // ────────────────────────────────────────────────
-
     window.downloadFullMatrix = async (type) => {
         const canvas = await html2canvas(document.getElementById('captureArea'), { scale: 2 });
         const img = canvas.toDataURL('image/png');
