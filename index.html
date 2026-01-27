@@ -257,12 +257,12 @@
 
     function getTeacherTotalAndDaily(teacher) {
         let totalH = 0;
-        let daily = {};
+        let daily = { Monday:0, Tuesday:0, Wednesday:0, Thursday:0, Friday:0, Saturday:0, Sunday:0 };
         window.schedules.forEach(s => {
             if (s.teacher === teacher) {
                 const h = (timeToMinutes(s.end) - timeToMinutes(s.start)) / 60;
                 totalH += h;
-                daily[s.day] = (daily[s.day] || 0) + h;
+                if (daily[s.day] !== undefined) daily[s.day] += h;
             }
         });
         return { totalH, daily };
@@ -317,7 +317,7 @@
     }
 
     // ────────────────────────────────────────────────
-    // ADMIN DASHBOARD
+    // ADMIN DASHBOARD (unchanged)
     // ────────────────────────────────────────────────
     function setupAdminDashboard() {
         onValue(usersRef, (snapshot) => {
@@ -410,7 +410,7 @@
     window.handleLogout = () => signOut(auth);
 
     // ────────────────────────────────────────────────
-    // SCHEDULE LOGIC + LIMIT CHECK
+    // SCHEDULE & CONFLICT LOGIC
     // ────────────────────────────────────────────────
     function loadDatabase() {
         onValue(scheduleRef, (snapshot) => {
@@ -421,7 +421,7 @@
             updateDataLists();
             renderManageTable();
             renderMatrix();
-            updateTeacherStats();  // Refresh stats on any data change
+            updateTeacherStats();
         });
     }
 
@@ -547,21 +547,25 @@
     };
 
     // ────────────────────────────────────────────────
-    // RENDERING & STATS (FIXED WITH SORTED DAYS)
+    // RENDERING & STATS – FIXED VERSION
     // ────────────────────────────────────────────────
     window.updateFilterList = (forceReset = false) => {
         const mode = document.getElementById('modeSelect').value;
         const sel = document.getElementById('filterSelector');
-        const prev = sel.value;
+
+        // IMPORTANT FIX: Reset filter value when mode changes
+        if (forceReset) {
+            sel.value = '';
+        }
 
         const uniqueVals = [...new Set(window.schedules.map(s => (s[mode] || '').trim()))]
             .filter(v => v).sort();
 
-        sel.innerHTML = uniqueVals.map(v => `<option value="${v}">${v}</option>`).join('');
-        if (!forceReset && prev && uniqueVals.includes(prev)) sel.value = prev;
+        sel.innerHTML = '<option value="">Select ' + mode + '...</option>' + 
+                        uniqueVals.map(v => `<option value="${v}">${v}</option>`).join('');
 
         renderMatrix();
-        updateTeacherStats();
+        updateTeacherStats();   // Refresh stats immediately after mode change
     };
 
     function updateTeacherStats() {
@@ -569,22 +573,25 @@
         const teacher = document.getElementById('filterSelector').value;
         const statsEl = document.getElementById('teacherStats');
 
-        if (mode !== 'teacher' || !teacher) {
+        if (mode !== 'teacher') {
             statsEl.classList.add('hidden');
+            return;
+        }
+
+        if (!teacher) {
+            statsEl.innerHTML = 'Select a teacher to view hours';
+            statsEl.classList.remove('hidden');
             return;
         }
 
         const { totalH, daily } = getTeacherTotalAndDaily(teacher);
 
         const dayOrder = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-        const sortedDays = dayOrder.filter(day => daily[day] !== undefined && daily[day] > 0);
+        const dailyParts = dayOrder
+            .filter(day => daily[day] > 0)
+            .map(day => `${day}: ${daily[day].toFixed(1)}h`);
 
-        let dailyText = '';
-        if (sortedDays.length > 0) {
-            dailyText = sortedDays.map(day => `${day}: ${daily[day].toFixed(1)}h`).join(" • ");
-        } else {
-            dailyText = 'No assignments';
-        }
+        const dailyText = dailyParts.length > 0 ? dailyParts.join(" • ") : 'No classes assigned';
 
         statsEl.innerHTML = `Total: <strong>${totalH.toFixed(1)} hrs</strong> (${dailyText})`;
         statsEl.classList.remove('hidden');
