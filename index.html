@@ -39,6 +39,96 @@
         .input-group label { display: block; font-size: 10px; font-weight: 800; color: #64748b; text-transform: uppercase; margin-bottom: 4px; }
         .input-group input, .input-group select { width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; height: 36px; box-sizing: border-box; }
 
+        /* Hours Summary Box - Coral/Light Red Theme */
+        .hours-summary { 
+            background: linear-gradient(135deg, #ff7e79 0%, #ff6b6b 50%, #ff5252 100%); 
+            color: white; 
+            padding: 20px; 
+            border-radius: 12px; 
+            margin-bottom: 15px; 
+            box-shadow: 0 8px 16px rgba(255, 107, 107, 0.25); 
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .hours-summary.over-limit { 
+            background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%); 
+            animation: pulse 2s ease-in-out infinite; 
+            box-shadow: 0 8px 20px rgba(220, 38, 38, 0.4);
+        }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.85; } }
+        
+        .hours-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 12px; margin-top: 15px; }
+        .day-hours { 
+            background: rgba(255,255,255,0.25); 
+            padding: 12px 8px; 
+            border-radius: 8px; 
+            text-align: center; 
+            backdrop-filter: blur(10px); 
+            position: relative;
+            border: 1px solid rgba(255,255,255,0.3);
+            transition: all 0.3s ease;
+        }
+        .day-hours:hover {
+            background: rgba(255,255,255,0.35);
+            transform: translateY(-2px);
+        }
+        .day-hours.over-limit { 
+            background: rgba(255,255,255,0.4); 
+            border: 2px solid rgba(255,255,255,0.9);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .day-hours .day-name { font-size: 9px; font-weight: 800; text-transform: uppercase; opacity: 0.95; letter-spacing: 0.5px; }
+        .day-hours .hours-value { font-size: 24px; font-weight: 800; margin-top: 4px; text-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .day-hours .limit-badge { 
+            position: absolute; 
+            top: -8px; 
+            right: -8px; 
+            background: #fef3c7; 
+            color: #92400e; 
+            font-size: 8px; 
+            padding: 3px 7px; 
+            border-radius: 10px; 
+            font-weight: 800;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+        }
+        .day-hours .over-badge { 
+            background: #fee2e2; 
+            color: #991b1b;
+            animation: badgePulse 1.5s ease-in-out infinite;
+        }
+        @keyframes badgePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .total-hours { 
+            background: rgba(255,255,255,0.35); 
+            padding: 16px; 
+            border-radius: 10px; 
+            text-align: center; 
+            margin-top: 15px; 
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.4);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .total-hours .label { font-size: 11px; font-weight: 800; opacity: 0.95; letter-spacing: 1px; }
+        .total-hours .value { 
+            font-size: 36px; 
+            font-weight: 900; 
+            margin-top: 6px; 
+            text-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            letter-spacing: -1px;
+        }
+        .total-hours .limit-info { 
+            font-size: 10px; 
+            margin-top: 8px; 
+            opacity: 0.9; 
+            font-weight: 600;
+            background: rgba(255,255,255,0.2);
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+        }
+
         .matrix-table { width: 100%; border-collapse: collapse; table-layout: fixed; border: 1px solid #cbd5e1; background: #fff; }
         .matrix-table th, .matrix-table td { border: 1px solid #e2e8f0; padding: 2px; text-align: center; height: var(--row-height); font-size: 11px; vertical-align: top; }
         .matrix-table th { background: #334155; color: white; height: 30px; font-size: 10px; }
@@ -67,6 +157,13 @@
         /* Search box */
         #searchBox { padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 6px; width: 320px; font-size: 13px; }
         #clearSearchBtn { padding: 6px 10px; border-radius: 6px; font-size: 12px; }
+
+        /* Warning Alert Box */
+        .warning-alert { background: #fef3c7; border: 2px solid #f59e0b; border-radius: 8px; padding: 12px; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        .warning-alert i { color: #f59e0b; font-size: 20px; }
+        .warning-alert .content { flex: 1; }
+        .warning-alert .title { font-weight: 800; font-size: 11px; color: #92400e; margin-bottom: 3px; }
+        .warning-alert .message { font-size: 10px; color: #78350f; }
     </style>
 </head>
 <body>
@@ -162,6 +259,31 @@
         </div>
     </div>
 
+    <!-- Warning Alert for Over-Limit Teachers -->
+    <div id="warningAlert" class="warning-alert hidden">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        <div class="content">
+            <div class="title">⚠️ DAILY HOUR LIMIT EXCEEDED</div>
+            <div class="message" id="warningMessage"></div>
+        </div>
+    </div>
+
+    <!-- Hours Summary (only shown for teacher view) -->
+    <div id="hoursSummary" class="hours-summary hidden">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h3 style="margin: 0; font-size: 15px; font-weight: 900; text-shadow: 0 2px 4px rgba(0,0,0,0.1);"><i class="fa-solid fa-clock"></i> TEACHING HOURS</h3>
+                <p style="margin: 3px 0 0 0; font-size: 11px; opacity: 0.95; font-weight: 600;" id="teacherNameDisplay"></p>
+            </div>
+        </div>
+        <div class="hours-grid" id="hoursGrid"></div>
+        <div class="total-hours">
+            <div class="label">TOTAL WEEKLY HOURS</div>
+            <div class="value" id="totalWeeklyHours">0</div>
+            <div class="limit-info">📚 Daily Limit: 8 hours per day</div>
+        </div>
+    </div>
+
     <div style="margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
         <span style="font-weight: 800; font-size: 10px; color: #64748b;">VIEW:</span>
         <select id="modeSelect" onchange="updateFilterList(true)" style="padding: 4px; font-size: 11px; border-radius: 4px; border: 1px solid #cbd5e1;">
@@ -236,14 +358,16 @@
     let isLoginMode = true;
     let currentUserRole = 'viewer';
     const ADMIN_EMAIL = "reymonde.silvestre@gmail.com";
+    const DAILY_HOUR_LIMIT = 8;
     window.schedules = [];
 
-    // --- UTILITIES ---
-    function timeToMinutes(t) { // "HH:MM" -> minutes from 00:00
+    // --- TIME UTILITIES (AM/PM Format) ---
+    function timeToMinutes(t) {
         if (!t) return 0;
         const [hh, mm] = t.split(':').map(Number);
         return hh * 60 + mm;
     }
+
     function minutesTo12Hr(mins) {
         const h = Math.floor(mins / 60);
         const m = mins % 60;
@@ -251,10 +375,23 @@
         const h12 = h % 12 || 12;
         return `${h12}:${m.toString().padStart(2,'0')} ${ampm}`;
     }
+
+    function militaryToAMPM(militaryTime) {
+        if (!militaryTime) return '';
+        const mins = timeToMinutes(militaryTime);
+        return minutesTo12Hr(mins);
+    }
+
     function formatHourRange(h) {
         const startMin = h * 60;
         const endMin = (h + 1) * 60;
         return `${minutesTo12Hr(startMin)} - ${minutesTo12Hr(endMin)}`;
+    }
+
+    function calculateHours(start, end) {
+        const startMin = timeToMinutes(start);
+        const endMin = timeToMinutes(end);
+        return (endMin - startMin) / 60;
     }
 
     // --- FORGOT PASSWORD ---
@@ -317,10 +454,8 @@
             if (!users) return;
 
             Object.entries(users).forEach(([uid, val]) => {
-                // Skip admin themselves
                 if (val.email === ADMIN_EMAIL) return;
 
-                // Pending Table
                 if (val.role === 'operator' && val.status === 'pending') {
                     pendingBody.innerHTML += `
                         <tr>
@@ -332,7 +467,6 @@
                         </tr>`;
                 }
 
-                // All Users Table
                 allUsersBody.innerHTML += `
                     <tr>
                         <td style="font-size:10px;">${val.email}</td>
@@ -354,7 +488,7 @@
     window.rejectUser = (uid) => { if(confirm("Permanently delete this user access?")) remove(ref(db, `users/${uid}`)); };
     window.changeUserRole = (uid, newRole) => {
         const updateData = { role: newRole };
-        if(newRole === 'operator') updateData.status = 'approved'; // Auto approve if admin changes it
+        if(newRole === 'operator') updateData.status = 'approved';
         update(ref(db, `users/${uid}`), updateData);
         alert("Role updated to " + newRole);
     };
@@ -423,18 +557,64 @@
             updateDataLists();
             renderManageTable();
             renderMatrix();
+            checkAllTeachersHourLimits();
         });
     }
 
+    // Check if adding this entry would exceed daily limit for the teacher
+    function checkDailyHourLimit(newEntry, ignoreKey = null) {
+        if (!newEntry.teacher) return null;
+        
+        const teacherSchedules = window.schedules.filter(s => 
+            s.teacher === newEntry.teacher && 
+            s.day === newEntry.day &&
+            s.firebaseKey !== ignoreKey
+        );
+
+        let totalHours = 0;
+        teacherSchedules.forEach(s => {
+            totalHours += calculateHours(s.start, s.end);
+        });
+
+        const newHours = calculateHours(newEntry.start, newEntry.end);
+        const projectedTotal = totalHours + newHours;
+
+        if (projectedTotal > DAILY_HOUR_LIMIT) {
+            return {
+                exceeded: true,
+                currentHours: totalHours,
+                newHours: newHours,
+                projectedTotal: projectedTotal,
+                overBy: projectedTotal - DAILY_HOUR_LIMIT
+            };
+        }
+
+        return null;
+    }
+
     function checkConflict(newEntry, ignoreKey = null) {
-        // Returns null if no conflict, otherwise returns a detailed string listing all conflicts
         const conflicts = [];
         const newStart = timeToMinutes(newEntry.start);
         const newEnd = timeToMinutes(newEntry.end);
 
-        if (newEnd <= newStart) { // invalid time
-            conflicts.push("INVALID TIME RANGE: End time must be after start time.");
-            return conflicts.join("\n");
+        if (newEnd <= newStart) {
+            conflicts.push("⚠️ INVALID TIME RANGE\nEnd time must be after start time.");
+            return conflicts.join("\n\n");
+        }
+
+        // Check daily hour limit
+        const hourLimitCheck = checkDailyHourLimit(newEntry, ignoreKey);
+        if (hourLimitCheck) {
+            conflicts.push(`⏰ DAILY HOUR LIMIT EXCEEDED
+Instructor: ${newEntry.teacher}
+Day: ${newEntry.day}
+
+Current Hours: ${hourLimitCheck.currentHours.toFixed(1)} hrs
+New Schedule: +${hourLimitCheck.newHours.toFixed(1)} hrs
+Projected Total: ${hourLimitCheck.projectedTotal.toFixed(1)} hrs
+
+⚠️ EXCEEDS LIMIT BY: ${hourLimitCheck.overBy.toFixed(1)} hours
+Daily limit is ${DAILY_HOUR_LIMIT} hours per day.`);
         }
 
         window.schedules.forEach(existing => {
@@ -445,28 +625,36 @@
             const overlapping = (newStart < exEnd && newEnd > exStart);
             if (!overlapping) return;
 
-            // Teacher conflict
+            const newStartAMPM = militaryToAMPM(newEntry.start);
+            const newEndAMPM = militaryToAMPM(newEntry.end);
+            const exStartAMPM = militaryToAMPM(existing.start);
+            const exEndAMPM = militaryToAMPM(existing.end);
+
             if (existing.teacher && newEntry.teacher && existing.teacher === newEntry.teacher) {
-                conflicts.push(`Instructor Conflict:
-  - Instructor: ${existing.teacher}
-  - Existing: ${existing.subject} (${existing.section}) at ${existing.start} - ${existing.end}
-  - New: ${newEntry.subject} (${newEntry.section}) at ${newEntry.start} - ${newEntry.end}`);
+                conflicts.push(`🧑‍🏫 INSTRUCTOR CONFLICT
+  Instructor: ${existing.teacher}
+  Existing: ${existing.subject} (${existing.section})
+            ${exStartAMPM} - ${exEndAMPM}
+  New: ${newEntry.subject} (${newEntry.section})
+       ${newStartAMPM} - ${newEndAMPM}`);
             }
 
-            // Room conflict
             if (existing.room && newEntry.room && existing.room === newEntry.room) {
-                conflicts.push(`Room Conflict:
-  - Room: ${existing.room}
-  - Existing: ${existing.subject} (${existing.section}) at ${existing.start} - ${existing.end}
-  - New: ${newEntry.subject} (${newEntry.section}) at ${newEntry.start} - ${newEntry.end}`);
+                conflicts.push(`🏛️ ROOM CONFLICT
+  Room: ${existing.room}
+  Existing: ${existing.subject} (${existing.section})
+            ${exStartAMPM} - ${exEndAMPM}
+  New: ${newEntry.subject} (${newEntry.section})
+       ${newStartAMPM} - ${newEndAMPM}`);
             }
 
-            // Section conflict
             if (existing.section && newEntry.section && existing.section === newEntry.section) {
-                conflicts.push(`Section Conflict:
-  - Section: ${existing.section}
-  - Existing: ${existing.subject} by ${existing.teacher} at ${existing.start} - ${existing.end}
-  - New: ${newEntry.subject} by ${newEntry.teacher} at ${newEntry.start} - ${newEntry.end}`);
+                conflicts.push(`👥 SECTION CONFLICT
+  Section: ${existing.section}
+  Existing: ${existing.subject} by ${existing.teacher}
+            ${exStartAMPM} - ${exEndAMPM}
+  New: ${newEntry.subject} by ${newEntry.teacher}
+       ${newStartAMPM} - ${newEndAMPM}`);
             }
         });
 
@@ -484,9 +672,9 @@
             start: document.getElementById('startTime').value,
             end: document.getElementById('endTime').value
         };
-        if(!entry.subject || !entry.section) return alert("Fill Subject & Section");
+        if(!entry.subject || !entry.section) return alert("Please fill in Subject & Section");
         const errorMsg = checkConflict(entry, key || null);
-        if(errorMsg) return alert("❌ CONFLICT(S) FOUND\n\n" + errorMsg);
+        if(errorMsg) return alert("❌ CONFLICT(S) DETECTED\n\n" + errorMsg);
         if(key) update(ref(db, `schedules/${key}`), entry);
         else push(scheduleRef, entry);
         clearInputs();
@@ -517,7 +705,7 @@
     };
 
     window.deleteEntry = (k) => { if(confirm("Delete this entry?")) remove(ref(db, `schedules/${k}`)); };
-    window.resetDatabase = () => { if(confirm("Reset all data?")) set(scheduleRef, null); };
+    window.resetDatabase = () => { if(confirm("⚠️ Reset all schedule data?\n\nThis action cannot be undone.")) set(scheduleRef, null); };
 
     // --- DRAG AND DROP ---
     window.handleDragStart = (e, k) => { if(currentUserRole === 'viewer') e.preventDefault(); else e.dataTransfer.setData("text", k); };
@@ -536,9 +724,107 @@
         const endTime = `${endHours}:${endMins}`;
         const updatedEntry = { ...entry, day, start: start, end: endTime };
         const errorMsg = checkConflict(updatedEntry, key);
-        if(errorMsg) return alert("❌ CONFLICT AT NEW POSITION\n\n" + errorMsg);
+        if(errorMsg) return alert("❌ CANNOT MOVE - CONFLICT DETECTED\n\n" + errorMsg);
         update(ref(db, `schedules/${key}`), { day, start: start, end: endTime });
     };
+
+    // --- CALCULATE TEACHER HOURS ---
+    function calculateTeacherHours(teacherName) {
+        const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+        const hoursPerDay = {};
+        days.forEach(d => hoursPerDay[d] = 0);
+
+        window.schedules
+            .filter(s => s.teacher === teacherName)
+            .forEach(item => {
+                const hours = calculateHours(item.start, item.end);
+                hoursPerDay[item.day] += hours;
+            });
+
+        const totalHours = Object.values(hoursPerDay).reduce((sum, h) => sum + h, 0);
+        return { hoursPerDay, totalHours };
+    }
+
+    function renderHoursSummary(teacherName) {
+        const summaryBox = document.getElementById('hoursSummary');
+        const hoursGrid = document.getElementById('hoursGrid');
+        const totalDisplay = document.getElementById('totalWeeklyHours');
+        const teacherDisplay = document.getElementById('teacherNameDisplay');
+
+        if (!teacherName) {
+            summaryBox.classList.add('hidden');
+            return;
+        }
+
+        const { hoursPerDay, totalHours } = calculateTeacherHours(teacherName);
+        const hasOverLimit = Object.values(hoursPerDay).some(h => h > DAILY_HOUR_LIMIT);
+        
+        summaryBox.classList.remove('hidden');
+        if (hasOverLimit) {
+            summaryBox.classList.add('over-limit');
+        } else {
+            summaryBox.classList.remove('over-limit');
+        }
+        
+        teacherDisplay.innerText = teacherName;
+
+        const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+        const dayAbbrev = { Monday: "MON", Tuesday: "TUE", Wednesday: "WED", Thursday: "THU", Friday: "FRI", Saturday: "SAT", Sunday: "SUN" };
+
+        hoursGrid.innerHTML = days.map(day => {
+            const hours = hoursPerDay[day];
+            const isOverLimit = hours > DAILY_HOUR_LIMIT;
+            const isAtLimit = hours === DAILY_HOUR_LIMIT;
+            let badge = '';
+            let overClass = '';
+            
+            if (isOverLimit) {
+                badge = `<span class="limit-badge over-badge">OVER</span>`;
+                overClass = ' over-limit';
+            } else if (isAtLimit) {
+                badge = `<span class="limit-badge">LIMIT</span>`;
+            }
+            
+            return `
+            <div class="day-hours${overClass}">
+                ${badge}
+                <div class="day-name">${dayAbbrev[day]}</div>
+                <div class="hours-value">${hours.toFixed(1)}</div>
+            </div>`;
+        }).join('');
+
+        totalDisplay.innerText = totalHours.toFixed(1);
+    }
+
+    // Check all teachers for hour limit violations
+    function checkAllTeachersHourLimits() {
+        const warningAlert = document.getElementById('warningAlert');
+        const warningMessage = document.getElementById('warningMessage');
+        
+        const teachers = [...new Set(window.schedules.map(s => s.teacher))].filter(t => t);
+        const violations = [];
+
+        teachers.forEach(teacher => {
+            const { hoursPerDay } = calculateTeacherHours(teacher);
+            const days = Object.entries(hoursPerDay).filter(([day, hours]) => hours > DAILY_HOUR_LIMIT);
+            
+            if (days.length > 0) {
+                days.forEach(([day, hours]) => {
+                    violations.push({ teacher, day, hours });
+                });
+            }
+        });
+
+        if (violations.length > 0) {
+            const messages = violations.map(v => 
+                `${v.teacher} on ${v.day}: ${v.hours.toFixed(1)} hours (${(v.hours - DAILY_HOUR_LIMIT).toFixed(1)}hrs over limit)`
+            );
+            warningMessage.innerHTML = messages.join('<br>');
+            warningAlert.classList.remove('hidden');
+        } else {
+            warningAlert.classList.add('hidden');
+        }
+    }
 
     // --- RENDERING ---
     window.updateFilterList = (forceReset = false) => {
@@ -565,10 +851,16 @@
         const body = document.getElementById('matrixBody');
         document.getElementById('matrixTitle').innerText = filterVal ? `${mode.toUpperCase()}: ${filterVal}` : "";
         body.innerHTML = '';
+
+        if (mode === 'teacher' && filterVal) {
+            renderHoursSummary(filterVal);
+        } else {
+            document.getElementById('hoursSummary').classList.add('hidden');
+        }
+
         if(!filterVal) return;
         const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
-        // Create hourly slots from 7:00 - 19:00 (7am - 7pm); previous code used 7..18 inclusive; keep same range but show full hour ranges
         for (let h = 7; h <= 18; h++) {
             let tr = document.createElement('tr');
             let slotStart = `${h.toString().padStart(2,'0')}:00`;
@@ -578,7 +870,6 @@
                 let td = document.createElement('td');
                 td.setAttribute('ondragover', 'handleDragOver(event)');
                 td.setAttribute('ondrop', `handleDrop(event, '${day}', '${slotStart}')`);
-                // Find schedules that overlap this slot and match filter
                 const slotStartMin = timeToMinutes(slotStart);
                 const slotEndMin = timeToMinutes(slotEnd);
                 window.schedules.filter(s => (s[mode] || '') === filterVal && s.day === day).forEach(item => {
@@ -591,8 +882,7 @@
                         div.draggable = (currentUserRole === 'operator');
                         div.setAttribute('ondragstart', `handleDragStart(event, '${item.firebaseKey}')`);
                         let info1 = (mode === "section") ? item.teacher : item.section;
-                        // Show time segment inside the slot to make overlapping entries clearer
-                        let displayTime = `${item.start} - ${item.end}`;
+                        let displayTime = `${militaryToAMPM(item.start)} - ${militaryToAMPM(item.end)}`;
                         div.innerHTML = `<strong>${item.subject}</strong><span style="font-weight:600">${info1} • ${displayTime}</span>`;
                         td.appendChild(div);
                     }
@@ -607,7 +897,6 @@
         const q = (document.getElementById('searchBox') ? document.getElementById('searchBox').value.trim().toLowerCase() : '');
         const filtered = window.schedules.filter(s => {
             if (!q) return true;
-            // Combine searchable fields
             const combined = [
                 s.subject || '',
                 s.section || '',
@@ -622,10 +911,11 @@
 
         document.getElementById('manageBody').innerHTML = filtered.map(s => {
             const actionsClass = currentUserRole === 'viewer' ? 'hidden' : '';
+            const timeDisplay = `${militaryToAMPM(s.start)} - ${militaryToAMPM(s.end)}`;
             return `
             <tr>
                 <td><b>${s.day ? s.day.substring(0,3) : ''}</b></td>
-                <td>${s.start}-${s.end}</td>
+                <td>${timeDisplay}</td>
                 <td style="color:#2563eb; font-weight:600">${s.subject}</td>
                 <td>${s.section}</td>
                 <td>${s.teacher}</td>
@@ -638,7 +928,6 @@
         }).join('');
     }
 
-    // Clear search input
     window.clearSearch = () => {
         const sb = document.getElementById('searchBox');
         if (sb) {
@@ -647,7 +936,6 @@
         }
     };
 
-    // Listen for search input changes
     document.addEventListener('DOMContentLoaded', () => {
         const sb = document.getElementById('searchBox');
         if (sb) {
@@ -675,7 +963,16 @@
     };
 
     window.downloadExcelMasterlist = () => {
-        const ws = XLSX.utils.json_to_sheet(window.schedules);
+        const exportData = window.schedules.map(s => ({
+            Day: s.day,
+            Start: militaryToAMPM(s.start),
+            End: militaryToAMPM(s.end),
+            Subject: s.subject,
+            Section: s.section,
+            Teacher: s.teacher,
+            Room: s.room
+        }));
+        const ws = XLSX.utils.json_to_sheet(exportData);
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "Masterlist");
         XLSX.writeFile(wb, "ARK_Masterlist.xlsx");
