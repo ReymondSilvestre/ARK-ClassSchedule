@@ -11,7 +11,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
     <style>
-        /* ===== ALL ORIGINAL STYLES — UNTOUCHED ===== */
         :root { --ark-dark: #0f172a; --ark-accent: #3b82f6; --ark-border: #e2e8f0; --row-height: 60px; }
         body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background: #f8fafc; margin: 0; padding: 15px; color: #1e293b; line-height: 1.2; }
 
@@ -28,6 +27,7 @@
 
         .main-container { max-width: 1440px; margin: auto; background: white; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); padding: 15px; }
         
+        /* Dashboard Header */
         .dashboard-header { 
             background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); 
             color: white; 
@@ -64,6 +64,7 @@
         }
         .btn-logout:hover { background: #dc2626; }
 
+        /* Dashboard Cards */
         .dashboard-grid { 
             display: grid; 
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
@@ -136,6 +137,7 @@
             text-transform: uppercase;
         }
 
+        /* Section Containers */
         .section-container {
             background: white;
             border: 2px solid #e2e8f0;
@@ -173,6 +175,7 @@
         }
         .btn-close-section:hover { background: #475569; }
 
+        /* OPTIMIZED PRINT LAYOUT */
         .print-container {
             background: white;
             padding: 0;
@@ -226,6 +229,7 @@
         .input-group label { display: block; font-size: 10px; font-weight: 800; color: #64748b; text-transform: uppercase; margin-bottom: 4px; }
         .input-group input, .input-group select { width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; height: 36px; box-sizing: border-box; }
 
+        /* Settings Panel */
         .settings-panel { 
             background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); 
             border: 2px solid #3b82f6; 
@@ -317,6 +321,7 @@
             color: #92400e;
         }
 
+        /* Hours Summary Box */
         .hours-summary { 
             background: linear-gradient(135deg, #111111 0%, #000000 50%, #1a1a1a 100%);
             color: white; 
@@ -406,6 +411,7 @@
             border-radius: 12px;
         }
 
+        /* OPTIMIZED TABLE FOR PRINTING */
         .matrix-table { 
             width: 100%; 
             border-collapse: collapse; 
@@ -443,6 +449,7 @@
             white-space: nowrap;
         }
 
+        /* OPTIMIZED SLOT BOX FOR PRINTING */
         .slot-box { 
             padding: 3px 4px; 
             border-radius: 3px; 
@@ -494,6 +501,7 @@
             line-height: 1.2;
         }
         
+        /* Slot Action Buttons */
         .slot-actions {
             position: absolute;
             top: 2px;
@@ -533,6 +541,7 @@
             transform: scale(1.1);
         }
         
+        /* Hide actions when printing */
         @media print {
             .slot-actions { display: none !important; }
         }
@@ -545,6 +554,7 @@
         .btn-delete { color: #ef4444; background: none; border: none; cursor: pointer; padding: 4px; }
         .btn-edit { color: #3b82f6; background: none; border: none; cursor: pointer; padding: 4px; margin-right: 5px; }
 
+        /* Admin Styles */
         #adminSection { background: #fff1f2; border: 2px solid #fda4af; padding: 20px; border-radius: 12px; }
         .admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         @media (max-width: 768px) { .admin-grid { grid-template-columns: 1fr; } }
@@ -552,19 +562,24 @@
         .badge-pending { background: #fef3c7; color: #92400e; }
         .badge-approved { background: #dcfce7; color: #166534; }
 
+        /* Search box */
         #searchBox { padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 6px; width: 320px; font-size: 13px; }
         #clearSearchBtn { padding: 6px 10px; border-radius: 6px; font-size: 12px; }
 
+        /* Warning Alert Box */
         .warning-alert { background: #fef3c7; border: 2px solid #f59e0b; border-radius: 8px; padding: 12px; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
         .warning-alert i { color: #f59e0b; font-size: 20px; }
         .warning-alert .content { flex: 1; }
         .warning-alert .title { font-weight: 800; font-size: 11px; color: #92400e; margin-bottom: 3px; }
         .warning-alert .message { font-size: 10px; color: #78350f; }
 
+        /* Bulk Download Modal */
         .modal-overlay {
             position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             background: rgba(0,0,0,0.5);
             display: none;
             align-items: center;
@@ -632,6 +647,7 @@
             color: white;
         }
 
+        /* Print Optimization */
         @media print {
             body { background: white; }
             .no-print { display: none !important; }
@@ -642,313 +658,13 @@
             }
             .matrix-table { page-break-inside: avoid; }
         }
-
-        /* ================================================================
-           SETTINGS SIDE-PANEL — NEW CSS ONLY (appended, nothing above touched)
-           ================================================================ */
-
-        /* Settings button in header */
-        .btn-settings {
-            background: rgba(255,255,255,0.11);
-            border: 1px solid rgba(255,255,255,0.22);
-            color: #fff;
-            padding: 8px 14px;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 7px;
-            transition: background 0.2s;
-        }
-        .btn-settings:hover { background: rgba(255,255,255,0.20); }
-
-        /* Backdrop */
-        .sp-backdrop {
-            position: fixed; inset: 0;
-            background: rgba(15,23,42,0.52);
-            backdrop-filter: blur(3px);
-            z-index: 8990;
-            opacity: 0; pointer-events: none;
-            transition: opacity 0.30s ease;
-        }
-        .sp-backdrop.open { opacity: 1; pointer-events: auto; }
-
-        /* Panel shell */
-        .sp-panel {
-            position: fixed;
-            top: 0; right: 0;
-            width: 430px; max-width: 94vw;
-            height: 100vh;
-            background: #0f172a;
-            color: #e2e8f0;
-            z-index: 8991;
-            display: flex; flex-direction: column;
-            transform: translateX(100%);
-            transition: transform 0.36s cubic-bezier(.4,0,.2,1);
-            box-shadow: -20px 0 50px rgba(0,0,0,0.45);
-        }
-        .sp-panel.open { transform: translateX(0); }
-
-        /* Head */
-        .sp-head {
-            flex-shrink: 0;
-            padding: 20px 22px 15px;
-            background: linear-gradient(155deg, #1e293b 0%, #0f172a 100%);
-            border-bottom: 1px solid rgba(255,255,255,0.07);
-            display: flex; justify-content: space-between; align-items: flex-start;
-        }
-        .sp-head-left { display: flex; align-items: center; gap: 14px; }
-        .sp-head-icon {
-            width: 44px; height: 44px; border-radius: 11px;
-            background: linear-gradient(135deg, #3b82f6, #6366f1);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 19px; color: #fff;
-            box-shadow: 0 4px 14px rgba(59,130,246,0.38);
-            flex-shrink: 0;
-        }
-        .sp-head h2 { margin: 0; font-size: 17px; font-weight: 800; color: #f1f5f9; }
-        .sp-head p { margin: 3px 0 0; font-size: 10px; color: #64748b; font-weight: 600; }
-        .sp-close {
-            background: rgba(255,255,255,0.07);
-            border: 1px solid rgba(255,255,255,0.12);
-            color: #94a3b8;
-            width: 32px; height: 32px; border-radius: 7px;
-            cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 15px; flex-shrink: 0;
-            transition: background 0.2s, color 0.2s;
-        }
-        .sp-close:hover { background: rgba(239,68,68,0.18); color: #f87171; }
-
-        /* Tab bar */
-        .sp-tabs {
-            flex-shrink: 0;
-            display: flex; gap: 5px;
-            padding: 10px 14px;
-            border-bottom: 1px solid rgba(255,255,255,0.06);
-            overflow-x: auto; scrollbar-width: none;
-        }
-        .sp-tabs::-webkit-scrollbar { display: none; }
-        .sp-tab {
-            flex-shrink: 0;
-            background: transparent;
-            border: 1px solid transparent;
-            color: #64748b;
-            padding: 7px 11px; border-radius: 7px;
-            font-size: 10px; font-weight: 700;
-            text-transform: uppercase; letter-spacing: 0.6px;
-            cursor: pointer;
-            display: flex; align-items: center; gap: 6px;
-            transition: background 0.18s, color 0.18s, border-color 0.18s;
-            white-space: nowrap;
-        }
-        .sp-tab i { font-size: 11px; }
-        .sp-tab:hover { background: rgba(255,255,255,0.06); color: #94a3b8; }
-        .sp-tab.active {
-            background: rgba(59,130,246,0.15);
-            color: #60a5fa;
-            border-color: rgba(59,130,246,0.28);
-        }
-
-        /* Scrolling body */
-        .sp-body {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px 20px 30px;
-            scrollbar-width: thin;
-            scrollbar-color: #334155 transparent;
-        }
-        .sp-body::-webkit-scrollbar { width: 5px; }
-        .sp-body::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
-
-        /* Pages */
-        .sp-page { display: none; }
-        .sp-page.active { display: block; animation: spFade .20s ease; }
-        @keyframes spFade { from { opacity:0; transform:translateY(4px); } to { opacity:1; transform:translateY(0); } }
-
-        /* Section label */
-        .sp-sec { font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.2px; color: #475569; margin: 0 0 8px; padding-bottom: 5px; border-bottom: 1px solid rgba(255,255,255,0.07); }
-        .sp-sec + .sp-sec, .sp-card + .sp-sec { margin-top: 18px; }
-
-        /* Card */
-        .sp-card {
-            background: #1e293b;
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 9px;
-            padding: 15px 16px;
-            margin-bottom: 10px;
-            transition: border-color 0.2s;
-        }
-        .sp-card:hover { border-color: rgba(59,130,246,0.28); }
-        .sp-card-title { font-size: 11px; font-weight: 700; color: #cbd5e1; display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
-        .sp-card-title i { color: #60a5fa; font-size: 12px; }
-
-        /* Inputs */
-        .sp-label { display: block; font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px; }
-        .sp-label + .sp-label { margin-top: 10px; }
-        .sp-input {
-            width: 100%; padding: 9px 12px; border-radius: 6px;
-            border: 1px solid rgba(255,255,255,0.12);
-            background: #0f172a; color: #f1f5f9;
-            font-size: 13px; box-sizing: border-box;
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-        .sp-input:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.18); }
-        .sp-input::placeholder { color: #475569; }
-
-        /* Swatches */
-        .sp-swatches { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-        .sp-swatch {
-            width: 34px; height: 34px; border-radius: 8px;
-            border: 2.5px solid transparent;
-            cursor: pointer; position: relative;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.30);
-            transition: transform 0.14s, border-color 0.14s, box-shadow 0.14s;
-        }
-        .sp-swatch:hover { transform: scale(1.12); }
-        .sp-swatch.active { border-color: #60a5fa; box-shadow: 0 0 0 3px rgba(59,130,246,0.32), 0 2px 6px rgba(0,0,0,0.30); }
-        .sp-swatch .chk {
-            position: absolute; inset: 0;
-            display: flex; align-items: center; justify-content: center;
-            color: #fff; font-size: 15px;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.6);
-            opacity: 0; transition: opacity 0.14s;
-        }
-        .sp-swatch.active .chk { opacity: 1; }
-
-        /* Toggle */
-        .sp-toggle-row { display: flex; align-items: center; justify-content: space-between; }
-        .sp-toggle-row span { font-size: 12px; font-weight: 600; color: #cbd5e1; display: block; }
-        .sp-toggle-row p { font-size: 10px; color: #64748b; margin: 2px 0 0; }
-        .sp-toggle {
-            width: 48px; height: 26px; border-radius: 13px;
-            background: #334155; border: none; outline: none;
-            position: relative; cursor: pointer;
-            transition: background 0.26s; flex-shrink: 0;
-        }
-        .sp-toggle.on { background: #22c55e; }
-        .sp-toggle::after {
-            content: ''; position: absolute;
-            top: 3px; left: 3px;
-            width: 20px; height: 20px; border-radius: 50%;
-            background: #fff; transition: left 0.26s;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.22);
-        }
-        .sp-toggle.on::after { left: 25px; }
-
-        /* Logo area */
-        .sp-logo-row { display: flex; align-items: center; gap: 16px; }
-        .sp-logo-thumb {
-            width: 68px; height: 68px; border-radius: 10px;
-            border: 2px dashed rgba(255,255,255,0.18);
-            background: #0f172a;
-            display: flex; align-items: center; justify-content: center;
-            overflow: hidden; flex-shrink: 0;
-        }
-        .sp-logo-thumb img { width: 100%; height: 100%; object-fit: contain; }
-        .sp-logo-thumb .sp-logo-ph { color: #475569; font-size: 22px; }
-        .sp-logo-side p { font-size: 10px; color: #64748b; margin: 0 0 8px; line-height: 1.5; }
-        .sp-btn-up {
-            display: inline-flex; align-items: center; gap: 6px;
-            background: linear-gradient(135deg, #3b82f6, #6366f1);
-            color: #fff; border: none; padding: 7px 14px; border-radius: 6px;
-            font-size: 11px; font-weight: 700; cursor: pointer;
-            transition: opacity 0.2s, transform 0.14s;
-        }
-        .sp-btn-up:hover { opacity: 0.84; transform: translateY(-1px); }
-        .sp-btn-rm {
-            display: inline-flex; align-items: center; gap: 5px;
-            background: transparent; color: #f87171;
-            border: 1px solid rgba(239,68,68,0.28);
-            padding: 7px 14px; border-radius: 6px;
-            font-size: 11px; font-weight: 600; cursor: pointer;
-            margin-left: 7px; transition: background 0.2s;
-        }
-        .sp-btn-rm:hover { background: rgba(239,68,68,0.10); }
-
-        /* Danger zone */
-        .sp-danger-lbl {
-            font-size: 9px; font-weight: 800; text-transform: uppercase;
-            letter-spacing: 1px; color: #f87171;
-            margin: 18px 0 8px; display: flex; align-items: center; gap: 6px;
-        }
-        .sp-danger-card {
-            background: rgba(239,68,68,0.07);
-            border: 1px solid rgba(239,68,68,0.22);
-            border-radius: 9px; padding: 15px 16px;
-        }
-        .sp-danger-card .sp-card-title { color: #f87171; }
-        .sp-danger-card .sp-card-title i { color: #f87171; }
-
-        /* Save button */
-        .sp-save {
-            width: 100%; padding: 11px; border-radius: 8px; border: none;
-            background: linear-gradient(135deg, #3b82f6, #6366f1);
-            color: #fff; font-size: 12px; font-weight: 800;
-            cursor: pointer; margin-top: 16px;
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-            transition: opacity 0.2s, transform 0.14s, box-shadow 0.2s;
-        }
-        .sp-save:hover { opacity: 0.86; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(59,130,246,0.36); }
-
-        /* Users table */
-        .sp-utbl { width: 100%; border-collapse: collapse; margin-top: 4px; }
-        .sp-utbl th {
-            text-align: left; font-size: 9px; font-weight: 800;
-            text-transform: uppercase; color: #475569; letter-spacing: 0.5px;
-            border-bottom: 1px solid rgba(255,255,255,0.07);
-            padding: 5px 6px 7px;
-        }
-        .sp-utbl td { padding: 7px 6px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 11px; color: #94a3b8; }
-        .sp-utbl tr:last-child td { border-bottom: none; }
-        .sp-btn-rpw {
-            background: rgba(59,130,246,0.14);
-            border: 1px solid rgba(59,130,246,0.28);
-            color: #60a5fa; padding: 4px 9px; border-radius: 5px;
-            font-size: 10px; font-weight: 700; cursor: pointer;
-            white-space: nowrap; transition: background 0.2s;
-        }
-        .sp-btn-rpw:hover { background: rgba(59,130,246,0.24); }
-        .sp-btn-rpw-all {
-            display: inline-flex; align-items: center; gap: 6px;
-            background: linear-gradient(135deg, #3b82f6, #6366f1);
-            color: #fff; border: none; padding: 6px 13px; border-radius: 6px;
-            font-size: 10px; font-weight: 700; cursor: pointer;
-            transition: opacity 0.2s;
-        }
-        .sp-btn-rpw-all:hover { opacity: 0.84; }
-
-        /* Toast */
-        .sp-toast {
-            position: fixed; bottom: 24px; right: 24px;
-            background: #1e293b; color: #f1f5f9;
-            border: 1px solid rgba(34,197,94,0.35);
-            padding: 11px 18px; border-radius: 8px;
-            font-size: 12px; font-weight: 600;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.32);
-            z-index: 9100;
-            transform: translateY(60px); opacity: 0;
-            transition: transform 0.30s cubic-bezier(.4,0,.2,1), opacity 0.30s;
-            display: flex; align-items: center; gap: 9px;
-            pointer-events: none;
-        }
-        .sp-toast.show { transform: translateY(0); opacity: 1; }
-        .sp-toast i { color: #4ade80; font-size: 15px; }
-
-        @media print {
-            .sp-backdrop, .sp-panel, .sp-toast, .btn-settings { display: none !important; }
-        }
     </style>
 </head>
 <body>
 
-<!-- ===== ORIGINAL HTML — UNTOUCHED ===== -->
-
 <div id="loginOverlay">
     <div class="login-card">
-        <img src="images/logo.png" alt="Logo" class="company-logo" id="loginLogo">
+        <img src="images/logo.png" alt="Logo" class="company-logo">
         <h2 id="authTitle" style="margin: 0 0 5px 0; color: var(--ark-dark); font-size: 18px;">ARK LOGIN</h2>
         <p id="authDesc" style="font-size: 11px; color: #64748b; margin-bottom: 15px;">Enter credentials to Access Class Schedule Maker</p>
 
@@ -1010,126 +726,14 @@
     </div>
 </div>
 
-<!-- ============================================================
-     SETTINGS SIDE PANEL — NEW HTML (injected before main-container)
-     ============================================================ -->
-<div class="sp-backdrop" id="spBackdrop" onclick="spClose()"></div>
-<div class="sp-panel" id="spPanel">
-    <div class="sp-head">
-        <div class="sp-head-left">
-            <div class="sp-head-icon"><i class="fa-solid fa-sliders"></i></div>
-            <div><h2>Settings</h2><p>Customize your workspace</p></div>
-        </div>
-        <button class="sp-close" onclick="spClose()"><i class="fa-solid fa-xmark"></i></button>
-    </div>
-    <div class="sp-tabs">
-        <button class="sp-tab active" data-tab="theme" onclick="spTab(this)"><i class="fa-solid fa-palette"></i> Theme</button>
-        <button class="sp-tab" data-tab="branding" onclick="spTab(this)"><i class="fa-solid fa-building"></i> Branding</button>
-        <button class="sp-tab" data-tab="admin" onclick="spTab(this)"><i class="fa-solid fa-shield-halved"></i> Admin</button>
-        <button class="sp-tab" data-tab="users" onclick="spTab(this)"><i class="fa-solid fa-users-gear"></i> Users</button>
-    </div>
-    <div class="sp-body">
-
-        <!-- THEME -->
-        <div class="sp-page active" id="spPage-theme">
-            <div class="sp-sec">Accent Color</div>
-            <div class="sp-card">
-                <div class="sp-card-title"><i class="fa-solid fa-circle-dot"></i> Choose accent</div>
-                <div class="sp-swatches" id="spAccentSwatches"></div>
-            </div>
-            <div class="sp-sec">Header / Primary Color</div>
-            <div class="sp-card">
-                <div class="sp-card-title"><i class="fa-solid fa-square-full"></i> Choose primary</div>
-                <div class="sp-swatches" id="spPrimarySwatches"></div>
-            </div>
-            <div class="sp-sec">Appearance</div>
-            <div class="sp-card">
-                <div class="sp-toggle-row">
-                    <div><span>Dark Mode</span><p>Switch the app between light and dark</p></div>
-                    <button class="sp-toggle" id="spDarkToggle" onclick="spToggleDark(this)"></button>
-                </div>
-            </div>
-        </div>
-
-        <!-- BRANDING -->
-        <div class="sp-page" id="spPage-branding">
-            <div class="sp-sec">Logo</div>
-            <div class="sp-card">
-                <div class="sp-logo-row">
-                    <div class="sp-logo-thumb" id="spLogoThumb">
-                        <img src="images/logo.png" alt="" id="spLogoPreview">
-                    </div>
-                    <div class="sp-logo-side">
-                        <p>Upload PNG, JPG or SVG.<br>Best with a square image (200×200 px). Max 2 MB.</p>
-                        <button class="sp-btn-up" onclick="document.getElementById('spLogoFile').click()"><i class="fa-solid fa-upload"></i> Upload</button>
-                        <button class="sp-btn-rm" onclick="spRemoveLogo()"><i class="fa-solid fa-trash"></i> Remove</button>
-                        <input type="file" id="spLogoFile" accept="image/*" style="display:none;" onchange="spLogoUpload(event)">
-                    </div>
-                </div>
-            </div>
-            <div class="sp-sec">Company Info</div>
-            <div class="sp-card">
-                <label class="sp-label">Company Name</label>
-                <input class="sp-input" id="spCompName" placeholder="e.g. ARK TECHNOLOGICAL INSTITUTE…">
-                <label class="sp-label">Address / Subtitle</label>
-                <input class="sp-input" id="spCompAddr" placeholder="e.g. J-Seven Bldg. Magallanes…">
-            </div>
-            <button class="sp-save" onclick="spSaveBranding()"><i class="fa-solid fa-floppy-disk"></i> Save Branding</button>
-        </div>
-
-        <!-- ADMIN -->
-        <div class="sp-page" id="spPage-admin">
-            <div class="sp-sec">Current Administrator</div>
-            <div class="sp-card">
-                <div class="sp-card-title"><i class="fa-solid fa-user-shield"></i> Admin Email</div>
-                <div style="background:#0f172a;padding:10px 12px;border-radius:6px;display:flex;align-items:center;gap:9px;">
-                    <i class="fa-solid fa-envelope" style="color:#60a5fa;font-size:14px;"></i>
-                    <span id="spAdminEmail" style="font-size:12px;color:#cbd5e1;font-weight:600;word-break:break-all;">—</span>
-                </div>
-            </div>
-            <div class="sp-danger-lbl"><i class="fa-solid fa-triangle-exclamation"></i> Danger Zone</div>
-            <div class="sp-danger-card">
-                <div class="sp-card-title"><i class="fa-solid fa-key"></i> Transfer Admin</div>
-                <p style="font-size:10px;color:#94a3b8;margin:6px 0 10px;line-height:1.5;">
-                    Transfers full system control to another registered user email.
-                </p>
-                <label class="sp-label">New Admin Email</label>
-                <input class="sp-input" id="spNewAdmin" placeholder="new.admin@email.com" style="border-color:rgba(239,68,68,0.30);">
-                <button class="sp-save" onclick="spChangeAdmin()" style="background:linear-gradient(135deg,#dc2626,#991b1b);margin-top:12px;">
-                    <i class="fa-solid fa-shield-halved"></i> Transfer Admin
-                </button>
-            </div>
-        </div>
-
-        <!-- USERS -->
-        <div class="sp-page" id="spPage-users">
-            <div class="sp-sec">Password Reset</div>
-            <div class="sp-card">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-                    <div class="sp-card-title" style="margin-bottom:0;"><i class="fa-solid fa-lock"></i> Registered Users</div>
-                    <button class="sp-btn-rpw-all" onclick="spResetAll()"><i class="fa-solid fa-rotate-left"></i> Reset All</button>
-                </div>
-                <table class="sp-utbl">
-                    <thead><tr><th>Email</th><th>Role</th><th style="text-align:right;">Action</th></tr></thead>
-                    <tbody id="spUsersBody"></tbody>
-                </table>
-            </div>
-        </div>
-
-    </div>
-</div>
-<!-- Toast -->
-<div class="sp-toast" id="spToast"><i class="fa-solid fa-check-circle"></i><span id="spToastMsg">Saved</span></div>
-
-
 <div class="main-container">
     <!-- Dashboard Header -->
     <div class="dashboard-header">
         <div class="header-left">
-            <img src="images/logo.png" alt="Logo" class="company-logo" id="headerLogo">
+            <img src="images/logo.png" alt="Logo" class="company-logo">
             <div class="header-title">
-                <h1 id="headerTitle">ARK TECHNOLOGICAL INSTITUTE EDUCATION SYSTEM iNC.</h1>
-                <p id="headerAddr">J-Seven Bldg. Magallanes Cor. Granja St. Brgy. 7 Lucena City.</p>
+                <h1>ARK TECHNOLOGICAL INSTITUTE EDUCATION SYSTEM iNC.</h1>
+                <p>J-Seven Bldg. Magallanes Cor. Granja St. Brgy. 7 Lucena City.</p>
             </div>
         </div>
         <div class="header-right">
@@ -1137,33 +741,38 @@
                 <i class="fa-solid fa-user"></i>
                 <span id="userRoleTag">VIEWER</span>
             </div>
-            <!-- NEW: Settings button -->
-            <button class="btn-settings" onclick="spOpen()"><i class="fa-solid fa-sliders"></i> Settings</button>
             <button class="btn-logout" onclick="handleLogout()">
                 <i class="fa-solid fa-right-from-bracket"></i> LOGOUT
             </button>
         </div>
     </div>
 
-    <!-- Dashboard Cards (original) -->
+    <!-- Dashboard Cards -->
     <div id="dashboardCards" class="dashboard-grid">
+        <!-- Admin Panel Card -->
         <div class="dashboard-card admin-only hidden" style="--card-color: #ef4444;" onclick="showSection('adminSection')">
             <div class="card-badge">ADMIN ONLY</div>
             <div class="card-icon"><i class="fa-solid fa-user-shield"></i></div>
             <div class="card-title">Admin Panel</div>
             <div class="card-description">Manage user accounts, approve operators, and control system access</div>
         </div>
+
+        <!-- Encode Schedule Card -->
         <div class="dashboard-card operator-only" style="--card-color: #3b82f6;" onclick="showSection('encodeSection')">
             <div class="card-badge">OPERATOR</div>
             <div class="card-icon"><i class="fa-solid fa-calendar-plus"></i></div>
             <div class="card-title">Encode Schedule</div>
             <div class="card-description">Add, edit, and manage class schedules with conflict detection</div>
         </div>
+
+        <!-- Schedule View Matrix Card -->
         <div class="dashboard-card" style="--card-color: #10b981;" onclick="showSection('matrixSection')">
             <div class="card-icon"><i class="fa-solid fa-table-cells"></i></div>
             <div class="card-title"> View Schedules </div>
             <div class="card-description">View schedules by section, teacher, or room with export options</div>
         </div>
+
+        <!-- Database Masterlist Card -->
         <div class="dashboard-card" style="--card-color: #f59e0b;" onclick="showSection('masterlistSection')">
             <div class="card-icon"><i class="fa-solid fa-database"></i></div>
             <div class="card-title">Database Masterlist</div>
@@ -1171,12 +780,18 @@
         </div>
     </div>
 
-    <!-- Admin Section (original) -->
+    <!-- Admin Section -->
     <div id="adminSection" class="section-container">
         <div class="section-header">
-            <div class="section-title"><i class="fa-solid fa-user-shield"></i> Admin Console</div>
-            <button class="btn-close-section" onclick="closeSection('adminSection')"><i class="fa-solid fa-xmark"></i> Close</button>
+            <div class="section-title">
+                <i class="fa-solid fa-user-shield"></i>
+                Admin Console
+            </div>
+            <button class="btn-close-section" onclick="closeSection('adminSection')">
+                <i class="fa-solid fa-xmark"></i> Close
+            </button>
         </div>
+
         <div class="admin-grid">
             <div>
                 <p style="font-size: 11px; font-weight: bold; color: #be123c; margin-bottom: 5px;">PENDING APPROVALS</p>
@@ -1187,6 +802,7 @@
                     </table>
                 </div>
             </div>
+
             <div>
                 <p style="font-size: 11px; font-weight: bold; color: #1e293b; margin-bottom: 5px;">MANAGE ALL USERS</p>
                 <div style="max-height: 200px; overflow-y: auto; border: 1px solid #cbd5e1; border-radius: 6px;">
@@ -1199,12 +815,19 @@
         </div>
     </div>
 
-    <!-- Encode Schedule Section (original) -->
+    <!-- Encode Schedule Section -->
     <div id="encodeSection" class="section-container">
         <div class="section-header">
-            <div class="section-title"><i class="fa-solid fa-calendar-plus"></i> Encode Schedule</div>
-            <button class="btn-close-section" onclick="closeSection('encodeSection')"><i class="fa-solid fa-xmark"></i> Close</button>
+            <div class="section-title">
+                <i class="fa-solid fa-calendar-plus"></i>
+                Encode Schedule
+            </div>
+            <button class="btn-close-section" onclick="closeSection('encodeSection')">
+                <i class="fa-solid fa-xmark"></i> Close
+            </button>
         </div>
+
+        <!-- Settings Panel -->
         <div class="settings-panel">
             <h3 style="margin: 0 0 10px 0; color: #1e40af; font-size: 13px;">
                 <i class="fa-solid fa-gear"></i> HOUR LIMIT SETTINGS
@@ -1228,6 +851,7 @@
                 </div>
             </div>
         </div>
+
         <div class="input-card">
             <div class="input-row">
                 <input type="hidden" id="editKey">
@@ -1249,6 +873,8 @@
                 </div>
             </div>
         </div>
+
+        <!-- Warning Alert for Over-Limit Teachers -->
         <div id="warningAlert" class="warning-alert hidden">
             <i class="fa-solid fa-triangle-exclamation"></i>
             <div class="content">
@@ -1258,22 +884,40 @@
         </div>
     </div>
 
-    <!-- Schedule View Matrix Section (original) -->
+    <!-- Schedule View Matrix Section -->
     <div id="matrixSection" class="section-container">
         <div class="section-header">
-            <div class="section-title"><i class="fa-solid fa-table-cells"></i> Schedule View Matrix</div>
-            <button class="btn-close-section" onclick="closeSection('matrixSection')"><i class="fa-solid fa-xmark"></i> Close</button>
+            <div class="section-title">
+                <i class="fa-solid fa-table-cells"></i>
+                Schedule View Matrix
+            </div>
+            <button class="btn-close-section" onclick="closeSection('matrixSection')">
+                <i class="fa-solid fa-xmark"></i> Close
+            </button>
         </div>
+
         <div class="action-bar">
             <div style="font-size: 11px; font-weight: 700;"><i class="fa-solid fa-download"></i> EXPORT OPTIONS</div>
             <div style="display:flex; gap:6px;">
-                <button id="resetBtn" class="btn-export operator-only" style="background:#ef4444;" onclick="resetDatabase()"><i class="fa-solid fa-rotate-left"></i> RESET</button>
-                <button class="btn-export" style="background:#6366f1;" onclick="openBulkModal()"><i class="fa-solid fa-layer-group"></i> BULK PDF</button>
-                <button class="btn-export" style="background:#dc2626;" onclick="downloadFullMatrix('pdf')"><i class="fa-solid fa-file-pdf"></i> PDF</button>
-                <button class="btn-export" style="background:#16a34a;" onclick="downloadFullMatrix('png')"><i class="fa-solid fa-image"></i> PNG</button>
-                <button class="btn-export" style="background:#15803d;" onclick="downloadExcelMasterlist()"><i class="fa-solid fa-file-excel"></i> EXCEL</button>
+                <button id="resetBtn" class="btn-export operator-only" style="background:#ef4444;" onclick="resetDatabase()">
+                    <i class="fa-solid fa-rotate-left"></i> RESET
+                </button>
+                <button class="btn-export" style="background:#6366f1;" onclick="openBulkModal()">
+                    <i class="fa-solid fa-layer-group"></i> BULK PDF
+                </button>
+                <button class="btn-export" style="background:#dc2626;" onclick="downloadFullMatrix('pdf')">
+                    <i class="fa-solid fa-file-pdf"></i> PDF
+                </button>
+                <button class="btn-export" style="background:#16a34a;" onclick="downloadFullMatrix('png')">
+                    <i class="fa-solid fa-image"></i> PNG
+                </button>
+                <button class="btn-export" style="background:#15803d;" onclick="downloadExcelMasterlist()">
+                    <i class="fa-solid fa-file-excel"></i> EXCEL
+                </button>
             </div>
         </div>
+
+        <!-- Hours Summary (only shown for teacher view) -->
         <div id="hoursSummary" class="hours-summary hidden">
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
@@ -1288,6 +932,7 @@
                 <div class="limit-info" id="limitInfoDisplay">📚 Daily Limit: 8 hours per day</div>
             </div>
         </div>
+
         <div style="margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
             <span style="font-weight: 800; font-size: 10px; color: #64748b;">VIEW:</span>
             <select id="modeSelect" onchange="updateFilterList(true)" style="padding: 4px; font-size: 11px; border-radius: 4px; border: 1px solid #cbd5e1;">
@@ -1297,11 +942,13 @@
             </select>
             <select id="filterSelector" onchange="renderMatrix()" style="padding: 4px; font-size: 11px; width: 200px; border: 2px solid #3b82f6; border-radius: 4px;"></select>
         </div>
+
+        <!-- OPTIMIZED PRINT CONTAINER -->
         <div id="captureArea" class="print-container" style="background:white; border: 2px solid #cbd5e1;">
             <div class="matrix-header">
-                <img src="images/logo.png" alt="Logo" class="company-logo" id="printLogo">
+                <img src="images/logo.png" alt="Logo" class="company-logo">
                 <div class="matrix-header-text">
-                    <h2 id="printTitle">ARK TECHNOLOGICAL INSTITUTE EDUCATION SYSTEM INC.</h2>
+                    <h2>ARK TECHNOLOGICAL INSTITUTE EDUCATION SYSTEM INC.</h2>
                     <p>Class Schedule</p>
                     <h3 id="matrixTitle"></h3>
                 </div>
@@ -1310,7 +957,13 @@
                 <thead>
                     <tr>
                         <th class="time-col">TIME</th>
-                        <th>MON</th><th>TUE</th><th>WED</th><th>THU</th><th>FRI</th><th>SAT</th><th>SUN</th>
+                        <th>MON</th>
+                        <th>TUE</th>
+                        <th>WED</th>
+                        <th>THU</th>
+                        <th>FRI</th>
+                        <th>SAT</th>
+                        <th>SUN</th>
                     </tr>
                 </thead>
                 <tbody id="matrixBody"></tbody>
@@ -1318,18 +971,27 @@
         </div>
     </div>
 
-    <!-- Database Masterlist Section (original) -->
+    <!-- Database Masterlist Section -->
     <div id="masterlistSection" class="section-container">
         <div class="section-header">
-            <div class="section-title"><i class="fa-solid fa-database"></i> Database Masterlist</div>
-            <button class="btn-close-section" onclick="closeSection('masterlistSection')"><i class="fa-solid fa-xmark"></i> Close</button>
+            <div class="section-title">
+                <i class="fa-solid fa-database"></i>
+                Database Masterlist
+            </div>
+            <button class="btn-close-section" onclick="closeSection('masterlistSection')">
+                <i class="fa-solid fa-xmark"></i> Close
+            </button>
         </div>
+
         <div style="display:flex; justify-content:space-between; align-items:center; gap: 8px; margin-bottom: 10px;">
             <div style="display:flex; gap:8px; align-items:center; flex: 1;">
                 <input id="searchBox" type="search" placeholder="Search masterlist (subject, section, teacher, room, day, time)" />
-                <button id="clearSearchBtn" class="btn-export" style="background:#64748b;" onclick="clearSearch()"><i class="fa-solid fa-xmark"></i> CLEAR</button>
+                <button id="clearSearchBtn" class="btn-export" style="background:#64748b;" onclick="clearSearch()">
+                    <i class="fa-solid fa-xmark"></i> CLEAR
+                </button>
             </div>
         </div>
+
         <div style="max-height: 500px; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 6px;">
             <table class="manage-table">
                 <thead>
@@ -1365,20 +1027,21 @@
 
     let isLoginMode = true;
     let currentUserRole = 'viewer';
-    let ADMIN_EMAIL = "reymonde.silvestre@gmail.com";   // changed to let — settings panel may update it
+    const ADMIN_EMAIL = "reymonde.silvestre@gmail.com";
     let DAILY_HOUR_LIMIT = 8;
     let ENFORCE_LIMIT = true;
     window.schedules = [];
 
-    // ============================================================
-    // ORIGINAL CODE — COMPLETELY UNCHANGED
-    // ============================================================
-
+    // --- SECTION NAVIGATION ---
     window.showSection = (sectionId) => {
-        document.querySelectorAll('.section-container').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.section-container').forEach(el => {
+            el.classList.remove('active');
+        });
         document.getElementById('dashboardCards').style.display = 'none';
         document.getElementById(sectionId).classList.add('active');
-        document.querySelectorAll('.dashboard-card').forEach(card => card.classList.remove('active'));
+        document.querySelectorAll('.dashboard-card').forEach(card => {
+            card.classList.remove('active');
+        });
     };
 
     window.closeSection = (sectionId) => {
@@ -1386,63 +1049,143 @@
         document.getElementById('dashboardCards').style.display = 'grid';
     };
 
-    window.openBulkModal = () => { document.getElementById('bulkDownloadModal').classList.add('active'); };
-    window.closeBulkModal = () => { document.getElementById('bulkDownloadModal').classList.remove('active'); };
+    // --- BULK DOWNLOAD ---
+    window.openBulkModal = () => {
+        document.getElementById('bulkDownloadModal').classList.add('active');
+    };
+
+    window.closeBulkModal = () => {
+        document.getElementById('bulkDownloadModal').classList.remove('active');
+    };
 
     window.selectBulkOption = async (type) => {
         closeBulkModal();
+        
         const loadingMsg = document.createElement('div');
         loadingMsg.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:white;padding:30px;border-radius:12px;box-shadow:0 25px 50px -12px rgba(0,0,0,0.5);z-index:10001;text-align:center;';
         loadingMsg.innerHTML = '<i class="fa-solid fa-spinner fa-spin" style="font-size:30px;color:#3b82f6;"></i><p style="margin-top:15px;font-weight:600;">Generating bulk PDF...</p>';
         document.body.appendChild(loadingMsg);
-        try { await downloadBulkPDF(type); } finally { document.body.removeChild(loadingMsg); }
+
+        try {
+            await downloadBulkPDF(type);
+        } finally {
+            document.body.removeChild(loadingMsg);
+        }
     };
 
     async function downloadBulkPDF(type) {
         const { jsPDF } = window.jspdf;
         const pdf = new jsPDF('l', 'mm', 'a4');
+        
         const values = [...new Set(window.schedules.map(s => (s[type] || '').trim()))].filter(v => v).sort();
-        if (values.length === 0) { alert(`No ${type}s found in the schedule.`); return; }
+        
+        if (values.length === 0) {
+            alert(`No ${type}s found in the schedule.`);
+            return;
+        }
+
         const originalMode = document.getElementById('modeSelect').value;
         const originalFilter = document.getElementById('filterSelector').value;
+
         for (let i = 0; i < values.length; i++) {
             const value = values[i];
+            
             document.getElementById('modeSelect').value = type;
             updateFilterList(false);
             document.getElementById('filterSelector').value = value;
             renderMatrix();
+
             await new Promise(resolve => setTimeout(resolve, 500));
-            const canvas = await html2canvas(document.getElementById('captureArea'), { scale: 2, useCORS: true, logging: false, backgroundColor: '#ffffff' });
+
+            const canvas = await html2canvas(document.getElementById('captureArea'), { 
+                scale: 2,
+                useCORS: true,
+                logging: false,
+                backgroundColor: '#ffffff'
+            });
             const img = canvas.toDataURL('image/png');
-            if (i > 0) pdf.addPage();
-            const pageWidth = 297, pageHeight = 210, margin = 10;
-            const availableWidth = pageWidth - (margin * 2), availableHeight = pageHeight - (margin * 2);
+            
+            if (i > 0) {
+                pdf.addPage();
+            }
+            
+            // A4 landscape: 297mm x 210mm
+            // Leave 10mm margins on each side
+            const pageWidth = 297;
+            const pageHeight = 210;
+            const margin = 10;
+            const availableWidth = pageWidth - (margin * 2);
+            const availableHeight = pageHeight - (margin * 2);
+            
             const imgProps = pdf.getImageProperties(img);
             const imgRatio = imgProps.height / imgProps.width;
-            let finalWidth = availableWidth, finalHeight = availableWidth * imgRatio;
-            if (finalHeight > availableHeight) { finalHeight = availableHeight; finalWidth = finalHeight / imgRatio; }
-            pdf.addImage(img, 'PNG', (pageWidth - finalWidth) / 2, (pageHeight - finalHeight) / 2, finalWidth, finalHeight);
+            
+            let finalWidth = availableWidth;
+            let finalHeight = availableWidth * imgRatio;
+            
+            // If height exceeds available space, scale down
+            if (finalHeight > availableHeight) {
+                finalHeight = availableHeight;
+                finalWidth = finalHeight / imgRatio;
+            }
+            
+            // Center the image
+            const xOffset = (pageWidth - finalWidth) / 2;
+            const yOffset = (pageHeight - finalHeight) / 2;
+            
+            pdf.addImage(img, 'PNG', xOffset, yOffset, finalWidth, finalHeight);
         }
+
         document.getElementById('modeSelect').value = originalMode;
         updateFilterList(false);
         document.getElementById('filterSelector').value = originalFilter;
         renderMatrix();
-        pdf.save(`ARK_All_${type}s_${new Date().toISOString().split('T')[0]}.pdf`);
+
+        const timestamp = new Date().toISOString().split('T')[0];
+        pdf.save(`ARK_All_${type}s_${timestamp}.pdf`);
     }
 
-    function timeToMinutes(t) { if (!t) return 0; const [hh, mm] = t.split(':').map(Number); return hh * 60 + mm; }
-    function minutesTo12Hr(mins) { const h = Math.floor(mins / 60), m = mins % 60, ampm = h >= 12 ? 'PM' : 'AM', h12 = h % 12 || 12; return `${h12}:${m.toString().padStart(2,'0')}${ampm}`; }
-    function militaryToAMPM(militaryTime) { if (!militaryTime) return ''; return minutesTo12Hr(timeToMinutes(militaryTime)); }
-    function formatHourRange(h) { return `${minutesTo12Hr(h * 60)}-${minutesTo12Hr((h + 1) * 60)}`; }
-    function calculateHours(start, end) { return (timeToMinutes(end) - timeToMinutes(start)) / 60; }
+    // --- TIME UTILITIES ---
+    function timeToMinutes(t) {
+        if (!t) return 0;
+        const [hh, mm] = t.split(':').map(Number);
+        return hh * 60 + mm;
+    }
 
+    function minutesTo12Hr(mins) {
+        const h = Math.floor(mins / 60);
+        const m = mins % 60;
+        const ampm = h >= 12 ? 'PM' : 'AM';
+        const h12 = h % 12 || 12;
+        return `${h12}:${m.toString().padStart(2,'0')}${ampm}`;
+    }
+
+    function militaryToAMPM(militaryTime) {
+        if (!militaryTime) return '';
+        const mins = timeToMinutes(militaryTime);
+        return minutesTo12Hr(mins);
+    }
+
+    function formatHourRange(h) {
+        const startMin = h * 60;
+        const endMin = (h + 1) * 60;
+        return `${minutesTo12Hr(startMin)}-${minutesTo12Hr(endMin)}`;
+    }
+
+    function calculateHours(start, end) {
+        const startMin = timeToMinutes(start);
+        const endMin = timeToMinutes(end);
+        return (endMin - startMin) / 60;
+    }
+
+    // --- SETTINGS MANAGEMENT ---
     function loadSettings() {
         onValue(settingsRef, (snapshot) => {
             const settings = snapshot.val();
             if (settings) {
                 DAILY_HOUR_LIMIT = settings.dailyHourLimit || 8;
                 ENFORCE_LIMIT = settings.enforceLimit !== undefined ? settings.enforceLimit : true;
-                if (settings.adminEmail) ADMIN_EMAIL = settings.adminEmail;
+                
                 document.getElementById('dailyHourLimit').value = DAILY_HOUR_LIMIT;
                 document.getElementById('enforceLimit').checked = ENFORCE_LIMIT;
                 updateLimitSettings();
@@ -1455,145 +1198,316 @@
         const enforceCheckbox = document.getElementById('enforceLimit');
         const badge = document.getElementById('enforcementBadge');
         const label = document.getElementById('enforceLimitLabel');
+        
         DAILY_HOUR_LIMIT = parseFloat(limitInput.value) || 8;
         ENFORCE_LIMIT = enforceCheckbox.checked;
-        if (ENFORCE_LIMIT) { badge.className = 'enforcement-badge badge-strict'; badge.textContent = 'STRICT MODE'; label.textContent = 'Strict Enforcement (Block Over-Limit)'; }
-        else { badge.className = 'enforcement-badge badge-warning'; badge.textContent = 'WARNING MODE'; label.textContent = 'Warning Only (Allow Over-Limit)'; }
-        if (currentUserRole === 'operator') { set(settingsRef, { dailyHourLimit: DAILY_HOUR_LIMIT, enforceLimit: ENFORCE_LIMIT }); }
-        document.getElementById('limitInfoDisplay').textContent = `📚 Daily Limit: ${DAILY_HOUR_LIMIT} hours per day`;
+        
+        if (ENFORCE_LIMIT) {
+            badge.className = 'enforcement-badge badge-strict';
+            badge.textContent = 'STRICT MODE';
+            label.textContent = 'Strict Enforcement (Block Over-Limit)';
+        } else {
+            badge.className = 'enforcement-badge badge-warning';
+            badge.textContent = 'WARNING MODE';
+            label.textContent = 'Warning Only (Allow Over-Limit)';
+        }
+        
+        if (currentUserRole === 'operator') {
+            set(settingsRef, {
+                dailyHourLimit: DAILY_HOUR_LIMIT,
+                enforceLimit: ENFORCE_LIMIT
+            });
+        }
+        
+        document.getElementById('limitInfoDisplay').textContent = 
+            `📚 Daily Limit: ${DAILY_HOUR_LIMIT} hours per day`;
+        
         checkAllTeachersHourLimits();
         renderHoursSummary(document.getElementById('filterSelector').value);
     };
 
+    // --- FORGOT PASSWORD ---
     window.handleForgotPassword = () => {
         const email = document.getElementById('authEmail').value;
         const errorMsg = document.getElementById('authError');
         if (!email) { errorMsg.innerText = "Please enter your email address first."; return; }
-        sendPasswordResetEmail(auth, email).then(() => { alert("Password reset email sent! Check your Gmail inbox."); }).catch(e => errorMsg.innerText = e.message);
+        sendPasswordResetEmail(auth, email).then(() => {
+            alert("Password reset email sent! Check your Gmail inbox.");
+        }).catch(e => errorMsg.innerText = e.message);
     };
 
+    // --- AUTH OBSERVER ---
     onAuthStateChanged(auth, (user) => {
         if (user) {
             onValue(ref(db, `users/${user.uid}`), (snapshot) => {
                 const userData = snapshot.val();
-                if (user.email === ADMIN_EMAIL) { currentUserRole = 'operator'; document.getElementById('loginOverlay').classList.add('hidden'); initAppUI(); return; }
+                if (user.email === ADMIN_EMAIL) {
+                    currentUserRole = 'operator';
+                    document.getElementById('loginOverlay').classList.add('hidden');
+                    initAppUI();
+                    return;
+                }
                 if (!userData) { signOut(auth); return; }
-                if (userData.role === 'operator' && userData.status !== 'approved') { alert("Your Operator account is pending approval from Reymonde Silvestre."); signOut(auth); }
-                else { currentUserRole = userData.role; document.getElementById('loginOverlay').classList.add('hidden'); initAppUI(); }
+                if (userData.role === 'operator' && userData.status !== 'approved') {
+                    alert("Your Operator account is pending approval from Reymonde Silvestre.");
+                    signOut(auth);
+                } else {
+                    currentUserRole = userData.role;
+                    document.getElementById('loginOverlay').classList.add('hidden');
+                    initAppUI();
+                }
             });
-        } else { document.getElementById('loginOverlay').classList.remove('hidden'); }
+        } else {
+            document.getElementById('loginOverlay').classList.remove('hidden');
+        }
     });
 
     function initAppUI() {
         document.getElementById('userRoleTag').innerText = currentUserRole.toUpperCase();
-        document.querySelectorAll('.operator-only').forEach(el => { if (currentUserRole === 'viewer') el.classList.add('hidden'); else el.classList.remove('hidden'); });
-        document.querySelectorAll('.admin-only').forEach(el => {
-            if (auth.currentUser?.email === ADMIN_EMAIL) { el.classList.remove('hidden'); setupAdminDashboard(); }
-            else el.classList.add('hidden');
+        
+        const opElements = document.querySelectorAll('.operator-only');
+        opElements.forEach(el => {
+            if (currentUserRole === 'viewer') el.classList.add('hidden');
+            else el.classList.remove('hidden');
         });
+
+        const adminCards = document.querySelectorAll('.admin-only');
+        adminCards.forEach(el => {
+            if (auth.currentUser?.email === ADMIN_EMAIL) {
+                el.classList.remove('hidden');
+                setupAdminDashboard();
+            } else {
+                el.classList.add('hidden');
+            }
+        });
+        
         loadSettings();
-        spLoadTheme();
-        spLoadBranding();
         loadDatabase();
     }
 
+    // --- ADMIN DASHBOARD LOGIC ---
     function setupAdminDashboard() {
         onValue(usersRef, (snapshot) => {
             const users = snapshot.val();
             const pendingBody = document.getElementById('pendingUsersBody');
             const allUsersBody = document.getElementById('allUsersBody');
-            pendingBody.innerHTML = ''; allUsersBody.innerHTML = '';
+            pendingBody.innerHTML = '';
+            allUsersBody.innerHTML = '';
             if (!users) return;
+
             Object.entries(users).forEach(([uid, val]) => {
                 if (val.email === ADMIN_EMAIL) return;
+
                 if (val.role === 'operator' && val.status === 'pending') {
-                    pendingBody.innerHTML += `<tr><td>${val.email}</td><td>
-                        <button onclick="approveUser('${uid}')" style="background:#22c55e; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;"><i class="fa-solid fa-check"></i></button>
-                        <button onclick="rejectUser('${uid}')" style="background:#ef4444; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;"><i class="fa-solid fa-x"></i></button>
-                    </td></tr>`;
+                    pendingBody.innerHTML += `
+                        <tr>
+                            <td>${val.email}</td>
+                            <td>
+                                <button onclick="approveUser('${uid}')" style="background:#22c55e; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;"><i class="fa-solid fa-check"></i></button>
+                                <button onclick="rejectUser('${uid}')" style="background:#ef4444; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;"><i class="fa-solid fa-x"></i></button>
+                            </td>
+                        </tr>`;
                 }
-                allUsersBody.innerHTML += `<tr><td style="font-size:10px;">${val.email}</td><td>
-                    <select onchange="changeUserRole('${uid}', this.value)" style="font-size:10px; padding:2px;">
-                        <option value="viewer" ${val.role === 'viewer' ? 'selected' : ''}>VIEWER</option>
-                        <option value="operator" ${val.role === 'operator' ? 'selected' : ''}>OPERATOR</option>
-                    </select></td>
-                    <td><button onclick="rejectUser('${uid}')" class="btn-delete" style="font-size:10px;"><i class="fa-solid fa-trash"></i></button></td></tr>`;
+
+                allUsersBody.innerHTML += `
+                    <tr>
+                        <td style="font-size:10px;">${val.email}</td>
+                        <td>
+                            <select onchange="changeUserRole('${uid}', this.value)" style="font-size:10px; padding:2px;">
+                                <option value="viewer" ${val.role === 'viewer' ? 'selected' : ''}>VIEWER</option>
+                                <option value="operator" ${val.role === 'operator' ? 'selected' : ''}>OPERATOR</option>
+                            </select>
+                        </td>
+                        <td>
+                             <button onclick="rejectUser('${uid}')" class="btn-delete" style="font-size:10px;"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>`;
             });
         });
     }
 
     window.approveUser = (uid) => update(ref(db, `users/${uid}`), { status: 'approved' });
     window.rejectUser = (uid) => { if(confirm("Permanently delete this user access?")) remove(ref(db, `users/${uid}`)); };
-    window.changeUserRole = (uid, newRole) => { const d = { role: newRole }; if(newRole === 'operator') d.status = 'approved'; update(ref(db, `users/${uid}`), d); alert("Role updated to " + newRole); };
+    window.changeUserRole = (uid, newRole) => {
+        const updateData = { role: newRole };
+        if(newRole === 'operator') updateData.status = 'approved';
+        update(ref(db, `users/${uid}`), updateData);
+        alert("Role updated to " + newRole);
+    };
 
+    // --- LOGIN / REGISTER UI TOGGLES ---
     window.toggleAuthMode = () => {
         isLoginMode = !isLoginMode;
-        const title = document.getElementById('authTitle'), btn = document.getElementById('authBtn');
-        const confirmField = document.getElementById('authConfirmPassword'), roleSel = document.getElementById('roleSelection');
-        const toggleText = document.getElementById('toggleText'), toggleLink = document.getElementById('toggleLink');
+        const title = document.getElementById('authTitle');
+        const btn = document.getElementById('authBtn');
+        const confirmField = document.getElementById('authConfirmPassword');
+        const roleSel = document.getElementById('roleSelection');
+        const toggleText = document.getElementById('toggleText');
+        const toggleLink = document.getElementById('toggleLink');
         const forgotLink = document.getElementById('forgotPassLink');
-        if (isLoginMode) { title.innerText = "ARK LOGIN"; btn.innerText = "SIGN IN"; confirmField.classList.add('hidden'); roleSel.classList.add('hidden'); forgotLink.classList.remove('hidden'); toggleText.innerText = "Don't have an account?"; toggleLink.innerText = "Create Account"; }
-        else { title.innerText = "CREATE ACCOUNT"; btn.innerText = "REGISTER"; confirmField.classList.remove('hidden'); roleSel.classList.remove('hidden'); forgotLink.classList.add('hidden'); toggleText.innerText = "Already have an account?"; toggleLink.innerText = "Log In Here"; }
+
+        if (isLoginMode) {
+            title.innerText = "ARK LOGIN";
+            btn.innerText = "SIGN IN";
+            confirmField.classList.add('hidden');
+            roleSel.classList.add('hidden');
+            forgotLink.classList.remove('hidden');
+            toggleText.innerText = "Don't have an account?";
+            toggleLink.innerText = "Create Account";
+        } else {
+            title.innerText = "CREATE ACCOUNT";
+            btn.innerText = "REGISTER";
+            confirmField.classList.remove('hidden');
+            roleSel.classList.remove('hidden');
+            forgotLink.classList.add('hidden');
+            toggleText.innerText = "Already have an account?";
+            toggleLink.innerText = "Log In Here";
+        }
     };
 
     window.handleAuth = () => {
-        const email = document.getElementById('authEmail').value, pass = document.getElementById('authPassword').value;
-        const confirmPass = document.getElementById('authConfirmPassword').value, role = document.getElementById('authRole').value;
+        const email = document.getElementById('authEmail').value;
+        const pass = document.getElementById('authPassword').value;
+        const confirmPass = document.getElementById('authConfirmPassword').value;
+        const role = document.getElementById('authRole').value;
         const errorMsg = document.getElementById('authError');
+
         if (!email || !pass) return errorMsg.innerText = "Please fill all fields.";
-        if (isLoginMode) { signInWithEmailAndPassword(auth, email, pass).catch(e => errorMsg.innerText = "Login Failed: " + e.message); }
-        else {
+
+        if (isLoginMode) {
+            signInWithEmailAndPassword(auth, email, pass).catch(e => errorMsg.innerText = "Login Failed: " + e.message);
+        } else {
             if (pass !== confirmPass) return errorMsg.innerText = "Passwords do not match.";
-            createUserWithEmailAndPassword(auth, email, pass).then((uc) => {
-                set(ref(db, 'users/' + uc.user.uid), { email, role, status: role === 'viewer' ? 'approved' : 'pending' });
+            createUserWithEmailAndPassword(auth, email, pass).then((userCredential) => {
+                set(ref(db, 'users/' + userCredential.user.uid), {
+                    email: email, role: role,
+                    status: role === 'viewer' ? 'approved' : 'pending'
+                });
                 if(role === 'operator') { alert("Account request sent! Please wait for approval."); signOut(auth); }
             }).catch(e => errorMsg.innerText = "Sign Up Failed: " + e.message);
         }
     };
 
     window.handleLogout = () => {
-        document.querySelectorAll('.section-container').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.section-container').forEach(el => {
+            el.classList.remove('active');
+        });
         document.getElementById('dashboardCards').style.display = 'grid';
         signOut(auth);
     };
 
+    // --- SCHEDULE LOGIC ---
     function loadDatabase() {
         onValue(scheduleRef, (snapshot) => {
             const data = snapshot.val();
             window.schedules = data ? Object.entries(data).map(([key, val]) => ({...val, firebaseKey: key})) : [];
-            updateFilterList(false); updateDataLists(); renderManageTable(); renderMatrix(); checkAllTeachersHourLimits();
+            updateFilterList(false);
+            updateDataLists();
+            renderManageTable();
+            renderMatrix();
+            checkAllTeachersHourLimits();
         });
     }
 
     function checkDailyHourLimit(newEntry, ignoreKey = null) {
         if (!newEntry.teacher) return null;
-        const teacherSchedules = window.schedules.filter(s => s.teacher === newEntry.teacher && s.day === newEntry.day && s.firebaseKey !== ignoreKey);
+
+        const teacherSchedules = window.schedules.filter(s => 
+            s.teacher === newEntry.teacher && 
+            s.day === newEntry.day &&
+            s.firebaseKey !== ignoreKey
+        );
+
         let totalHours = 0;
-        teacherSchedules.forEach(s => { totalHours += calculateHours(s.start, s.end); });
+        teacherSchedules.forEach(s => {
+            totalHours += calculateHours(s.start, s.end);
+        });
+
         const newHours = calculateHours(newEntry.start, newEntry.end);
         const projectedTotal = totalHours + newHours;
-        if (projectedTotal > DAILY_HOUR_LIMIT) return { exceeded: true, currentHours: totalHours, newHours, projectedTotal, overBy: projectedTotal - DAILY_HOUR_LIMIT };
+
+        if (projectedTotal > DAILY_HOUR_LIMIT) {
+            return {
+                exceeded: true,
+                currentHours: totalHours,
+                newHours: newHours,
+                projectedTotal: projectedTotal,
+                overBy: projectedTotal - DAILY_HOUR_LIMIT
+            };
+        }
+
         return null;
     }
 
     function checkConflict(newEntry, ignoreKey = null) {
         const conflicts = [];
-        const newStart = timeToMinutes(newEntry.start), newEnd = timeToMinutes(newEntry.end);
-        if (newEnd <= newStart) { conflicts.push("⚠️ INVALID TIME RANGE\nEnd time must be after start time."); return conflicts.join("\n\n"); }
+        const newStart = timeToMinutes(newEntry.start);
+        const newEnd = timeToMinutes(newEntry.end);
+
+        if (newEnd <= newStart) {
+            conflicts.push("⚠️ INVALID TIME RANGE\nEnd time must be after start time.");
+            return conflicts.join("\n\n");
+        }
+
         const hourLimitCheck = checkDailyHourLimit(newEntry, ignoreKey);
         if (hourLimitCheck && ENFORCE_LIMIT) {
-            conflicts.push(`⏰ DAILY HOUR LIMIT EXCEEDED (STRICT MODE)\nInstructor: ${newEntry.teacher}\nDay: ${newEntry.day}\n\nCurrent Hours: ${hourLimitCheck.currentHours.toFixed(1)} hrs\nNew Schedule: +${hourLimitCheck.newHours.toFixed(1)} hrs\nProjected Total: ${hourLimitCheck.projectedTotal.toFixed(1)} hrs\n\n⚠️ EXCEEDS LIMIT BY: ${hourLimitCheck.overBy.toFixed(1)} hours\nDaily limit is ${DAILY_HOUR_LIMIT} hours per day.\n\n❌ Cannot save in Strict Mode. Either:\n• Reduce the schedule duration\n• Change to Warning Mode in settings`);
+            conflicts.push(`⏰ DAILY HOUR LIMIT EXCEEDED (STRICT MODE)
+Instructor: ${newEntry.teacher}
+Day: ${newEntry.day}
+
+Current Hours: ${hourLimitCheck.currentHours.toFixed(1)} hrs
+New Schedule: +${hourLimitCheck.newHours.toFixed(1)} hrs
+Projected Total: ${hourLimitCheck.projectedTotal.toFixed(1)} hrs
+
+⚠️ EXCEEDS LIMIT BY: ${hourLimitCheck.overBy.toFixed(1)} hours
+Daily limit is ${DAILY_HOUR_LIMIT} hours per day.
+
+❌ Cannot save in Strict Mode. Either:
+• Reduce the schedule duration
+• Change to Warning Mode in settings`);
         }
+
         window.schedules.forEach(existing => {
             if (existing.firebaseKey === ignoreKey) return;
             if (existing.day !== newEntry.day) return;
-            const exStart = timeToMinutes(existing.start), exEnd = timeToMinutes(existing.end);
-            if (!(newStart < exEnd && newEnd > exStart)) return;
-            const nS = militaryToAMPM(newEntry.start), nE = militaryToAMPM(newEntry.end), eS = militaryToAMPM(existing.start), eE = militaryToAMPM(existing.end);
-            if (existing.teacher && newEntry.teacher && existing.teacher === newEntry.teacher) conflicts.push(`🧑‍🏫 INSTRUCTOR CONFLICT\n  Instructor: ${existing.teacher}\n  Existing: ${existing.subject} (${existing.section})\n            ${eS} - ${eE}\n  New: ${newEntry.subject} (${newEntry.section})\n       ${nS} - ${nE}`);
-            if (existing.room && newEntry.room && existing.room === newEntry.room) conflicts.push(`🏛️ ROOM CONFLICT\n  Room: ${existing.room}\n  Existing: ${existing.subject} (${existing.section})\n            ${eS} - ${eE}\n  New: ${newEntry.subject} (${newEntry.section})\n       ${nS} - ${nE}`);
-            if (existing.section && newEntry.section && existing.section === newEntry.section) conflicts.push(`👥 SECTION CONFLICT\n  Section: ${existing.section}\n  Existing: ${existing.subject} by ${existing.teacher}\n            ${eS} - ${eE}\n  New: ${newEntry.subject} by ${newEntry.teacher}\n       ${nS} - ${nE}`);
+            const exStart = timeToMinutes(existing.start);
+            const exEnd = timeToMinutes(existing.end);
+            const overlapping = (newStart < exEnd && newEnd > exStart);
+            if (!overlapping) return;
+
+            const newStartAMPM = militaryToAMPM(newEntry.start);
+            const newEndAMPM = militaryToAMPM(newEntry.end);
+            const exStartAMPM = militaryToAMPM(existing.start);
+            const exEndAMPM = militaryToAMPM(existing.end);
+
+            if (existing.teacher && newEntry.teacher && existing.teacher === newEntry.teacher) {
+                conflicts.push(`🧑‍🏫 INSTRUCTOR CONFLICT
+  Instructor: ${existing.teacher}
+  Existing: ${existing.subject} (${existing.section})
+            ${exStartAMPM} - ${exEndAMPM}
+  New: ${newEntry.subject} (${newEntry.section})
+       ${newStartAMPM} - ${newEndAMPM}`);
+            }
+
+            if (existing.room && newEntry.room && existing.room === newEntry.room) {
+                conflicts.push(`🏛️ ROOM CONFLICT
+  Room: ${existing.room}
+  Existing: ${existing.subject} (${existing.section})
+            ${exStartAMPM} - ${exEndAMPM}
+  New: ${newEntry.subject} (${newEntry.section})
+       ${newStartAMPM} - ${newEndAMPM}`);
+            }
+
+            if (existing.section && newEntry.section && existing.section === newEntry.section) {
+                conflicts.push(`👥 SECTION CONFLICT
+  Section: ${existing.section}
+  Existing: ${existing.subject} by ${existing.teacher}
+            ${exStartAMPM} - ${exEndAMPM}
+  New: ${newEntry.subject} by ${newEntry.teacher}
+       ${newStartAMPM} - ${newEndAMPM}`);
+            }
         });
+
         return conflicts.length ? conflicts.join("\n\n") : null;
     }
 
@@ -1609,84 +1523,190 @@
             end: document.getElementById('endTime').value
         };
         if(!entry.subject || !entry.section) return alert("Please fill in Subject & Section");
+        
         const errorMsg = checkConflict(entry, key || null);
         if(errorMsg) return alert("❌ CONFLICT(S) DETECTED\n\n" + errorMsg);
+        
         if (!ENFORCE_LIMIT) {
-            const hlc = checkDailyHourLimit(entry, key || null);
-            if (hlc) { if (!confirm(`⚠️ WARNING: Daily Hour Limit Will Be Exceeded\n\nInstructor: ${entry.teacher}\nDay: ${entry.day}\n\nCurrent Hours: ${hlc.currentHours.toFixed(1)} hrs\nNew Schedule: +${hlc.newHours.toFixed(1)} hrs\nProjected Total: ${hlc.projectedTotal.toFixed(1)} hrs\n\n⚠️ EXCEEDS LIMIT BY: ${hlc.overBy.toFixed(1)} hours\nDaily limit is ${DAILY_HOUR_LIMIT} hours per day.\n\n⚠️ Warning Mode is active. Do you want to proceed anyway?`)) return; }
+            const hourLimitCheck = checkDailyHourLimit(entry, key || null);
+            if (hourLimitCheck) {
+                const proceed = confirm(`⚠️ WARNING: Daily Hour Limit Will Be Exceeded
+                
+Instructor: ${entry.teacher}
+Day: ${entry.day}
+
+Current Hours: ${hourLimitCheck.currentHours.toFixed(1)} hrs
+New Schedule: +${hourLimitCheck.newHours.toFixed(1)} hrs
+Projected Total: ${hourLimitCheck.projectedTotal.toFixed(1)} hrs
+
+⚠️ EXCEEDS LIMIT BY: ${hourLimitCheck.overBy.toFixed(1)} hours
+Daily limit is ${DAILY_HOUR_LIMIT} hours per day.
+
+⚠️ Warning Mode is active. Do you want to proceed anyway?`);
+                
+                if (!proceed) return;
+            }
         }
-        if(key) update(ref(db, `schedules/${key}`), entry); else push(scheduleRef, entry);
+        
+        if(key) update(ref(db, `schedules/${key}`), entry);
+        else push(scheduleRef, entry);
         clearInputs();
     };
 
-    function clearInputs() { document.getElementById('editKey').value = ''; document.getElementById('subject').value = ''; document.getElementById('section').value = ''; document.getElementById('teacher').value = ''; document.getElementById('room').value = ''; document.getElementById('saveBtn').innerText = 'SAVE'; }
+    function clearInputs() {
+        document.getElementById('editKey').value = '';
+        document.getElementById('subject').value = '';
+        document.getElementById('section').value = '';
+        document.getElementById('teacher').value = '';
+        document.getElementById('room').value = '';
+        document.getElementById('saveBtn').innerText = 'SAVE';
+    }
 
     window.editEntry = (key) => {
         const item = window.schedules.find(s => s.firebaseKey === key);
         if(!item) return;
+        
         showSection('encodeSection');
-        document.getElementById('editKey').value = key; document.getElementById('subject').value = item.subject; document.getElementById('section').value = item.section;
-        document.getElementById('teacher').value = item.teacher; document.getElementById('room').value = item.room; document.getElementById('day').value = item.day;
-        document.getElementById('startTime').value = item.start; document.getElementById('endTime').value = item.end; document.getElementById('saveBtn').innerText = 'UPDATE';
+        
+        document.getElementById('editKey').value = key;
+        document.getElementById('subject').value = item.subject;
+        document.getElementById('section').value = item.section;
+        document.getElementById('teacher').value = item.teacher;
+        document.getElementById('room').value = item.room;
+        document.getElementById('day').value = item.day;
+        document.getElementById('startTime').value = item.start;
+        document.getElementById('endTime').value = item.end;
+        document.getElementById('saveBtn').innerText = 'UPDATE';
+        
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     window.deleteEntry = (k) => { if(confirm("Delete this entry?")) remove(ref(db, `schedules/${k}`)); };
     window.resetDatabase = () => { if(confirm("⚠️ Reset all schedule data?\n\nThis action cannot be undone.")) set(scheduleRef, null); };
 
+    // --- DRAG AND DROP ---
     window.handleDragStart = (e, k) => { if(currentUserRole === 'viewer') e.preventDefault(); else e.dataTransfer.setData("text", k); };
     window.handleDragOver = (e) => e.preventDefault();
     window.handleDrop = (e, day, start) => {
         e.preventDefault();
-        const key = e.dataTransfer.getData("text"), entry = window.schedules.find(s => s.firebaseKey === key);
+        const key = e.dataTransfer.getData("text");
+        const entry = window.schedules.find(s => s.firebaseKey === key);
         if(!entry) return;
-        const [nh, nm] = start.split(':').map(Number), duration = timeToMinutes(entry.end) - timeToMinutes(entry.start);
-        const newEndMin = nh * 60 + nm + duration;
-        const endTime = `${Math.floor(newEndMin/60).toString().padStart(2,'0')}:${(newEndMin%60).toString().padStart(2,'0')}`;
-        const updatedEntry = { ...entry, day, start, end: endTime };
+        const [nh, nm] = start.split(':').map(Number);
+        const duration = timeToMinutes(entry.end) - timeToMinutes(entry.start);
+        const newStartMin = nh * 60 + nm;
+        const newEndMin = newStartMin + duration;
+        const endHours = Math.floor(newEndMin/60).toString().padStart(2,'0');
+        const endMins = (newEndMin%60).toString().padStart(2,'0');
+        const endTime = `${endHours}:${endMins}`;
+        const updatedEntry = { ...entry, day, start: start, end: endTime };
         const errorMsg = checkConflict(updatedEntry, key);
         if(errorMsg) return alert("❌ CANNOT MOVE - CONFLICT DETECTED\n\n" + errorMsg);
-        update(ref(db, `schedules/${key}`), { day, start, end: endTime });
+        update(ref(db, `schedules/${key}`), { day, start: start, end: endTime });
     };
 
+    // --- CALCULATE TEACHER HOURS ---
     function calculateTeacherHours(teacherName) {
-        const days = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"], hoursPerDay = {};
+        const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+        const hoursPerDay = {};
         days.forEach(d => hoursPerDay[d] = 0);
-        window.schedules.filter(s => s.teacher === teacherName).forEach(item => { hoursPerDay[item.day] += calculateHours(item.start, item.end); });
-        return { hoursPerDay, totalHours: Object.values(hoursPerDay).reduce((s, h) => s + h, 0) };
+
+        window.schedules
+            .filter(s => s.teacher === teacherName)
+            .forEach(item => {
+                const hours = calculateHours(item.start, item.end);
+                hoursPerDay[item.day] += hours;
+            });
+
+        const totalHours = Object.values(hoursPerDay).reduce((sum, h) => sum + h, 0);
+        return { hoursPerDay, totalHours };
     }
 
     function renderHoursSummary(teacherName) {
-        const summaryBox = document.getElementById('hoursSummary'), hoursGrid = document.getElementById('hoursGrid');
-        const totalDisplay = document.getElementById('totalWeeklyHours'), teacherDisplay = document.getElementById('teacherNameDisplay');
-        if (!teacherName) { summaryBox.classList.add('hidden'); return; }
+        const summaryBox = document.getElementById('hoursSummary');
+        const hoursGrid = document.getElementById('hoursGrid');
+        const totalDisplay = document.getElementById('totalWeeklyHours');
+        const teacherDisplay = document.getElementById('teacherNameDisplay');
+
+        if (!teacherName) {
+            summaryBox.classList.add('hidden');
+            return;
+        }
+
         const { hoursPerDay, totalHours } = calculateTeacherHours(teacherName);
         const hasOverLimit = Object.values(hoursPerDay).some(h => h > DAILY_HOUR_LIMIT);
+
         summaryBox.classList.remove('hidden');
-        summaryBox.classList.toggle('over-limit', hasOverLimit);
+        if (hasOverLimit) {
+            summaryBox.classList.add('over-limit');
+        } else {
+            summaryBox.classList.remove('over-limit');
+        }
+
         teacherDisplay.innerText = teacherName;
-        const days = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
-        const dayAbbrev = { Monday:"MON", Tuesday:"TUE", Wednesday:"WED", Thursday:"THU", Friday:"FRI", Saturday:"SAT", Sunday:"SUN" };
+
+        const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+        const dayAbbrev = { Monday: "MON", Tuesday: "TUE", Wednesday: "WED", Thursday: "THU", Friday: "FRI", Saturday: "SAT", Sunday: "SUN" };
+
         hoursGrid.innerHTML = days.map(day => {
-            const hours = hoursPerDay[day], isOver = hours > DAILY_HOUR_LIMIT, isAt = hours === DAILY_HOUR_LIMIT;
-            let badge = '', overClass = '';
-            if (isOver) { badge = `<span class="limit-badge over-badge">OVER WORK</span>`; overClass = ' over-limit'; }
-            else if (isAt) badge = `<span class="limit-badge">LIMIT</span>`;
-            return `<div class="day-hours${overClass}">${badge}<div class="day-name">${dayAbbrev[day]}</div><div class="hours-value">${hours.toFixed(1)}</div></div>`;
+            const hours = hoursPerDay[day];
+            const isOverLimit = hours > DAILY_HOUR_LIMIT;
+            const isAtLimit = hours === DAILY_HOUR_LIMIT;
+            let badge = '';
+            let overClass = '';
+
+            if (isOverLimit) {
+                badge = `<span class="limit-badge over-badge">OVER WORK</span>`;
+                overClass = ' over-limit';
+            } else if (isAtLimit) {
+                badge = `<span class="limit-badge">LIMIT</span>`;
+            }
+
+            return `
+            <div class="day-hours${overClass}">
+                ${badge}
+                <div class="day-name">${dayAbbrev[day]}</div>
+                <div class="hours-value">${hours.toFixed(1)}</div>
+            </div>`;
         }).join('');
+
         totalDisplay.innerText = totalHours.toFixed(1);
     }
 
     function checkAllTeachersHourLimits() {
-        const warningAlert = document.getElementById('warningAlert'), warningMessage = document.getElementById('warningMessage');
-        const teachers = [...new Set(window.schedules.map(s => s.teacher))].filter(t => t), violations = [];
-        teachers.forEach(teacher => { const { hoursPerDay } = calculateTeacherHours(teacher); Object.entries(hoursPerDay).filter(([,hours]) => hours > DAILY_HOUR_LIMIT).forEach(([day, hours]) => violations.push({ teacher, day, hours })); });
-        if (violations.length > 0) { warningMessage.innerHTML = violations.map(v => `${v.teacher} on ${v.day}: ${v.hours.toFixed(1)} hours (${(v.hours - DAILY_HOUR_LIMIT).toFixed(1)}hrs over ${DAILY_HOUR_LIMIT}hr limit)`).join('<br>'); warningAlert.classList.remove('hidden'); }
-        else warningAlert.classList.add('hidden');
+        const warningAlert = document.getElementById('warningAlert');
+        const warningMessage = document.getElementById('warningMessage');
+
+        const teachers = [...new Set(window.schedules.map(s => s.teacher))].filter(t => t);
+        const violations = [];
+
+        teachers.forEach(teacher => {
+            const { hoursPerDay } = calculateTeacherHours(teacher);
+            const days = Object.entries(hoursPerDay).filter(([day, hours]) => hours > DAILY_HOUR_LIMIT);
+
+            if (days.length > 0) {
+                days.forEach(([day, hours]) => {
+                    violations.push({ teacher, day, hours });
+                });
+            }
+        });
+
+        if (violations.length > 0) {
+            const messages = violations.map(v => 
+                `${v.teacher} on ${v.day}: ${v.hours.toFixed(1)} hours (${(v.hours - DAILY_HOUR_LIMIT).toFixed(1)}hrs over ${DAILY_HOUR_LIMIT}hr limit)`
+            );
+            warningMessage.innerHTML = messages.join('<br>');
+            warningAlert.classList.remove('hidden');
+        } else {
+            warningAlert.classList.add('hidden');
+        }
     }
 
+    // --- RENDERING ---
     window.updateFilterList = (forceReset = false) => {
-        const m = document.getElementById('modeSelect').value, sel = document.getElementById('filterSelector'), prev = sel.value;
+        const m = document.getElementById('modeSelect').value;
+        const sel = document.getElementById('filterSelector');
+        const prev = sel.value;
         const vals = [...new Set(window.schedules.map(s => (s[m] || '').trim()))].filter(v => v).sort();
         sel.innerHTML = vals.map(v => `<option value="${v}">${v}</option>`).join('');
         if (!forceReset && prev && vals.includes(prev)) sel.value = prev;
@@ -1694,42 +1714,77 @@
     };
 
     window.updateDataLists = () => {
-        ['subject','section','teacher','room'].forEach(f => {
+        ['subject', 'section', 'teacher', 'room'].forEach(f => {
             const list = document.getElementById(`${f}List`);
-            list.innerHTML = [...new Set(window.schedules.map(s => s[f]))].filter(v => v).sort().map(v => `<option value="${v}">`).join('');
+            const vals = [...new Set(window.schedules.map(s => s[f]))].filter(v => v).sort();
+            list.innerHTML = vals.map(v => `<option value="${v}">`).join('');
         });
     };
 
     window.renderMatrix = () => {
-        const mode = document.getElementById('modeSelect').value, filterVal = document.getElementById('filterSelector').value;
+        const mode = document.getElementById('modeSelect').value;
+        const filterVal = document.getElementById('filterSelector').value;
         const body = document.getElementById('matrixBody');
         document.getElementById('matrixTitle').innerText = filterVal ? `${mode.toUpperCase()}: ${filterVal}` : "";
         body.innerHTML = '';
-        if (mode === 'teacher' && filterVal) renderHoursSummary(filterVal); else document.getElementById('hoursSummary').classList.add('hidden');
+
+        if (mode === 'teacher' && filterVal) {
+            renderHoursSummary(filterVal);
+        } else {
+            document.getElementById('hoursSummary').classList.add('hidden');
+        }
+
         if(!filterVal) return;
-        const days = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+        const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+
         for (let h = 7; h <= 18; h++) {
             let tr = document.createElement('tr');
-            let slotStart = `${h.toString().padStart(2,'0')}:00`, slotEnd = `${(h+1).toString().padStart(2,'0')}:00`;
+            let slotStart = `${h.toString().padStart(2,'0')}:00`;
+            let slotEnd = `${(h+1).toString().padStart(2,'0')}:00`;
             tr.innerHTML = `<td class="time-col">${formatHourRange(h)}</td>`;
             days.forEach(day => {
                 let td = document.createElement('td');
                 td.setAttribute('ondragover', 'handleDragOver(event)');
                 td.setAttribute('ondrop', `handleDrop(event, '${day}', '${slotStart}')`);
-                const slotStartMin = timeToMinutes(slotStart), slotEndMin = timeToMinutes(slotEnd);
+                const slotStartMin = timeToMinutes(slotStart);
+                const slotEndMin = timeToMinutes(slotEnd);
                 window.schedules.filter(s => (s[mode] || '') === filterVal && s.day === day).forEach(item => {
-                    const itemStartMin = timeToMinutes(item.start), itemEndMin = timeToMinutes(item.end);
-                    if (slotStartMin < itemEndMin && slotEndMin > itemStartMin) {
+                    const itemStartMin = timeToMinutes(item.start);
+                    const itemEndMin = timeToMinutes(item.end);
+                    const overlapsSlot = (slotStartMin < itemEndMin && slotEndMin > itemStartMin);
+                    if (overlapsSlot) {
                         let div = document.createElement('div');
                         div.className = 'slot-box';
                         div.draggable = (currentUserRole === 'operator');
                         div.setAttribute('ondragstart', `handleDragStart(event, '${item.firebaseKey}')`);
+                        
                         let displayInfo = '';
-                        if (mode === "section") displayInfo = item.teacher || 'No Teacher';
-                        else if (mode === "teacher") displayInfo = item.section || 'No Section';
-                        else if (mode === "room") displayInfo = `${item.section || 'No Section'}•${item.teacher || 'No Teacher'}`;
-                        const actionButtons = currentUserRole === 'operator' ? `<div class="slot-actions"><button class="slot-action-btn slot-edit-btn" onclick="event.stopPropagation(); editEntry('${item.firebaseKey}')" title="Edit"><i class="fa-solid fa-pen"></i></button><button class="slot-action-btn slot-delete-btn" onclick="event.stopPropagation(); deleteEntry('${item.firebaseKey}')" title="Delete"><i class="fa-solid fa-trash"></i></button></div>` : '';
-                        div.innerHTML = `${actionButtons}<strong>${item.subject}</strong><span class="room-badge">${item.room || 'No Room'}</span><div class="info-line">${displayInfo}</div>`;
+                        if (mode === "section") {
+                            displayInfo = item.teacher || 'No Teacher';
+                        } else if (mode === "teacher") {
+                            displayInfo = item.section || 'No Section';
+                        } else if (mode === "room") {
+                            displayInfo = `${item.section || 'No Section'}•${item.teacher || 'No Teacher'}`;
+                        }
+                        
+                        // Action buttons (only for operators)
+                        const actionButtons = currentUserRole === 'operator' ? `
+                            <div class="slot-actions">
+                                <button class="slot-action-btn slot-edit-btn" onclick="event.stopPropagation(); editEntry('${item.firebaseKey}')" title="Edit">
+                                    <i class="fa-solid fa-pen"></i>
+                                </button>
+                                <button class="slot-action-btn slot-delete-btn" onclick="event.stopPropagation(); deleteEntry('${item.firebaseKey}')" title="Delete">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </div>
+                        ` : '';
+                        
+                        div.innerHTML = `
+                            ${actionButtons}
+                            <strong>${item.subject}</strong>
+                            <span class="room-badge">${item.room || 'No Room'}</span>
+                            <div class="info-line">${displayInfo}</div>
+                        `;
                         td.appendChild(div);
                     }
                 });
@@ -1741,272 +1796,119 @@
 
     function renderManageTable() {
         const q = (document.getElementById('searchBox') ? document.getElementById('searchBox').value.trim().toLowerCase() : '');
-        const filtered = window.schedules.filter(s => { if (!q) return true; return [s.subject||'',s.section||'',s.teacher||'',s.room||'',s.day||'',`${s.start||''}-${s.end||''}`,s.firebaseKey||''].join(' ').toLowerCase().includes(q); });
+        const filtered = window.schedules.filter(s => {
+            if (!q) return true;
+            const combined = [
+                s.subject || '',
+                s.section || '',
+                s.teacher || '',
+                s.room || '',
+                s.day || '',
+                `${s.start || ''}-${s.end || ''}`,
+                s.firebaseKey || ''
+            ].join(' ').toLowerCase();
+            return combined.includes(q);
+        });
+
         document.getElementById('manageBody').innerHTML = filtered.map(s => {
             const actionsClass = currentUserRole === 'viewer' ? 'hidden' : '';
-            return `<tr><td><b>${s.day ? s.day.substring(0,3) : ''}</b></td><td>${militaryToAMPM(s.start)} - ${militaryToAMPM(s.end)}</td><td style="color:#2563eb; font-weight:600">${s.subject}</td><td>${s.section}</td><td>${s.teacher}</td><td>${s.room}</td><td class="${actionsClass}" style="text-align: center;"><button onclick="editEntry('${s.firebaseKey}')" class="btn-edit"><i class="fa-solid fa-pen"></i></button><button onclick="deleteEntry('${s.firebaseKey}')" class="btn-delete"><i class="fa-solid fa-trash"></i></button></td></tr>`;
+            const timeDisplay = `${militaryToAMPM(s.start)} - ${militaryToAMPM(s.end)}`;
+            return `
+            <tr>
+                <td><b>${s.day ? s.day.substring(0,3) : ''}</b></td>
+                <td>${timeDisplay}</td>
+                <td style="color:#2563eb; font-weight:600">${s.subject}</td>
+                <td>${s.section}</td>
+                <td>${s.teacher}</td>
+                <td>${s.room}</td>
+                <td class="${actionsClass}" style="text-align: center;">
+                    <button onclick="editEntry('${s.firebaseKey}')" class="btn-edit"><i class="fa-solid fa-pen"></i></button>
+                    <button onclick="deleteEntry('${s.firebaseKey}')" class="btn-delete"><i class="fa-solid fa-trash"></i></button>
+                </td>
+            </tr>`;
         }).join('');
     }
 
-    window.clearSearch = () => { const sb = document.getElementById('searchBox'); if (sb) { sb.value = ''; renderManageTable(); } };
+    window.clearSearch = () => {
+        const sb = document.getElementById('searchBox');
+        if (sb) {
+            sb.value = '';
+            renderManageTable();
+        }
+    };
 
     document.addEventListener('DOMContentLoaded', () => {
         const sb = document.getElementById('searchBox');
-        if (sb) sb.addEventListener('input', () => renderManageTable());
+        if (sb) {
+            sb.addEventListener('input', () => {
+                renderManageTable();
+            });
+        }
     });
 
+    // --- EXPORTS ---
     window.downloadFullMatrix = async (type) => {
-        const canvas = await html2canvas(document.getElementById('captureArea'), { scale: 2, useCORS: true, logging: false, backgroundColor: '#ffffff' });
+        const canvas = await html2canvas(document.getElementById('captureArea'), { 
+            scale: 2,
+            useCORS: true,
+            logging: false,
+            backgroundColor: '#ffffff'
+        });
         const img = canvas.toDataURL('image/png');
-        if(type === 'png') { const a = document.createElement('a'); a.href = img; a.download = 'schedule.png'; a.click(); }
-        else {
-            const { jsPDF } = window.jspdf; const pdf = new jsPDF('l', 'mm', 'a4');
-            const pageWidth = 297, pageHeight = 210, margin = 10;
-            const availableWidth = pageWidth - (margin * 2), availableHeight = pageHeight - (margin * 2);
-            const imgProps = pdf.getImageProperties(img), imgRatio = imgProps.height / imgProps.width;
-            let finalWidth = availableWidth, finalHeight = availableWidth * imgRatio;
-            if (finalHeight > availableHeight) { finalHeight = availableHeight; finalWidth = finalHeight / imgRatio; }
-            pdf.addImage(img, 'PNG', (pageWidth - finalWidth) / 2, (pageHeight - finalHeight) / 2, finalWidth, finalHeight);
+        
+        if(type === 'png') {
+            const a = document.createElement('a'); 
+            a.href = img; 
+            a.download = 'schedule.png'; 
+            a.click();
+        } else {
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF('l', 'mm', 'a4');
+            
+            // A4 landscape: 297mm x 210mm with 10mm margins
+            const pageWidth = 297;
+            const pageHeight = 210;
+            const margin = 10;
+            const availableWidth = pageWidth - (margin * 2);
+            const availableHeight = pageHeight - (margin * 2);
+            
+            const imgProps = pdf.getImageProperties(img);
+            const imgRatio = imgProps.height / imgProps.width;
+            
+            let finalWidth = availableWidth;
+            let finalHeight = availableWidth * imgRatio;
+            
+            if (finalHeight > availableHeight) {
+                finalHeight = availableHeight;
+                finalWidth = finalHeight / imgRatio;
+            }
+            
+            const xOffset = (pageWidth - finalWidth) / 2;
+            const yOffset = (pageHeight - finalHeight) / 2;
+            
+            pdf.addImage(img, 'PNG', xOffset, yOffset, finalWidth, finalHeight);
             pdf.save('schedule.pdf');
         }
     };
 
     window.downloadExcelMasterlist = () => {
-        const exportData = window.schedules.map(s => ({ Day: s.day, Start: militaryToAMPM(s.start), End: militaryToAMPM(s.end), Subject: s.subject, Section: s.section, Teacher: s.teacher, Room: s.room }));
-        const ws = XLSX.utils.json_to_sheet(exportData), wb = XLSX.utils.book_new();
+        const exportData = window.schedules.map(s => ({
+            Day: s.day,
+            Start: militaryToAMPM(s.start),
+            End: militaryToAMPM(s.end),
+            Subject: s.subject,
+            Section: s.section,
+            Teacher: s.teacher,
+            Room: s.room
+        }));
+        const ws = XLSX.utils.json_to_sheet(exportData);
+        const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "Masterlist");
         XLSX.writeFile(wb, "ARK_Masterlist.xlsx");
     };
-
-    // ============================================================
-    // SETTINGS SIDE-PANEL — NEW JS (appended after all original code)
-    // ============================================================
-
-    const ACCENT_COLORS = ['#3b82f6','#8b5cf6','#ec4899','#10b981','#f59e0b','#ef4444','#14b8a6','#6366f1','#06b6d4','#84cc16'];
-    const PRIMARY_COLORS = ['#0f172a','#1f2937','#27272a','#262626','#292524','#1e3a5f','#2e1065','#14532d','#4c0519','#374151'];
-
-    let SP = {
-        accent:  '#3b82f6',
-        primary: '#0f172a',
-        dark:    false,
-        logo:    null,   // null = keep original file path
-        name:    'ARK TECHNOLOGICAL INSTITUTE EDUCATION SYSTEM iNC.',
-        addr:    'J-Seven Bldg. Magallanes Cor. Granja St. Brgy. 7 Lucena City.'
-    };
-
-    // --- toast ---
-    function spToast(msg) {
-        const el = document.getElementById('spToast');
-        document.getElementById('spToastMsg').textContent = msg;
-        el.classList.add('show');
-        setTimeout(() => el.classList.remove('show'), 2400);
-    }
-
-    // --- open / close ---
-    window.spOpen = () => {
-        document.getElementById('spBackdrop').classList.add('open');
-        document.getElementById('spPanel').classList.add('open');
-        spSyncUI();
-    };
-    window.spClose = () => {
-        document.getElementById('spBackdrop').classList.remove('open');
-        document.getElementById('spPanel').classList.remove('open');
-    };
-
-    // --- tab switch ---
-    window.spTab = (btn) => {
-        document.querySelectorAll('.sp-tab').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.sp-page').forEach(p => p.classList.remove('active'));
-        btn.classList.add('active');
-        document.getElementById('spPage-' + btn.dataset.tab).classList.add('active');
-        if (btn.dataset.tab === 'users') spLoadUsers();
-    };
-
-    // --- build color swatches ---
-    function buildSwatches(containerId, palette, activeHex, onPick) {
-        const wrap = document.getElementById(containerId);
-        wrap.innerHTML = palette.map(hex =>
-            `<div class="sp-swatch ${hex === activeHex ? 'active' : ''}" style="background:${hex};" data-hex="${hex}"><span class="chk"><i class="fa-solid fa-check"></i></span></div>`
-        ).join('');
-        wrap.querySelectorAll('.sp-swatch').forEach(el => {
-            el.addEventListener('click', () => {
-                wrap.querySelectorAll('.sp-swatch').forEach(s => s.classList.remove('active'));
-                el.classList.add('active');
-                onPick(el.dataset.hex);
-            });
-        });
-    }
-
-    // --- apply theme live ---
-    function spApplyTheme() {
-        document.documentElement.style.setProperty('--ark-accent', SP.accent);
-        document.documentElement.style.setProperty('--ark-dark', SP.primary);
-
-        // Dark mode toggle
-        if (SP.dark) {
-            document.body.style.background = '#0f172a';
-            document.body.style.color = '#e2e8f0';
-            document.querySelector('.main-container').style.background = '#1e293b';
-            document.querySelector('.main-container').style.boxShadow = '0 4px 6px -1px rgba(0,0,0,0.3)';
-            document.querySelectorAll('.dashboard-card').forEach(c => { c.style.background='#1e293b'; c.style.borderColor='#334155'; });
-            document.querySelectorAll('.section-container').forEach(c => { c.style.background='#1e293b'; c.style.borderColor='#334155'; });
-            document.querySelectorAll('.input-card').forEach(c => { c.style.background='#1e293b'; c.style.borderColor='#334155'; });
-            document.querySelectorAll('.card-title').forEach(c => c.style.color='#f1f5f9');
-            document.querySelectorAll('.card-description').forEach(c => c.style.color='#94a3b8');
-            document.querySelectorAll('.section-title').forEach(c => c.style.color='#f1f5f9');
-            document.querySelectorAll('.manage-table th').forEach(c => { c.style.background='#334155'; c.style.color='#cbd5e1'; });
-            document.querySelectorAll('.manage-table td').forEach(c => { c.style.color='#cbd5e1'; c.style.borderBottomColor='#334155'; });
-            document.querySelectorAll('.input-group label').forEach(c => c.style.color='#94a3b8');
-            document.querySelectorAll('.input-group input, .input-group select').forEach(c => { c.style.background='#0f172a'; c.style.color='#f1f5f9'; c.style.borderColor='#475569'; });
-            document.getElementById('searchBox').style.cssText += 'background:#0f172a;color:#f1f5f9;border-color:#475569;';
-        } else {
-            document.body.style.background = '#f8fafc';
-            document.body.style.color = '#1e293b';
-            document.querySelector('.main-container').style.background = '#ffffff';
-            document.querySelector('.main-container').style.boxShadow = '0 4px 6px -1px rgba(0,0,0,0.1)';
-            document.querySelectorAll('.dashboard-card').forEach(c => { c.style.background='white'; c.style.borderColor='#e2e8f0'; });
-            document.querySelectorAll('.section-container').forEach(c => { c.style.background='white'; c.style.borderColor='#e2e8f0'; });
-            document.querySelectorAll('.input-card').forEach(c => { c.style.background='#fff'; c.style.borderColor='#e2e8f0'; });
-            document.querySelectorAll('.card-title').forEach(c => c.style.color='#0f172a');
-            document.querySelectorAll('.card-description').forEach(c => c.style.color='#64748b');
-            document.querySelectorAll('.section-title').forEach(c => c.style.color='#0f172a');
-            document.querySelectorAll('.manage-table th').forEach(c => { c.style.background='#f1f5f9'; c.style.color='#1e293b'; });
-            document.querySelectorAll('.manage-table td').forEach(c => { c.style.color='#1e293b'; c.style.borderBottomColor='#f1f5f9'; });
-            document.querySelectorAll('.input-group label').forEach(c => c.style.color='#64748b');
-            document.querySelectorAll('.input-group input, .input-group select').forEach(c => { c.style.background=''; c.style.color=''; c.style.borderColor='#cbd5e1'; });
-            const sb = document.getElementById('searchBox');
-            sb.style.background=''; sb.style.color=''; sb.style.borderColor='#cbd5e1';
-        }
-    }
-
-    window.spToggleDark = (btn) => {
-        SP.dark = !SP.dark;
-        btn.classList.toggle('on', SP.dark);
-        spApplyTheme();
-        spSaveTheme();
-    };
-
-    function spSaveTheme() {
-        if (currentUserRole === 'operator' || (auth.currentUser && auth.currentUser.email === ADMIN_EMAIL)) {
-            set(ref(db, 'settings/theme'), { accent: SP.accent, primary: SP.primary, dark: SP.dark });
-        }
-        spToast('Theme updated');
-    }
-
-    function spLoadTheme() {
-        onValue(ref(db, 'settings/theme'), snap => {
-            const t = snap.val();
-            if (t) {
-                SP.accent  = t.accent  || SP.accent;
-                SP.primary = t.primary || SP.primary;
-                SP.dark    = !!t.dark;
-                spApplyTheme();
-            }
-        });
-    }
-
-    // --- BRANDING ---
-    window.spLogoUpload = (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-        if (file.size > 2 * 1024 * 1024) { alert('Logo must be under 2 MB.'); return; }
-        const reader = new FileReader();
-        reader.onload = ev => { SP.logo = ev.target.result; spApplyLogo(); };
-        reader.readAsDataURL(file);
-    };
-
-    window.spRemoveLogo = () => { SP.logo = null; spApplyLogo(); spToast('Logo removed'); };
-
-    function spApplyLogo() {
-        const src = SP.logo || 'images/logo.png';
-        ['loginLogo','headerLogo','spLogoPreview','printLogo'].forEach(id => { const el = document.getElementById(id); if (el) el.src = src; });
-    }
-
-    function spApplyBranding() {
-        document.getElementById('headerTitle').textContent  = SP.name;
-        document.getElementById('headerAddr').textContent   = SP.addr;
-        document.getElementById('printTitle').textContent   = SP.name;
-        spApplyLogo();
-    }
-
-    window.spSaveBranding = () => {
-        SP.name = document.getElementById('spCompName').value.trim() || SP.name;
-        SP.addr = document.getElementById('spCompAddr').value.trim() || SP.addr;
-        spApplyBranding();
-        if (currentUserRole === 'operator' || (auth.currentUser && auth.currentUser.email === ADMIN_EMAIL)) {
-            set(ref(db, 'settings/branding'), { name: SP.name, addr: SP.addr, logo: SP.logo });
-        }
-        spToast('Branding saved');
-    };
-
-    function spLoadBranding() {
-        onValue(ref(db, 'settings/branding'), snap => {
-            const b = snap.val();
-            if (b) {
-                if (b.name) SP.name = b.name;
-                if (b.addr) SP.addr = b.addr;
-                if (b.logo) SP.logo = b.logo;
-                spApplyBranding();
-            }
-        });
-    }
-
-    // --- ADMIN TRANSFER ---
-    window.spChangeAdmin = () => {
-        const newEmail = document.getElementById('spNewAdmin').value.trim();
-        if (!newEmail) return alert('Enter a new admin email.');
-        if (newEmail === ADMIN_EMAIL) return alert('That is already the current admin.');
-        if (!confirm(`Transfer admin to:\n${newEmail}\n\nAre you sure?`)) return;
-        set(ref(db, 'settings/adminEmail'), newEmail).then(() => {
-            ADMIN_EMAIL = newEmail;
-            document.getElementById('spAdminEmail').textContent = newEmail;
-            document.getElementById('spNewAdmin').value = '';
-            spToast('Admin transferred to ' + newEmail);
-        }).catch(e => alert('Error: ' + e.message));
-    };
-
-    // --- USER PASSWORD RESET ---
-    function spLoadUsers() {
-        onValue(usersRef, snap => {
-            const users = snap.val();
-            const tbody = document.getElementById('spUsersBody');
-            tbody.innerHTML = '';
-            if (!users) { tbody.innerHTML = '<tr><td colspan="3" style="color:#475569;font-size:11px;text-align:center;padding:14px;">No users found</td></tr>'; return; }
-            Object.values(users).forEach(u => {
-                const badge = u.role === 'operator'
-                    ? '<span style="background:#3b82f6;color:#fff;padding:2px 7px;border-radius:4px;font-size:9px;font-weight:700;">OPERATOR</span>'
-                    : '<span style="background:#64748b;color:#fff;padding:2px 7px;border-radius:4px;font-size:9px;font-weight:700;">VIEWER</span>';
-                tbody.innerHTML += `<tr><td style="font-size:10px;word-break:break-all;">${u.email || '—'}</td><td>${badge}</td><td style="text-align:right;"><button class="sp-btn-rpw" onclick="spResetOne('${u.email}')"><i class="fa-solid fa-rotate-left"></i> Reset</button></td></tr>`;
-            });
-        });
-    }
-
-    window.spResetOne = (email) => {
-        if (!email) return alert('No email.');
-        if (!confirm(`Send password-reset email to:\n${email}`)) return;
-        sendPasswordResetEmail(auth, email).then(() => spToast('Reset email sent to ' + email)).catch(e => alert('Error: ' + e.message));
-    };
-
-    window.spResetAll = () => {
-        if (!confirm('Send password-reset emails to ALL registered users?')) return;
-        onValue(usersRef, snap => {
-            const users = snap.val();
-            if (!users) return;
-            Object.values(users).forEach(u => { if (u.email) sendPasswordResetEmail(auth, u.email).catch(() => {}); });
-            setTimeout(() => spToast('Reset emails sent to all users'), 1200);
-        }, { once: true });
-    };
-
-    // --- sync panel UI when opened ---
-    function spSyncUI() {
-        buildSwatches('spAccentSwatches',  ACCENT_COLORS,  SP.accent,  hex => { SP.accent = hex; spApplyTheme(); spSaveTheme(); });
-        buildSwatches('spPrimarySwatches', PRIMARY_COLORS, SP.primary, hex => { SP.primary = hex; spApplyTheme(); spSaveTheme(); });
-        document.getElementById('spDarkToggle').classList.toggle('on', SP.dark);
-        document.getElementById('spCompName').value = SP.name;
-        document.getElementById('spCompAddr').value = SP.addr;
-        spApplyLogo();
-        document.getElementById('spAdminEmail').textContent = ADMIN_EMAIL;
-    }
 </script>
 </body>
 </html>
+
+
+
