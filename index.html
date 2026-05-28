@@ -33,6 +33,11 @@
             --slot-homeroom-bg2: #ffedd5;
             --slot-homeroom-border: #fb923c;
             --slot-homeroom-text: #7c2d12;
+            /* Break Time */
+            --slot-break-bg: #f5f3ff;
+            --slot-break-bg2: #ede9fe;
+            --slot-break-border: #8b5cf6;
+            --slot-break-text: #4c1d95;
         }
 
         body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background: #f8fafc; margin: 0; padding: 15px; color: #1e293b; line-height: 1.2; }
@@ -89,7 +94,7 @@
         .matrix-header-text p { margin: 3px 0 0 0; font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; }
         .matrix-header-text h3 { margin: 5px 0 0 0; font-size: 13px; color: #3b82f6; font-weight: 800; text-transform: uppercase; }
 
-        /* Color Legend Strip (below schedule header) */
+        /* Color Legend Strip */
         .color-legend-strip {
             display: flex;
             align-items: center;
@@ -117,6 +122,7 @@
         .legend-swatch.regular { background: linear-gradient(135deg, var(--slot-regular-bg), var(--slot-regular-bg2)); border-color: var(--slot-regular-border); }
         .legend-swatch.async { background: linear-gradient(135deg, var(--slot-async-bg), var(--slot-async-bg2)); border-color: var(--slot-async-border); }
         .legend-swatch.homeroom { background: linear-gradient(135deg, var(--slot-homeroom-bg), var(--slot-homeroom-bg2)); border-color: var(--slot-homeroom-border); }
+        .legend-swatch.break { background: linear-gradient(135deg, var(--slot-break-bg), var(--slot-break-bg2)); border-color: var(--slot-break-border); }
 
         .action-bar { display: flex; justify-content: space-between; align-items: center; background: var(--ark-dark); color: white; padding: 8px 15px; border-radius: 6px; margin-bottom: 15px; }
         .btn-export { border: none; padding: 6px 12px; border-radius: 4px; color: white; font-weight: 600; cursor: pointer; font-size: 10px; display: flex; align-items: center; gap: 6px; transition: 0.2s; }
@@ -214,7 +220,6 @@
             cursor: pointer;
             background: white;
         }
-        /* Preview slot inside the color card */
         .color-preview-slot {
             padding: 6px 8px;
             border-radius: 4px;
@@ -271,6 +276,226 @@
             margin-top: 4px;
         }
 
+        /* ===== BREAK TIME PANEL ===== */
+        .breaktime-panel {
+            background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
+            border: 2px solid #8b5cf6;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        .breaktime-panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+        .breaktime-panel-header h3 {
+            margin: 0;
+            color: #4c1d95;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .breaktime-controls {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .btn-add-break {
+            background: #8b5cf6;
+            color: white;
+            border: none;
+            padding: 7px 14px;
+            border-radius: 6px;
+            font-size: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-add-break:hover { background: #7c3aed; }
+        .break-scope-select {
+            padding: 6px 10px;
+            border: 1px solid #c4b5fd;
+            border-radius: 6px;
+            font-size: 11px;
+            background: white;
+            color: #4c1d95;
+            font-weight: 600;
+        }
+        .break-entries-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .break-entry-card {
+            background: white;
+            border: 1px solid #ddd6fe;
+            border-radius: 8px;
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .break-entry-card .break-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: linear-gradient(135deg, var(--slot-break-bg), var(--slot-break-bg2));
+            border: 1px solid var(--slot-break-border);
+            color: var(--slot-break-text);
+            font-size: 9px;
+            font-weight: 800;
+            padding: 3px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+        .break-entry-card .break-info {
+            flex: 1;
+            font-size: 10px;
+            color: #475569;
+            font-weight: 600;
+        }
+        .break-entry-card .break-scope-badge {
+            font-size: 8px;
+            font-weight: 800;
+            padding: 2px 7px;
+            border-radius: 10px;
+            text-transform: uppercase;
+        }
+        .scope-all { background: #dbeafe; color: #1e40af; }
+        .scope-section { background: #dcfce7; color: #166534; }
+        .scope-teacher { background: #fef3c7; color: #92400e; }
+        .scope-room { background: #fce7f3; color: #9d174d; }
+        .btn-delete-break {
+            background: none;
+            border: none;
+            color: #ef4444;
+            cursor: pointer;
+            padding: 4px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+            transition: 0.2s;
+        }
+        .btn-delete-break:hover { background: #fee2e2; }
+        .btn-edit-break {
+            background: none;
+            border: none;
+            color: #3b82f6;
+            cursor: pointer;
+            padding: 4px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+            transition: 0.2s;
+        }
+        .btn-edit-break:hover { background: #dbeafe; }
+
+        /* Break time add form */
+        .break-add-form {
+            background: white;
+            border: 2px dashed #c4b5fd;
+            border-radius: 8px;
+            padding: 14px;
+            margin-top: 10px;
+            display: none;
+        }
+        .break-add-form.visible { display: block; }
+        .break-form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 10px;
+            align-items: end;
+        }
+        .break-form-grid .input-group label { color: #6b21a8; }
+        .break-form-grid input, .break-form-grid select {
+            width: 100%;
+            padding: 7px;
+            border: 1px solid #c4b5fd;
+            border-radius: 6px;
+            font-size: 12px;
+            height: 34px;
+            box-sizing: border-box;
+        }
+        .break-form-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .btn-save-break {
+            background: #8b5cf6;
+            color: white;
+            border: none;
+            padding: 7px 16px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .btn-save-break:hover { background: #7c3aed; }
+        .btn-cancel-break {
+            background: #e2e8f0;
+            color: #475569;
+            border: none;
+            padding: 7px 14px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .no-breaks-msg {
+            text-align: center;
+            padding: 20px;
+            color: #9ca3af;
+            font-size: 11px;
+            font-weight: 600;
+            border: 2px dashed #e9d5ff;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        /* Break slot in matrix */
+        .slot-break {
+            border-left: 3px solid var(--slot-break-border);
+            background: linear-gradient(135deg, var(--slot-break-bg) 0%, var(--slot-break-bg2) 100%);
+        }
+        .badge-break {
+            background: var(--slot-break-border);
+            color: white;
+        }
+        /* Break row in table */
+        .break-row-cell {
+            background: linear-gradient(135deg, var(--slot-break-bg) 0%, var(--slot-break-bg2) 100%) !important;
+            border-top: 2px solid var(--slot-break-border) !important;
+            border-bottom: 2px solid var(--slot-break-border) !important;
+        }
+        .break-row-label {
+            background: linear-gradient(135deg, var(--slot-break-bg) 0%, var(--slot-break-bg2) 100%) !important;
+            border-top: 2px solid var(--slot-break-border) !important;
+            border-bottom: 2px solid var(--slot-break-border) !important;
+            color: var(--slot-break-text) !important;
+        }
+        .break-fill {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            font-size: 9px;
+            font-weight: 800;
+            color: var(--slot-break-text);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            height: 100%;
+            min-height: 28px;
+            padding: 4px;
+        }
+
         /* Hours Summary Box */
         .hours-summary { background: linear-gradient(135deg, #111111 0%, #000000 50%, #1a1a1a 100%); color: white; padding: 20px; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 8px 16px rgba(255, 107, 107, 0.25); border: 1px solid rgba(255, 255, 255, 0.2); }
         .hours-summary.over-limit { background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%); animation: pulse 2s ease-in-out infinite; box-shadow: 0 8px 20px rgba(220, 38, 38, 0.4); }
@@ -306,23 +531,10 @@
         .slot-box:hover { box-shadow: 0 2px 4px rgba(0,0,0,0.15); transform: translateY(-1px); }
         .slot-box:hover .slot-actions { opacity: 1; }
 
-        /* Regular class */
-        .slot-regular {
-            border-left: 3px solid var(--slot-regular-border);
-            background: linear-gradient(135deg, var(--slot-regular-bg) 0%, var(--slot-regular-bg2) 100%);
-        }
-        /* Async/Asynchronous class */
-        .slot-async {
-            border-left: 3px solid var(--slot-async-border);
-            background: linear-gradient(135deg, var(--slot-async-bg) 0%, var(--slot-async-bg2) 100%);
-        }
-        /* Homeroom class */
-        .slot-homeroom {
-            border-left: 3px solid var(--slot-homeroom-border);
-            background: linear-gradient(135deg, var(--slot-homeroom-bg) 0%, var(--slot-homeroom-bg2) 100%);
-        }
+        .slot-regular { border-left: 3px solid var(--slot-regular-border); background: linear-gradient(135deg, var(--slot-regular-bg) 0%, var(--slot-regular-bg2) 100%); }
+        .slot-async { border-left: 3px solid var(--slot-async-border); background: linear-gradient(135deg, var(--slot-async-bg) 0%, var(--slot-async-bg2) 100%); }
+        .slot-homeroom { border-left: 3px solid var(--slot-homeroom-border); background: linear-gradient(135deg, var(--slot-homeroom-bg) 0%, var(--slot-homeroom-bg2) 100%); }
 
-        /* Class type badge inside slot */
         .slot-type-badge {
             display: inline-block;
             font-size: 6px;
@@ -333,17 +545,9 @@
             letter-spacing: 0.5px;
             margin-bottom: 2px;
         }
-        .badge-async {
-            background: var(--slot-async-border);
-            color: white;
-        }
-        .badge-homeroom {
-            background: var(--slot-homeroom-border);
-            color: white;
-        }
-        .badge-regular {
-            display: none; /* no badge for regular */
-        }
+        .badge-async { background: var(--slot-async-border); color: white; }
+        .badge-homeroom { background: var(--slot-homeroom-border); color: white; }
+        .badge-regular { display: none; }
 
         .slot-box strong { font-size: 9px; display: block; font-weight: 800; margin-bottom: 2px; letter-spacing: 0.2px; line-height: 1.2; padding-right: 25px; }
         .slot-regular strong { color: var(--slot-regular-text); }
@@ -363,10 +567,10 @@
         @media print {
             .slot-actions { display: none !important; }
             .color-customization-panel { display: none !important; }
+            .breaktime-panel { display: none !important; }
             .no-print { display: none !important; }
         }
 
-        /* Table styles */
         .matrix-table { width: 100%; border-collapse: collapse; table-layout: fixed; border: 2px solid #334155; background: #fff; font-family: 'Arial', sans-serif; }
         .matrix-table th, .matrix-table td { border: 1px solid #cbd5e1; padding: 4px 2px; text-align: center; vertical-align: middle; font-size: 9px; line-height: 1.2; }
         .matrix-table th { background: #334155; color: white; height: 28px; font-size: 9px; font-weight: 700; letter-spacing: 0.3px; padding: 5px 2px; }
@@ -380,7 +584,6 @@
         .btn-delete { color: #ef4444; background: none; border: none; cursor: pointer; padding: 4px; }
         .btn-edit { color: #3b82f6; background: none; border: none; cursor: pointer; padding: 4px; margin-right: 5px; }
 
-        /* Admin Styles */
         #adminSection { background: #fff1f2; border: 2px solid #fda4af; padding: 20px; border-radius: 12px; }
         .admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         @media (max-width: 768px) { .admin-grid { grid-template-columns: 1fr; } }
@@ -397,7 +600,6 @@
         .warning-alert .title { font-weight: 800; font-size: 11px; color: #92400e; margin-bottom: 3px; }
         .warning-alert .message { font-size: 10px; color: #78350f; }
 
-        /* Bulk Modal */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 9999; }
         .modal-overlay.active { display: flex; }
         .modal-content { background: white; padding: 30px; border-radius: 12px; max-width: 500px; width: 90%; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
@@ -580,16 +782,21 @@
             </div>
 
             <!-- Keyword Config -->
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 12px;">
                 <div class="keyword-config">
-                    <label><i class="fa-solid fa-wifi-slash"></i> Async Keywords (detect in subject name)</label>
+                    <label><i class="fa-solid fa-wifi-slash"></i> Async Keywords</label>
                     <input type="text" id="asyncKeywords" value="ASYNC,ASYNCHRONOUS" onchange="saveColorSettings()" placeholder="e.g. ASYNC,ASYNCHRONOUS">
-                    <div class="keyword-hint">Comma-separated. Case-insensitive. If subject contains any of these words → async color.</div>
+                    <div class="keyword-hint">Comma-separated. Case-insensitive.</div>
                 </div>
                 <div class="keyword-config">
-                    <label><i class="fa-solid fa-house-chimney-user"></i> Homeroom Keywords (detect in subject name)</label>
+                    <label><i class="fa-solid fa-house-chimney-user"></i> Homeroom Keywords</label>
                     <input type="text" id="homeroomKeywords" value="HOMEROOM,HOME ROOM,HR" onchange="saveColorSettings()" placeholder="e.g. HOMEROOM,HOME ROOM,HR">
-                    <div class="keyword-hint">Comma-separated. Case-insensitive. If subject contains any of these words → homeroom color.</div>
+                    <div class="keyword-hint">Comma-separated. Case-insensitive.</div>
+                </div>
+                <div class="keyword-config">
+                    <label><i class="fa-solid fa-mug-hot"></i> Break Time Keywords</label>
+                    <input type="text" id="breakKeywords" value="BREAK,LUNCH,RECESS,FREE,VACANT" onchange="saveColorSettings()" placeholder="e.g. BREAK,LUNCH,RECESS">
+                    <div class="keyword-hint">Comma-separated. Case-insensitive.</div>
                 </div>
             </div>
 
@@ -597,29 +804,15 @@
                 <!-- Regular -->
                 <div class="color-type-card">
                     <div class="color-type-title">
-                        <span class="type-dot" style="background: #22c55e;"></span>
-                        Regular Class
+                        <span class="type-dot" style="background: #22c55e;"></span>Regular Class
                     </div>
                     <div class="color-row">
-                        <div class="color-picker-group">
-                            <label>BG Start</label>
-                            <input type="color" id="color-regular-bg" value="#f0fdf4" onchange="applyColors()">
-                        </div>
-                        <div class="color-picker-group">
-                            <label>BG End</label>
-                            <input type="color" id="color-regular-bg2" value="#dcfce7" onchange="applyColors()">
-                        </div>
-                        <div class="color-picker-group">
-                            <label>Border</label>
-                            <input type="color" id="color-regular-border" value="#22c55e" onchange="applyColors()">
-                        </div>
-                        <div class="color-picker-group">
-                            <label>Text</label>
-                            <input type="color" id="color-regular-text" value="#0f172a" onchange="applyColors()">
-                        </div>
+                        <div class="color-picker-group"><label>BG Start</label><input type="color" id="color-regular-bg" value="#f0fdf4" onchange="applyColors()"></div>
+                        <div class="color-picker-group"><label>BG End</label><input type="color" id="color-regular-bg2" value="#dcfce7" onchange="applyColors()"></div>
+                        <div class="color-picker-group"><label>Border</label><input type="color" id="color-regular-border" value="#22c55e" onchange="applyColors()"></div>
+                        <div class="color-picker-group"><label>Text</label><input type="color" id="color-regular-text" value="#0f172a" onchange="applyColors()"></div>
                     </div>
-                    <div class="color-preview-slot" id="preview-regular"
-                        style="--preview-bg:#f0fdf4; --preview-bg2:#dcfce7; --preview-border:#22c55e; --preview-text:#0f172a;">
+                    <div class="color-preview-slot" id="preview-regular" style="--preview-bg:#f0fdf4; --preview-bg2:#dcfce7; --preview-border:#22c55e; --preview-text:#0f172a;">
                         📘 MATHEMATICS 101
                     </div>
                 </div>
@@ -632,25 +825,12 @@
                         <span style="background:#fee2e2; color:#991b1b; font-size:7px; padding:1px 5px; border-radius:3px; margin-left:4px;">ASYNC</span>
                     </div>
                     <div class="color-row">
-                        <div class="color-picker-group">
-                            <label>BG Start</label>
-                            <input type="color" id="color-async-bg" value="#fff0f0" onchange="applyColors()">
-                        </div>
-                        <div class="color-picker-group">
-                            <label>BG End</label>
-                            <input type="color" id="color-async-bg2" value="#ffe4e4" onchange="applyColors()">
-                        </div>
-                        <div class="color-picker-group">
-                            <label>Border</label>
-                            <input type="color" id="color-async-border" value="#f87171" onchange="applyColors()">
-                        </div>
-                        <div class="color-picker-group">
-                            <label>Text</label>
-                            <input type="color" id="color-async-text" value="#7f1d1d" onchange="applyColors()">
-                        </div>
+                        <div class="color-picker-group"><label>BG Start</label><input type="color" id="color-async-bg" value="#fff0f0" onchange="applyColors()"></div>
+                        <div class="color-picker-group"><label>BG End</label><input type="color" id="color-async-bg2" value="#ffe4e4" onchange="applyColors()"></div>
+                        <div class="color-picker-group"><label>Border</label><input type="color" id="color-async-border" value="#f87171" onchange="applyColors()"></div>
+                        <div class="color-picker-group"><label>Text</label><input type="color" id="color-async-text" value="#7f1d1d" onchange="applyColors()"></div>
                     </div>
-                    <div class="color-preview-slot" id="preview-async"
-                        style="--preview-bg:#fff0f0; --preview-bg2:#ffe4e4; --preview-border:#f87171; --preview-text:#7f1d1d;">
+                    <div class="color-preview-slot" id="preview-async" style="--preview-bg:#fff0f0; --preview-bg2:#ffe4e4; --preview-border:#f87171; --preview-text:#7f1d1d;">
                         📡 ASYNC LEARNING
                     </div>
                 </div>
@@ -663,26 +843,31 @@
                         <span style="background:#ffedd5; color:#7c2d12; font-size:7px; padding:1px 5px; border-radius:3px; margin-left:4px;">HR</span>
                     </div>
                     <div class="color-row">
-                        <div class="color-picker-group">
-                            <label>BG Start</label>
-                            <input type="color" id="color-homeroom-bg" value="#fff7ed" onchange="applyColors()">
-                        </div>
-                        <div class="color-picker-group">
-                            <label>BG End</label>
-                            <input type="color" id="color-homeroom-bg2" value="#ffedd5" onchange="applyColors()">
-                        </div>
-                        <div class="color-picker-group">
-                            <label>Border</label>
-                            <input type="color" id="color-homeroom-border" value="#fb923c" onchange="applyColors()">
-                        </div>
-                        <div class="color-picker-group">
-                            <label>Text</label>
-                            <input type="color" id="color-homeroom-text" value="#7c2d12" onchange="applyColors()">
-                        </div>
+                        <div class="color-picker-group"><label>BG Start</label><input type="color" id="color-homeroom-bg" value="#fff7ed" onchange="applyColors()"></div>
+                        <div class="color-picker-group"><label>BG End</label><input type="color" id="color-homeroom-bg2" value="#ffedd5" onchange="applyColors()"></div>
+                        <div class="color-picker-group"><label>Border</label><input type="color" id="color-homeroom-border" value="#fb923c" onchange="applyColors()"></div>
+                        <div class="color-picker-group"><label>Text</label><input type="color" id="color-homeroom-text" value="#7c2d12" onchange="applyColors()"></div>
                     </div>
-                    <div class="color-preview-slot" id="preview-homeroom"
-                        style="--preview-bg:#fff7ed; --preview-bg2:#ffedd5; --preview-border:#fb923c; --preview-text:#7c2d12;">
+                    <div class="color-preview-slot" id="preview-homeroom" style="--preview-bg:#fff7ed; --preview-bg2:#ffedd5; --preview-border:#fb923c; --preview-text:#7c2d12;">
                         🏠 HOMEROOM PERIOD
+                    </div>
+                </div>
+
+                <!-- Break Time -->
+                <div class="color-type-card">
+                    <div class="color-type-title">
+                        <span class="type-dot" style="background: #8b5cf6;"></span>
+                        Break Time
+                        <span style="background:#ede9fe; color:#4c1d95; font-size:7px; padding:1px 5px; border-radius:3px; margin-left:4px;">BREAK</span>
+                    </div>
+                    <div class="color-row">
+                        <div class="color-picker-group"><label>BG Start</label><input type="color" id="color-break-bg" value="#f5f3ff" onchange="applyColors()"></div>
+                        <div class="color-picker-group"><label>BG End</label><input type="color" id="color-break-bg2" value="#ede9fe" onchange="applyColors()"></div>
+                        <div class="color-picker-group"><label>Border</label><input type="color" id="color-break-border" value="#8b5cf6" onchange="applyColors()"></div>
+                        <div class="color-picker-group"><label>Text</label><input type="color" id="color-break-text" value="#4c1d95" onchange="applyColors()"></div>
+                    </div>
+                    <div class="color-preview-slot" id="preview-break" style="--preview-bg:#f5f3ff; --preview-bg2:#ede9fe; --preview-border:#8b5cf6; --preview-text:#4c1d95;">
+                        ☕ BREAK TIME
                     </div>
                 </div>
             </div>
@@ -748,7 +933,7 @@
             </div>
         </div>
 
-        <!-- Hours Summary (only shown for teacher view) -->
+        <!-- Hours Summary -->
         <div id="hoursSummary" class="hours-summary hidden">
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
@@ -790,6 +975,7 @@
                 <div class="legend-item"><div class="legend-swatch regular"></div>Regular Class</div>
                 <div class="legend-item"><div class="legend-swatch async"></div>Async / Asynchronous</div>
                 <div class="legend-item"><div class="legend-swatch homeroom"></div>Homeroom Class</div>
+                <div class="legend-item"><div class="legend-swatch break"></div>Break Time</div>
             </div>
             <table class="matrix-table">
                 <thead>
@@ -850,6 +1036,7 @@
     const usersRef = ref(db, 'users');
     const settingsRef = ref(db, 'settings');
     const colorSettingsRef = ref(db, 'colorSettings');
+    const breakTimesRef = ref(db, 'breakTimes');
 
     let isLoginMode = true;
     let currentUserRole = 'viewer';
@@ -857,15 +1044,18 @@
     let DAILY_HOUR_LIMIT = 8;
     let ENFORCE_LIMIT = true;
     window.schedules = [];
+    window.breakTimes = [];
 
     // Default colors & keywords
     const DEFAULT_COLORS = {
         'regular-bg': '#f0fdf4', 'regular-bg2': '#dcfce7', 'regular-border': '#22c55e', 'regular-text': '#0f172a',
         'async-bg': '#fff0f0', 'async-bg2': '#ffe4e4', 'async-border': '#f87171', 'async-text': '#7f1d1d',
-        'homeroom-bg': '#fff7ed', 'homeroom-bg2': '#ffedd5', 'homeroom-border': '#fb923c', 'homeroom-text': '#7c2d12'
+        'homeroom-bg': '#fff7ed', 'homeroom-bg2': '#ffedd5', 'homeroom-border': '#fb923c', 'homeroom-text': '#7c2d12',
+        'break-bg': '#f5f3ff', 'break-bg2': '#ede9fe', 'break-border': '#8b5cf6', 'break-text': '#4c1d95'
     };
     const DEFAULT_ASYNC_KEYWORDS = 'ASYNC,ASYNCHRONOUS';
     const DEFAULT_HOMEROOM_KEYWORDS = 'HOMEROOM,HOME ROOM,HR';
+    const DEFAULT_BREAK_KEYWORDS = 'BREAK,LUNCH,RECESS,FREE,VACANT';
 
     // ===== CLASS TYPE DETECTION =====
     function getSlotType(subject) {
@@ -876,20 +1066,19 @@
             .split(',').map(k => k.trim().toUpperCase()).filter(k => k);
         const homeroomKW = (document.getElementById('homeroomKeywords')?.value || DEFAULT_HOMEROOM_KEYWORDS)
             .split(',').map(k => k.trim().toUpperCase()).filter(k => k);
+        const breakKW = (document.getElementById('breakKeywords')?.value || DEFAULT_BREAK_KEYWORDS)
+            .split(',').map(k => k.trim().toUpperCase()).filter(k => k);
 
-        for (const kw of asyncKW) {
-            if (subjectUpper.includes(kw)) return 'async';
-        }
-        for (const kw of homeroomKW) {
-            if (subjectUpper.includes(kw)) return 'homeroom';
-        }
+        for (const kw of breakKW) { if (subjectUpper.includes(kw)) return 'break'; }
+        for (const kw of asyncKW) { if (subjectUpper.includes(kw)) return 'async'; }
+        for (const kw of homeroomKW) { if (subjectUpper.includes(kw)) return 'homeroom'; }
         return 'regular';
     }
 
     // ===== COLOR MANAGEMENT =====
     window.applyColors = () => {
         const root = document.documentElement;
-        const types = ['regular', 'async', 'homeroom'];
+        const types = ['regular', 'async', 'homeroom', 'break'];
         const props = ['bg', 'bg2', 'border', 'text'];
         types.forEach(type => {
             props.forEach(prop => {
@@ -911,8 +1100,8 @@
                 if (text) preview.style.setProperty('--preview-text', text);
             }
         });
-        // Re-render matrix to update slot classes
         renderMatrix();
+        renderBreakEntriesList();
     };
 
     window.resetColors = () => {
@@ -922,6 +1111,7 @@
         });
         document.getElementById('asyncKeywords').value = DEFAULT_ASYNC_KEYWORDS;
         document.getElementById('homeroomKeywords').value = DEFAULT_HOMEROOM_KEYWORDS;
+        document.getElementById('breakKeywords').value = DEFAULT_BREAK_KEYWORDS;
         applyColors();
         saveColorSettings();
     };
@@ -935,6 +1125,7 @@
         });
         colorData.asyncKeywords = document.getElementById('asyncKeywords')?.value || DEFAULT_ASYNC_KEYWORDS;
         colorData.homeroomKeywords = document.getElementById('homeroomKeywords')?.value || DEFAULT_HOMEROOM_KEYWORDS;
+        colorData.breakKeywords = document.getElementById('breakKeywords')?.value || DEFAULT_BREAK_KEYWORDS;
         set(colorSettingsRef, colorData);
         applyColors();
     };
@@ -947,14 +1138,9 @@
                 const el = document.getElementById(`color-${key}`);
                 if (el && data[key]) el.value = data[key];
             });
-            if (data.asyncKeywords) {
-                const el = document.getElementById('asyncKeywords');
-                if (el) el.value = data.asyncKeywords;
-            }
-            if (data.homeroomKeywords) {
-                const el = document.getElementById('homeroomKeywords');
-                if (el) el.value = data.homeroomKeywords;
-            }
+            if (data.asyncKeywords) { const el = document.getElementById('asyncKeywords'); if (el) el.value = data.asyncKeywords; }
+            if (data.homeroomKeywords) { const el = document.getElementById('homeroomKeywords'); if (el) el.value = data.homeroomKeywords; }
+            if (data.breakKeywords) { const el = document.getElementById('breakKeywords'); if (el) el.value = data.breakKeywords; }
             applyColors();
         });
     }
@@ -963,6 +1149,161 @@
     document.querySelectorAll('[id^="color-"]').forEach(el => {
         el.addEventListener('change', () => saveColorSettings());
     });
+
+    // ===== BREAK TIME MANAGEMENT =====
+
+    window.toggleBreakForm = () => {
+        const form = document.getElementById('breakAddForm');
+        const isVisible = form.classList.contains('visible');
+        if (isVisible) {
+            cancelBreakForm();
+        } else {
+            document.getElementById('breakFormTitle').innerText = 'NEW BREAK TIME';
+            document.getElementById('editBreakKey').value = '';
+            document.getElementById('breakLabel').value = '';
+            document.getElementById('breakStart').value = '12:00';
+            document.getElementById('breakEnd').value = '13:00';
+            document.getElementById('breakDays').value = 'all';
+            document.getElementById('breakScope').value = 'all';
+            document.getElementById('breakScopeValueGroup').style.display = 'none';
+            form.classList.add('visible');
+        }
+    };
+
+    window.cancelBreakForm = () => {
+        document.getElementById('breakAddForm').classList.remove('visible');
+        document.getElementById('editBreakKey').value = '';
+    };
+
+    window.updateBreakScopeValue = () => {
+        const scope = document.getElementById('breakScope').value;
+        const group = document.getElementById('breakScopeValueGroup');
+        const label = document.getElementById('breakScopeValueLabel');
+        const list = document.getElementById('breakScopeList');
+        if (scope === 'all') {
+            group.style.display = 'none';
+        } else {
+            group.style.display = 'block';
+            label.innerText = scope === 'section' ? 'Section Name' : scope === 'teacher' ? 'Teacher Name' : 'Room Name';
+            const vals = [...new Set(window.schedules.map(s => s[scope] || '').filter(v => v))].sort();
+            list.innerHTML = vals.map(v => `<option value="${v}">`).join('');
+        }
+    };
+
+    window.saveBreak = () => {
+        const label = document.getElementById('breakLabel').value.trim();
+        const start = document.getElementById('breakStart').value;
+        const end = document.getElementById('breakEnd').value;
+        const days = document.getElementById('breakDays').value;
+        const scope = document.getElementById('breakScope').value;
+        const scopeValue = scope !== 'all' ? document.getElementById('breakScopeValue').value.trim().toUpperCase() : '';
+        const editKey = document.getElementById('editBreakKey').value;
+
+        if (!label) return alert('Please enter a break label.');
+        if (!start || !end) return alert('Please enter start and end times.');
+        if (timeToMinutes(end) <= timeToMinutes(start)) return alert('End time must be after start time.');
+        if (scope !== 'all' && !scopeValue) return alert(`Please enter a ${scope} value.`);
+
+        const breakEntry = { label, start, end, days, scope, scopeValue };
+
+        if (editKey) {
+            update(ref(db, `breakTimes/${editKey}`), breakEntry);
+        } else {
+            push(breakTimesRef, breakEntry);
+        }
+        cancelBreakForm();
+    };
+
+    window.editBreak = (key) => {
+        const item = window.breakTimes.find(b => b.firebaseKey === key);
+        if (!item) return;
+        document.getElementById('breakFormTitle').innerText = 'EDIT BREAK TIME';
+        document.getElementById('editBreakKey').value = key;
+        document.getElementById('breakLabel').value = item.label;
+        document.getElementById('breakStart').value = item.start;
+        document.getElementById('breakEnd').value = item.end;
+        document.getElementById('breakDays').value = item.days || 'all';
+        document.getElementById('breakScope').value = item.scope || 'all';
+        updateBreakScopeValue();
+        if (item.scope !== 'all' && item.scopeValue) {
+            document.getElementById('breakScopeValue').value = item.scopeValue;
+        }
+        document.getElementById('breakAddForm').classList.add('visible');
+        document.getElementById('breakAddForm').scrollIntoView({ behavior: 'smooth' });
+    };
+
+    window.deleteBreak = (key) => {
+        if (confirm('Delete this break time entry?')) remove(ref(db, `breakTimes/${key}`));
+    };
+
+    function loadBreakTimes() {
+        onValue(breakTimesRef, (snapshot) => {
+            const data = snapshot.val();
+            window.breakTimes = data ? Object.entries(data).map(([key, val]) => ({ ...val, firebaseKey: key })) : [];
+            renderBreakEntriesList();
+            renderMatrix();
+        });
+    }
+
+    function renderBreakEntriesList() {
+        const list = document.getElementById('breakEntriesList');
+        if (!list) return;
+        if (!window.breakTimes || window.breakTimes.length === 0) {
+            list.innerHTML = `<div class="no-breaks-msg"><i class="fa-solid fa-mug-hot" style="font-size:18px; margin-bottom:6px; display:block; opacity:0.4;"></i>No break times configured yet.<br>Click <strong>ADD BREAK</strong> to create one.</div>`;
+            return;
+        }
+
+        const scopeLabels = { all: 'ALL', section: 'SECTION', teacher: 'TEACHER', room: 'ROOM' };
+        const scopeClasses = { all: 'scope-all', section: 'scope-section', teacher: 'scope-teacher', room: 'scope-room' };
+        const dayLabels = { all: 'All Days', weekdays: 'Weekdays', Monday: 'Mon', Tuesday: 'Tue', Wednesday: 'Wed', Thursday: 'Thu', Friday: 'Fri', Saturday: 'Sat', Sunday: 'Sun' };
+
+        list.innerHTML = window.breakTimes.map(b => {
+            const scopeClass = scopeClasses[b.scope] || 'scope-all';
+            const scopeLabel = scopeLabels[b.scope] || 'ALL';
+            const dayLabel = dayLabels[b.days] || b.days || 'All Days';
+            const scopeDetail = b.scope !== 'all' && b.scopeValue ? ` • ${b.scopeValue}` : '';
+            const editBtn = currentUserRole !== 'viewer' ? `<button class="btn-edit-break" onclick="editBreak('${b.firebaseKey}')" title="Edit"><i class="fa-solid fa-pen"></i></button>` : '';
+            const deleteBtn = currentUserRole !== 'viewer' ? `<button class="btn-delete-break" onclick="deleteBreak('${b.firebaseKey}')" title="Delete"><i class="fa-solid fa-trash"></i></button>` : '';
+
+            return `<div class="break-entry-card">
+                <div class="break-tag"><i class="fa-solid fa-mug-hot"></i> ${b.label || 'Break'}</div>
+                <div class="break-info">
+                    <strong>${militaryToAMPM(b.start)} – ${militaryToAMPM(b.end)}</strong>
+                    &nbsp;·&nbsp; ${dayLabel}
+                </div>
+                <span class="break-scope-badge ${scopeClass}">${scopeLabel}${scopeDetail}</span>
+                ${editBtn}
+                ${deleteBtn}
+            </div>`;
+        }).join('');
+    }
+
+    // Check if a given hour slot should be a break for the current view
+    function getBreakForSlot(hour, day, mode, filterVal) {
+        if (!window.breakTimes || window.breakTimes.length === 0) return null;
+        const slotStart = hour * 60;
+        const slotEnd = (hour + 1) * 60;
+
+        return window.breakTimes.find(b => {
+            const bStart = timeToMinutes(b.start);
+            const bEnd = timeToMinutes(b.end);
+            if (!(slotStart < bEnd && slotEnd > bStart)) return false;
+
+            // Check day match
+            const daysVal = b.days || 'all';
+            const weekdays = ['Monday','Tuesday','Wednesday','Thursday','Friday'];
+            if (daysVal !== 'all') {
+                if (daysVal === 'weekdays') { if (!weekdays.includes(day)) return false; }
+                else { if (daysVal !== day) return false; }
+            }
+
+            // Check scope match
+            const scope = b.scope || 'all';
+            if (scope === 'all') return true;
+            if (scope === mode && b.scopeValue && b.scopeValue.trim().toUpperCase() === (filterVal || '').trim().toUpperCase()) return true;
+            return false;
+        }) || null;
+    }
 
     // --- SECTION NAVIGATION ---
     window.showSection = (sectionId) => {
@@ -1130,9 +1471,17 @@
             else colorPanel.classList.remove('hidden');
         }
 
+        // Break panel: only show to operators
+        const breakPanel = document.querySelector('.breaktime-panel');
+        if (breakPanel) {
+            if (currentUserRole === 'viewer') breakPanel.classList.add('hidden');
+            else breakPanel.classList.remove('hidden');
+        }
+
         loadSettings();
         loadColorSettings();
         loadDatabase();
+        loadBreakTimes();
     }
 
     // --- ADMIN DASHBOARD ---
@@ -1173,7 +1522,7 @@
         alert("Role updated to " + newRole);
     };
 
-    // --- LOGIN / REGISTER UI TOGGLES ---
+    // --- LOGIN / REGISTER UI ---
     window.toggleAuthMode = () => {
         isLoginMode = !isLoginMode;
         const title = document.getElementById('authTitle'), btn = document.getElementById('authBtn');
@@ -1416,60 +1765,72 @@
             let tr = document.createElement('tr');
             let slotStart = `${h.toString().padStart(2,'0')}:00`;
             let slotEnd = `${(h+1).toString().padStart(2,'0')}:00`;
-            tr.innerHTML = `<td class="time-col">${formatHourRange(h)}</td>`;
-            days.forEach(day => {
+
+            // Check if this entire row is a break for all days
+            const breakEntries = days.map(day => getBreakForSlot(h, day, mode, filterVal));
+            const isAnyBreak = breakEntries.some(b => b !== null);
+
+            // Time column
+            const timeTd = document.createElement('td');
+            timeTd.className = 'time-col';
+            if (isAnyBreak) timeTd.classList.add('break-row-label');
+            timeTd.textContent = formatHourRange(h);
+            tr.appendChild(timeTd);
+
+            days.forEach((day, di) => {
                 let td = document.createElement('td');
                 td.setAttribute('ondragover', 'handleDragOver(event)');
                 td.setAttribute('ondrop', `handleDrop(event, '${day}', '${slotStart}')`);
-                const slotStartMin = timeToMinutes(slotStart), slotEndMin = timeToMinutes(slotEnd);
-                window.schedules.filter(s => (s[mode] || '') === filterVal && s.day === day).forEach(item => {
-                    const itemStartMin = timeToMinutes(item.start), itemEndMin = timeToMinutes(item.end);
-                    if (!(slotStartMin < itemEndMin && slotEndMin > itemStartMin)) return;
 
-                    // Determine slot type
-                    const slotType = getSlotType(item.subject);
-                    
-                    let div = document.createElement('div');
-                    div.className = `slot-box slot-${slotType}`;
-                    div.draggable = (currentUserRole === 'operator');
-                    div.setAttribute('ondragstart', `handleDragStart(event, '${item.firebaseKey}')`);
+                const breakEntry = breakEntries[di];
+                if (breakEntry) {
+                    // Render break cell
+                    td.classList.add('break-row-cell');
+                    const breakLabel = breakEntry.label || 'Break';
+                    td.innerHTML = `<div class="break-fill"><i class="fa-solid fa-mug-hot"></i> ${breakLabel}</div>`;
+                } else {
+                    const slotStartMin = timeToMinutes(slotStart), slotEndMin = timeToMinutes(slotEnd);
+                    window.schedules.filter(s => (s[mode] || '') === filterVal && s.day === day).forEach(item => {
+                        const itemStartMin = timeToMinutes(item.start), itemEndMin = timeToMinutes(item.end);
+                        if (!(slotStartMin < itemEndMin && slotEndMin > itemStartMin)) return;
 
-                    let displayInfo = '';
-                    if (mode === "section") displayInfo = item.teacher || 'No Teacher';
-                    else if (mode === "teacher") displayInfo = item.section || 'No Section';
-                    else if (mode === "room") displayInfo = `${item.section || 'No Section'}•${item.teacher || 'No Teacher'}`;
+                        const slotType = getSlotType(item.subject);
+                        let div = document.createElement('div');
+                        div.className = `slot-box slot-${slotType}`;
+                        div.draggable = (currentUserRole === 'operator');
+                        div.setAttribute('ondragstart', `handleDragStart(event, '${item.firebaseKey}')`);
 
-                    // Type badge
-                    let typeBadgeHTML = '';
-                    if (slotType === 'async') typeBadgeHTML = `<span class="slot-type-badge badge-async"><i class="fa-solid fa-wifi-slash"></i> ASYNC</span>`;
-                    else if (slotType === 'homeroom') typeBadgeHTML = `<span class="slot-type-badge badge-homeroom"><i class="fa-solid fa-house-chimney-user"></i> HOMEROOM</span>`;
+                        let displayInfo = '';
+                        if (mode === "section") displayInfo = item.teacher || 'No Teacher';
+                        else if (mode === "teacher") displayInfo = item.section || 'No Section';
+                        else if (mode === "room") displayInfo = `${item.section || 'No Section'}•${item.teacher || 'No Teacher'}`;
 
-                    const actionButtons = currentUserRole === 'operator' ? `
-                        <div class="slot-actions">
-                            <button class="slot-action-btn slot-edit-btn" onclick="event.stopPropagation(); editEntry('${item.firebaseKey}')" title="Edit"><i class="fa-solid fa-pen"></i></button>
-                            <button class="slot-action-btn slot-delete-btn" onclick="event.stopPropagation(); deleteEntry('${item.firebaseKey}')" title="Delete"><i class="fa-solid fa-trash"></i></button>
-                        </div>` : '';
+                        let typeBadgeHTML = '';
+                        if (slotType === 'async') typeBadgeHTML = `<span class="slot-type-badge badge-async"><i class="fa-solid fa-wifi-slash"></i> ASYNC</span>`;
+                        else if (slotType === 'homeroom') typeBadgeHTML = `<span class="slot-type-badge badge-homeroom"><i class="fa-solid fa-house-chimney-user"></i> HOMEROOM</span>`;
+                        else if (slotType === 'break') typeBadgeHTML = `<span class="slot-type-badge badge-break"><i class="fa-solid fa-mug-hot"></i> BREAK</span>`;
 
-                    div.innerHTML = `
-                        ${actionButtons}
-                        ${typeBadgeHTML}
-                        <strong>${item.subject}</strong>
-                        <span class="room-badge">${item.room || 'No Room'}</span>
-                        <div class="info-line">${displayInfo}</div>
-                    `;
-                    td.appendChild(div);
-                });
+                        const actionButtons = currentUserRole === 'operator' ? `
+                            <div class="slot-actions">
+                                <button class="slot-action-btn slot-edit-btn" onclick="event.stopPropagation(); editEntry('${item.firebaseKey}')" title="Edit"><i class="fa-solid fa-pen"></i></button>
+                                <button class="slot-action-btn slot-delete-btn" onclick="event.stopPropagation(); deleteEntry('${item.firebaseKey}')" title="Delete"><i class="fa-solid fa-trash"></i></button>
+                            </div>` : '';
+
+                        div.innerHTML = `
+                            ${actionButtons}
+                            ${typeBadgeHTML}
+                            <strong>${item.subject}</strong>
+                            <span class="room-badge">${item.room || 'No Room'}</span>
+                            <div class="info-line">${displayInfo}</div>
+                        `;
+                        td.appendChild(div);
+                    });
+                }
                 tr.appendChild(td);
             });
             body.appendChild(tr);
         }
     };
-
-    function getTypeBadgeHTML(type) {
-        if (type === 'async') return `<span style="background:#f87171; color:white; font-size:7px; padding:1px 4px; border-radius:2px; font-weight:800;">ASYNC</span>`;
-        if (type === 'homeroom') return `<span style="background:#fb923c; color:white; font-size:7px; padding:1px 4px; border-radius:2px; font-weight:800;">HR</span>`;
-        return `<span style="background:#22c55e; color:white; font-size:7px; padding:1px 4px; border-radius:2px; font-weight:800;">REG</span>`;
-    }
 
     function renderManageTable() {
         const q = (document.getElementById('searchBox')?.value || '').trim().toLowerCase();
@@ -1483,9 +1844,10 @@
             const typeColors = {
                 regular: { bg: '#dcfce7', color: '#166534', label: 'Regular' },
                 async: { bg: '#fee2e2', color: '#991b1b', label: 'Async' },
-                homeroom: { bg: '#ffedd5', color: '#7c2d12', label: 'Homeroom' }
+                homeroom: { bg: '#ffedd5', color: '#7c2d12', label: 'Homeroom' },
+                break: { bg: '#ede9fe', color: '#4c1d95', label: 'Break' }
             };
-            const tc = typeColors[type];
+            const tc = typeColors[type] || typeColors.regular;
             return `<tr>
                 <td><b>${s.day ? s.day.substring(0,3) : ''}</b></td>
                 <td>${militaryToAMPM(s.start)} - ${militaryToAMPM(s.end)}</td>
