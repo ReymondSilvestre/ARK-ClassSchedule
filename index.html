@@ -68,7 +68,6 @@
         .lock-card h3 { margin: 0 0 8px 0; font-size: 18px; font-weight: 900; color: #0f172a; }
         .lock-card p { font-size: 12px; color: #64748b; margin: 0; line-height: 1.6; }
         .lock-editor-badge { display: inline-flex; align-items: center; gap: 6px; background: #fef3c7; color: #92400e; border: 1.5px solid #fde68a; padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: 800; margin: 14px 0 4px 0; }
-        .lock-countdown { font-size: 11px; color: #94a3b8; margin-top: 10px; }
         .btn-lock-wait { background: #f1f5f9; color: #475569; border: none; padding: 10px 24px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 12px; margin-top: 16px; transition: 0.2s; }
         .btn-lock-wait:hover { background: #e2e8f0; }
 
@@ -102,6 +101,7 @@
         .modal-overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); display:none; align-items:center; justify-content:center; z-index:9999; backdrop-filter:blur(3px); }
         .modal-overlay.active { display:flex; }
         .modal-content { background:white; padding:30px; border-radius:14px; max-width:520px; width:90%; box-shadow:0 25px 50px -12px rgba(0,0,0,0.5); }
+        .modal-content.modal-wide { max-width:900px; }
         .modal-title { font-size:17px; font-weight:800; margin-bottom:18px; color:#0f172a; display:flex; align-items:center; gap:8px; }
         .modal-field { margin-bottom:14px; }
         .modal-field label { display:block; font-size:10px; font-weight:800; color:#64748b; text-transform:uppercase; margin-bottom:5px; }
@@ -113,6 +113,7 @@
         .btn-modal-cancel { background:#e2e8f0; color:#475569; }
         .btn-modal-confirm { background:#3b82f6; color:white; }
         .btn-modal-danger { background:#ef4444; color:white; }
+        .btn-modal-success { background:#10b981; color:white; }
         .copy-info-box { background:#eff6ff; border:1.5px solid #bfdbfe; border-radius:8px; padding:12px; margin-top:12px; font-size:11px; color:#1e40af; line-height:1.6; }
         .toggle-switch { display:flex; align-items:center; gap:10px; }
         .toggle-switch input[type="checkbox"] { width:44px; height:24px; appearance:none; background:#cbd5e1; border-radius:12px; position:relative; cursor:pointer; transition:0.3s; flex-shrink:0; }
@@ -125,6 +126,32 @@
         .sem-list-table td { padding:8px 10px; border-bottom:1px solid #f1f5f9; vertical-align:middle; }
         .active-sem-row { background:#eff6ff !important; }
         .active-sem-badge { background:#dbeafe; color:#1e40af; font-size:8px; font-weight:800; padding:2px 7px; border-radius:10px; text-transform:uppercase; }
+
+        /* ===== OPERATOR PANEL TOGGLE (NEW) ===== */
+        .operator-section-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: linear-gradient(90deg, #0f172a, #1e293b);
+            color: white;
+            padding: 10px 16px;
+            border-radius: 8px;
+            margin-bottom: 14px;
+            cursor: pointer;
+            user-select: none;
+            border: 1.5px solid rgba(255,255,255,0.1);
+            transition: 0.2s;
+            width: 100%;
+            text-align: left;
+        }
+        .operator-section-toggle:hover { background: linear-gradient(90deg, #1e293b, #334155); }
+        .operator-section-toggle .osp-left { display: flex; align-items: center; gap: 10px; font-size: 12px; font-weight: 800; letter-spacing: 0.5px; }
+        .operator-section-toggle .osp-right { display: flex; align-items: center; gap: 8px; font-size: 10px; opacity: 0.8; }
+        .operator-section-toggle .osp-chevron { transition: transform 0.3s ease; font-size: 11px; }
+        .operator-section-toggle.collapsed .osp-chevron { transform: rotate(-90deg); }
+        .osp-badge { font-size: 8px; font-weight: 800; padding: 2px 8px; border-radius: 10px; background: #f59e0b; color: #92400e; text-transform: uppercase; }
+        .operator-section-body { overflow: hidden; transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease; max-height: 3000px; opacity: 1; }
+        .operator-section-body.collapsed { max-height: 0; opacity: 0; }
 
         /* ===== COLLAPSIBLE PANEL TOGGLE ===== */
         .panel-toggle-bar {
@@ -153,6 +180,7 @@
         .badge-settings { background: #10b981; color: white; }
         .badge-colors { background: #a855f7; color: white; }
         .badge-breaks { background: #8b5cf6; color: white; }
+        .badge-dataeditor { background: #f59e0b; color: #7c2d12; }
         .collapsible-body { overflow: hidden; transition: max-height 0.35s cubic-bezier(0.4,0,0.2,1), opacity 0.25s ease; max-height: 0; opacity: 0; }
         .collapsible-body.open { max-height: 2000px; opacity: 1; }
 
@@ -264,6 +292,35 @@
         .btn-cancel-break { background:#e2e8f0; color:#475569; border:none; padding:7px 14px; border-radius:6px; font-size:11px; font-weight:600; cursor:pointer; }
         .no-breaks-msg { text-align:center; padding:20px; color:#9ca3af; font-size:11px; font-weight:600; border:2px dashed #e9d5ff; border-radius:8px; margin-top:10px; }
 
+        /* ===== DATA EDITOR PANEL (ADMIN ONLY) ===== */
+        .data-editor-panel { background:linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); border:2px solid #f59e0b; padding:15px; border-radius:8px; }
+        .data-editor-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; flex-wrap:wrap; gap:8px; }
+        .data-editor-header h3 { margin:0; color:#92400e; font-size:13px; display:flex; align-items:center; gap:8px; font-weight:800; }
+        .data-editor-tabs { display:flex; gap:6px; flex-wrap:wrap; }
+        .data-editor-tab { border:none; padding:6px 12px; border-radius:6px; font-size:10px; font-weight:800; cursor:pointer; transition:0.2s; background:#e2e8f0; color:#475569; }
+        .data-editor-tab.active { background:#f59e0b; color:white; }
+        .data-editor-tab:hover { opacity:0.85; }
+        .data-editor-body { display:none; }
+        .data-editor-body.active { display:block; }
+        .data-editor-list { display:flex; flex-direction:column; gap:6px; margin-top:10px; max-height:250px; overflow-y:auto; }
+        .data-item-row { display:flex; align-items:center; gap:8px; background:white; border:1px solid #fde68a; border-radius:6px; padding:7px 10px; }
+        .data-item-row input { flex:1; border:1px solid #cbd5e1; border-radius:4px; padding:5px 8px; font-size:12px; box-sizing:border-box; }
+        .data-item-row input:focus { border-color:#f59e0b; outline:none; box-shadow:0 0 0 2px rgba(245,158,11,0.15); }
+        .btn-item-save { background:#10b981; color:white; border:none; padding:5px 10px; border-radius:4px; font-size:10px; font-weight:700; cursor:pointer; white-space:nowrap; }
+        .btn-item-delete { background:#ef4444; color:white; border:none; padding:5px 8px; border-radius:4px; font-size:10px; cursor:pointer; }
+        .btn-item-save:hover { background:#059669; }
+        .btn-item-delete:hover { background:#dc2626; }
+        .data-editor-add-row { display:flex; gap:8px; margin-top:10px; align-items:center; }
+        .data-editor-add-row input { flex:1; border:1.5px dashed #f59e0b; border-radius:6px; padding:7px 10px; font-size:12px; box-sizing:border-box; background:#fffbeb; }
+        .data-editor-add-row input:focus { border-style:solid; border-color:#f59e0b; outline:none; }
+        .btn-add-item { background:#f59e0b; color:white; border:none; padding:7px 14px; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer; white-space:nowrap; display:flex; align-items:center; gap:5px; }
+        .btn-add-item:hover { background:#d97706; }
+        .data-editor-note { font-size:10px; color:#92400e; background:#fef3c7; border:1px solid #fde68a; border-radius:6px; padding:8px 10px; margin-top:10px; line-height:1.5; }
+        .data-editor-count { font-size:9px; font-weight:800; background:#fde68a; color:#92400e; padding:2px 8px; border-radius:10px; margin-left:6px; }
+
+        /* ===== CLUSTER BADGE IN SLOT ===== */
+        .slot-cluster-badge { display:inline-block; background:rgba(99,102,241,0.15); color:#4338ca; padding:1px 4px; border-radius:2px; font-size:6px; font-weight:800; margin-top:1px; text-transform:uppercase; letter-spacing:0.3px; }
+
         /* ===== SLOT STYLES ===== */
         .slot-box { padding:2px 3px; border-radius:2px; font-size:7px; margin:1px; cursor:grab; display:block; min-height:24px; box-shadow:0 1px 2px rgba(0,0,0,0.1); transition:0.2s; line-height:1.2; position:relative; }
         .slot-box:hover { box-shadow:0 2px 4px rgba(0,0,0,0.15); transform:translateY(-1px); }
@@ -291,7 +348,6 @@
         .matrix-table { width:100%; border-collapse:collapse; table-layout:fixed; border:1px solid #334155; background:#fff; font-family:'Arial', sans-serif; }
         .matrix-table th, .matrix-table td { border:1px solid #cbd5e1; padding:2px 1px; text-align:center; vertical-align:top; font-size:8px; line-height:1.1; }
         .matrix-table th { background:#334155; color:white; height:24px; font-size:8px; font-weight:700; letter-spacing:0.3px; padding:3px 1px; }
-        /* Time column: wider for readability */
         .time-col {
             background:#1e3a5f !important;
             color: white !important;
@@ -317,11 +373,9 @@
         .time-start { font-size:8px; font-weight:900; color:#93c5fd; display:block; }
         .time-dash { font-size:7px; color:rgba(255,255,255,0.5); display:block; margin:1px 0; }
         .time-end { font-size:8px; font-weight:700; color:#bfdbfe; display:block; }
-        /* Merged cells (rowspan) */
         .matrix-table td.merged-cell { vertical-align: middle; }
         .matrix-table td { min-height:36px; }
         .empty-cell { min-height:32px; display:block; }
-        /* Break row styling */
         .break-cell {
             background: linear-gradient(135deg, var(--slot-break-bg) 0%, var(--slot-break-bg2) 100%) !important;
             border-top:1.5px solid var(--slot-break-border) !important;
@@ -368,17 +422,25 @@
         .warning-alert .title { font-weight:800; font-size:11px; color:#92400e; margin-bottom:3px; }
         .warning-alert .message { font-size:10px; color:#78350f; }
 
-        /* Bulk modal */
         .modal-options { display:flex; flex-direction:column; gap:10px; margin-bottom:20px; }
         .modal-option { padding:15px; border:2px solid #e2e8f0; border-radius:8px; cursor:pointer; transition:0.2s; display:flex; align-items:center; gap:10px; }
         .modal-option:hover { border-color:#3b82f6; background:#eff6ff; }
         .modal-option i { font-size:20px; color:#3b82f6; }
 
-        /* No semester state */
         .no-sem-state { text-align:center; padding:50px 20px; color:#94a3b8; }
         .no-sem-state i { font-size:48px; margin-bottom:15px; display:block; }
         .no-sem-state h3 { font-size:18px; font-weight:800; color:#475569; margin-bottom:8px; }
         .no-sem-state p { font-size:13px; margin-bottom:20px; }
+
+        /* ===== BULK EDIT CLUSTER MODAL ===== */
+        .bulk-cluster-table { width:100%; border-collapse:collapse; font-size:11px; max-height:400px; display:block; overflow-y:auto; }
+        .bulk-cluster-table thead { display:table; width:100%; table-layout:fixed; }
+        .bulk-cluster-table tbody { display:block; max-height:350px; overflow-y:auto; }
+        .bulk-cluster-table tr { display:table; width:100%; table-layout:fixed; }
+        .bulk-cluster-table th { background:#f1f5f9; padding:7px 8px; text-align:left; font-weight:800; font-size:10px; color:#64748b; text-transform:uppercase; border-bottom:2px solid #e2e8f0; }
+        .bulk-cluster-table td { padding:5px 6px; border-bottom:1px solid #f1f5f9; vertical-align:middle; }
+        .bulk-cluster-table input { width:100%; padding:4px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:11px; box-sizing:border-box; }
+        .bulk-cluster-table input:focus { border-color:#3b82f6; outline:none; }
 
         @page { size:13in 8.5in landscape; margin:6mm; }
         @media print {
@@ -394,13 +456,12 @@
             #editLockBanner { display:none !important; }
         }
 
-        /* Spacing helpers */
         .mb-8 { margin-bottom: 8px; }
     </style>
 </head>
 <body>
 
-<!-- EDIT LOCK BANNER (shown to other users when someone is editing) -->
+<!-- EDIT LOCK BANNER -->
 <div id="editLockBanner">
     <div class="lock-banner-left">
         <div class="lock-pulse"></div>
@@ -409,14 +470,13 @@
     <button class="btn-force-unlock" id="forceUnlockBtn" onclick="forceUnlock()" style="display:none;"><i class="fa-solid fa-unlock"></i> Force Unlock (Admin)</button>
 </div>
 
-<!-- EDIT LOCK OVERLAY (blocks other users from encoding) -->
+<!-- EDIT LOCK OVERLAY -->
 <div id="lockOverlay">
     <div class="lock-card">
         <div class="lock-icon">🔒</div>
         <h3>Schedule Locked for Editing</h3>
         <p>Another operator is currently editing the schedule. Please wait for them to finish before making changes.</p>
         <div class="lock-editor-badge"><i class="fa-solid fa-user-pen"></i> <span id="lockEditorName">Loading...</span></div>
-        <div class="lock-countdown" id="lockCountdown"></div>
         <button class="btn-lock-wait" onclick="document.getElementById('lockOverlay').classList.remove('visible')"><i class="fa-solid fa-xmark"></i> Dismiss</button>
     </div>
 </div>
@@ -466,6 +526,36 @@
             <div class="modal-option" onclick="selectBulkOption('room')"><i class="fa-solid fa-door-open"></i><div><strong>All Rooms</strong><p style="font-size:11px;color:#64748b;margin:0;">Download schedules for all rooms in one PDF</p></div></div>
         </div>
         <div class="modal-buttons"><button class="btn-modal btn-modal-cancel" onclick="closeBulkModal()">Cancel</button></div>
+    </div>
+</div>
+
+<!-- BULK CLUSTER UPDATE MODAL -->
+<div id="bulkClusterModal" class="modal-overlay">
+    <div class="modal-content modal-wide">
+        <div class="modal-title"><i class="fa-solid fa-layer-group" style="color:#6366f1;"></i> Bulk Update Cluster Field</div>
+        <p style="font-size:11px;color:#64748b;margin-bottom:12px;">Update the Cluster field for existing schedule entries that were encoded without it. Changes are saved individually per row.</p>
+        <div style="display:flex;gap:8px;margin-bottom:10px;align-items:center;flex-wrap:wrap;">
+            <input type="text" id="bulkClusterFilter" placeholder="Filter by section, teacher, subject..." oninput="renderBulkClusterTable()" style="flex:1;padding:7px 10px;border:1px solid #cbd5e1;border-radius:6px;font-size:12px;">
+            <select id="bulkClusterFillSelect" style="padding:7px;border:1px solid #cbd5e1;border-radius:6px;font-size:12px;" onchange="bulkFillCluster()">
+                <option value="">— Fill All Visible with... —</option>
+            </select>
+        </div>
+        <div style="overflow:auto;max-height:420px;border:1px solid #e2e8f0;border-radius:8px;">
+            <table style="width:100%;border-collapse:collapse;font-size:11px;">
+                <thead>
+                    <tr style="background:#f1f5f9;position:sticky;top:0;z-index:1;">
+                        <th style="padding:8px;text-align:left;font-weight:800;font-size:10px;color:#64748b;text-transform:uppercase;border-bottom:2px solid #e2e8f0;">Subject</th>
+                        <th style="padding:8px;text-align:left;font-weight:800;font-size:10px;color:#64748b;text-transform:uppercase;border-bottom:2px solid #e2e8f0;">Section</th>
+                        <th style="padding:8px;text-align:left;font-weight:800;font-size:10px;color:#64748b;text-transform:uppercase;border-bottom:2px solid #e2e8f0;">Teacher</th>
+                        <th style="padding:8px;text-align:left;font-weight:800;font-size:10px;color:#64748b;text-transform:uppercase;border-bottom:2px solid #e2e8f0;">Day / Time</th>
+                        <th style="padding:8px;text-align:left;font-weight:800;font-size:10px;color:#64748b;text-transform:uppercase;border-bottom:2px solid #e2e8f0;min-width:140px;">Cluster</th>
+                        <th style="padding:8px;text-align:center;font-weight:800;font-size:10px;color:#64748b;text-transform:uppercase;border-bottom:2px solid #e2e8f0;width:60px;">Save</th>
+                    </tr>
+                </thead>
+                <tbody id="bulkClusterBody"></tbody>
+            </table>
+        </div>
+        <div class="modal-buttons"><button class="btn-modal btn-modal-cancel" onclick="closeBulkClusterModal()"><i class="fa-solid fa-xmark"></i> Close</button></div>
     </div>
 </div>
 
@@ -558,67 +648,149 @@
     <div id="encodeSection" class="section-container">
         <div class="section-header">
             <div class="section-title"><i class="fa-solid fa-calendar-plus"></i> Encode Schedule <span id="encodeSemTag" style="background:#dbeafe;color:#1e40af;font-size:10px;font-weight:700;padding:3px 10px;border-radius:6px;margin-left:8px;"></span></div>
-            <button class="btn-close-section" onclick="closeSection('encodeSection')"><i class="fa-solid fa-xmark"></i> Close</button>
+            <div style="display:flex;gap:8px;align-items:center;">
+                <!-- OPERATOR PANEL COLLAPSE TOGGLE (visible to operator only) -->
+                <button class="operator-section-toggle" id="ospToggle" onclick="toggleOperatorSectionPanel()" style="max-width:220px;padding:7px 12px;" title="Show/Hide Operator Tools">
+                    <div class="osp-left" style="font-size:10px;"><i class="fa-solid fa-sliders"></i> OPERATOR TOOLS <span class="osp-badge">OP</span></div>
+                    <div class="osp-right"><span id="ospToggleLabel" style="font-size:9px;">Hide</span> <i class="fa-solid fa-chevron-down osp-chevron"></i></div>
+                </button>
+                <button class="btn-close-section" onclick="closeSection('encodeSection')"><i class="fa-solid fa-xmark"></i> Close</button>
+            </div>
         </div>
 
-        <!-- COLLAPSIBLE: Hour Limit Settings -->
-        <div class="mb-8">
-            <button class="panel-toggle-bar open" id="toggleSettings" onclick="togglePanel('panelSettings','toggleSettings')">
-                <div class="toggle-bar-left">
-                    <i class="fa-solid fa-gear"></i>
-                    HOUR LIMIT SETTINGS
-                    <span class="panel-badge badge-settings">SETTINGS</span>
-                    <span id="enforcementBadge" class="enforcement-badge badge-strict" style="margin-left:4px;">STRICT MODE</span>
-                </div>
-                <div class="toggle-bar-right"><span id="settingsToggleLabel">Hide</span> <i class="fa-solid fa-chevron-up chevron"></i></div>
-            </button>
-            <div class="collapsible-body open" id="panelSettings">
-                <div class="settings-panel">
-                    <div class="settings-grid">
-                        <div class="setting-item"><label><i class="fa-solid fa-clock"></i> Daily Hour Limit (per teacher)</label><input type="number" id="dailyHourLimit" value="8" min="1" max="24" step="0.5" onchange="updateLimitSettings()"></div>
-                        <div class="setting-item">
-                            <label><i class="fa-solid fa-shield-halved"></i> Enforcement Mode</label>
-                            <div class="toggle-switch"><input type="checkbox" id="enforceLimit" checked onchange="updateLimitSettings()"><span class="toggle-label" id="enforceLimitLabel">Strict Enforcement (Block Over-Limit)</span></div>
-                            <p style="font-size:9px;color:#64748b;margin:8px 0 0 0;line-height:1.4;"><strong>Strict:</strong> Prevents saving schedules that exceed the daily limit.<br><strong>Warning:</strong> Allows saving but shows warning alerts.</p>
+        <!-- OPERATOR COLLAPSIBLE SECTION BODY -->
+        <div class="operator-section-body" id="ospBody">
+
+            <!-- COLLAPSIBLE: Hour Limit Settings -->
+            <div class="mb-8">
+                <button class="panel-toggle-bar open" id="toggleSettings" onclick="togglePanel('panelSettings','toggleSettings')">
+                    <div class="toggle-bar-left">
+                        <i class="fa-solid fa-gear"></i>
+                        HOUR LIMIT SETTINGS
+                        <span class="panel-badge badge-settings">SETTINGS</span>
+                        <span id="enforcementBadge" class="enforcement-badge badge-strict" style="margin-left:4px;">STRICT MODE</span>
+                    </div>
+                    <div class="toggle-bar-right"><span id="settingsToggleLabel">Hide</span> <i class="fa-solid fa-chevron-up chevron"></i></div>
+                </button>
+                <div class="collapsible-body open" id="panelSettings">
+                    <div class="settings-panel">
+                        <div class="settings-grid">
+                            <div class="setting-item"><label><i class="fa-solid fa-clock"></i> Daily Hour Limit (per teacher)</label><input type="number" id="dailyHourLimit" value="8" min="1" max="24" step="0.5" onchange="updateLimitSettings()"></div>
+                            <div class="setting-item">
+                                <label><i class="fa-solid fa-shield-halved"></i> Enforcement Mode</label>
+                                <div class="toggle-switch"><input type="checkbox" id="enforceLimit" checked onchange="updateLimitSettings()"><span class="toggle-label" id="enforceLimitLabel">Strict Enforcement (Block Over-Limit)</span></div>
+                                <p style="font-size:9px;color:#64748b;margin:8px 0 0 0;line-height:1.4;"><strong>Strict:</strong> Prevents saving schedules that exceed the daily limit.<br><strong>Warning:</strong> Allows saving but shows warning alerts.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- COLLAPSIBLE: Color Customization (Operator only) -->
-        <div class="mb-8 operator-only" id="colorPanelWrap">
-            <button class="panel-toggle-bar" id="toggleColors" onclick="togglePanel('panelColors','toggleColors')">
-                <div class="toggle-bar-left">
-                    <i class="fa-solid fa-palette"></i>
-                    SLOT COLOR CUSTOMIZATION
-                    <span class="panel-badge badge-colors">COLORS</span>
-                </div>
-                <div class="toggle-bar-right"><span id="colorsToggleLabel">Show</span> <i class="fa-solid fa-chevron-down chevron"></i></div>
-            </button>
-            <div class="collapsible-body" id="panelColors">
-                <div class="color-customization-panel">
-                    <div class="color-panel-header">
-                        <h3><i class="fa-solid fa-palette"></i> SLOT COLOR CUSTOMIZATION</h3>
-                        <button class="btn-reset-colors" onclick="resetColors()"><i class="fa-solid fa-rotate-left"></i> Reset Defaults</button>
+            <!-- COLLAPSIBLE: Color Customization -->
+            <div class="mb-8" id="colorPanelWrap">
+                <button class="panel-toggle-bar" id="toggleColors" onclick="togglePanel('panelColors','toggleColors')">
+                    <div class="toggle-bar-left">
+                        <i class="fa-solid fa-palette"></i>
+                        SLOT COLOR CUSTOMIZATION
+                        <span class="panel-badge badge-colors">COLORS</span>
                     </div>
-                    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px;">
-                        <div class="keyword-config"><label><i class="fa-solid fa-wifi-slash"></i> Async Keywords</label><input type="text" id="asyncKeywords" value="ASYNC,ASYNCHRONOUS" onchange="saveColorSettings()" placeholder="e.g. ASYNC,ASYNCHRONOUS"><div class="keyword-hint">Comma-separated. Case-insensitive.</div></div>
-                        <div class="keyword-config"><label><i class="fa-solid fa-house-chimney-user"></i> Homeroom Keywords</label><input type="text" id="homeroomKeywords" value="HOMEROOM,HOME ROOM,HR" onchange="saveColorSettings()" placeholder="e.g. HOMEROOM,HOME ROOM,HR"><div class="keyword-hint">Comma-separated. Case-insensitive.</div></div>
-                        <div class="keyword-config"><label><i class="fa-solid fa-mug-hot"></i> Break Time Keywords</label><input type="text" id="breakKeywords" value="BREAK,LUNCH,RECESS,FREE,VACANT" onchange="saveColorSettings()" placeholder="e.g. BREAK,LUNCH,RECESS"><div class="keyword-hint">Comma-separated. Case-insensitive.</div></div>
-                    </div>
-                    <div class="color-types-grid">
-                        <div class="color-type-card"><div class="color-type-title"><span class="type-dot" style="background:#22c55e;"></span>Regular Class</div><div class="color-row"><div class="color-picker-group"><label>BG Start</label><input type="color" id="color-regular-bg" value="#f0fdf4" onchange="applyColors()"></div><div class="color-picker-group"><label>BG End</label><input type="color" id="color-regular-bg2" value="#dcfce7" onchange="applyColors()"></div><div class="color-picker-group"><label>Border</label><input type="color" id="color-regular-border" value="#22c55e" onchange="applyColors()"></div><div class="color-picker-group"><label>Text</label><input type="color" id="color-regular-text" value="#0f172a" onchange="applyColors()"></div></div><div class="color-preview-slot" id="preview-regular" style="--preview-bg:#f0fdf4;--preview-bg2:#dcfce7;--preview-border:#22c55e;--preview-text:#0f172a;">📘 MATHEMATICS 101</div></div>
-                        <div class="color-type-card"><div class="color-type-title"><span class="type-dot" style="background:#f87171;"></span>Async / Asynchronous</div><div class="color-row"><div class="color-picker-group"><label>BG Start</label><input type="color" id="color-async-bg" value="#fff0f0" onchange="applyColors()"></div><div class="color-picker-group"><label>BG End</label><input type="color" id="color-async-bg2" value="#ffe4e4" onchange="applyColors()"></div><div class="color-picker-group"><label>Border</label><input type="color" id="color-async-border" value="#f87171" onchange="applyColors()"></div><div class="color-picker-group"><label>Text</label><input type="color" id="color-async-text" value="#7f1d1d" onchange="applyColors()"></div></div><div class="color-preview-slot" id="preview-async" style="--preview-bg:#fff0f0;--preview-bg2:#ffe4e4;--preview-border:#f87171;--preview-text:#7f1d1d;">📡 ASYNC LEARNING</div></div>
-                        <div class="color-type-card"><div class="color-type-title"><span class="type-dot" style="background:#fb923c;"></span>Homeroom Class</div><div class="color-row"><div class="color-picker-group"><label>BG Start</label><input type="color" id="color-homeroom-bg" value="#fff7ed" onchange="applyColors()"></div><div class="color-picker-group"><label>BG End</label><input type="color" id="color-homeroom-bg2" value="#ffedd5" onchange="applyColors()"></div><div class="color-picker-group"><label>Border</label><input type="color" id="color-homeroom-border" value="#fb923c" onchange="applyColors()"></div><div class="color-picker-group"><label>Text</label><input type="color" id="color-homeroom-text" value="#7c2d12" onchange="applyColors()"></div></div><div class="color-preview-slot" id="preview-homeroom" style="--preview-bg:#fff7ed;--preview-bg2:#ffedd5;--preview-border:#fb923c;--preview-text:#7c2d12;">🏠 HOMEROOM PERIOD</div></div>
-                        <div class="color-type-card"><div class="color-type-title"><span class="type-dot" style="background:#8b5cf6;"></span>Break Time</div><div class="color-row"><div class="color-picker-group"><label>BG Start</label><input type="color" id="color-break-bg" value="#f5f3ff" onchange="applyColors()"></div><div class="color-picker-group"><label>BG End</label><input type="color" id="color-break-bg2" value="#ede9fe" onchange="applyColors()"></div><div class="color-picker-group"><label>Border</label><input type="color" id="color-break-border" value="#8b5cf6" onchange="applyColors()"></div><div class="color-picker-group"><label>Text</label><input type="color" id="color-break-text" value="#4c1d95" onchange="applyColors()"></div></div><div class="color-preview-slot" id="preview-break" style="--preview-bg:#f5f3ff;--preview-bg2:#ede9fe;--preview-border:#8b5cf6;--preview-text:#4c1d95;">☕ BREAK TIME</div></div>
+                    <div class="toggle-bar-right"><span id="colorsToggleLabel">Show</span> <i class="fa-solid fa-chevron-down chevron"></i></div>
+                </button>
+                <div class="collapsible-body" id="panelColors">
+                    <div class="color-customization-panel">
+                        <div class="color-panel-header">
+                            <h3><i class="fa-solid fa-palette"></i> SLOT COLOR CUSTOMIZATION</h3>
+                            <button class="btn-reset-colors" onclick="resetColors()"><i class="fa-solid fa-rotate-left"></i> Reset Defaults</button>
+                        </div>
+                        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px;">
+                            <div class="keyword-config"><label><i class="fa-solid fa-wifi-slash"></i> Async Keywords</label><input type="text" id="asyncKeywords" value="ASYNC,ASYNCHRONOUS" onchange="saveColorSettings()" placeholder="e.g. ASYNC,ASYNCHRONOUS"><div class="keyword-hint">Comma-separated. Case-insensitive.</div></div>
+                            <div class="keyword-config"><label><i class="fa-solid fa-house-chimney-user"></i> Homeroom Keywords</label><input type="text" id="homeroomKeywords" value="HOMEROOM,HOME ROOM,HR" onchange="saveColorSettings()" placeholder="e.g. HOMEROOM,HOME ROOM,HR"><div class="keyword-hint">Comma-separated. Case-insensitive.</div></div>
+                            <div class="keyword-config"><label><i class="fa-solid fa-mug-hot"></i> Break Time Keywords</label><input type="text" id="breakKeywords" value="BREAK,LUNCH,RECESS,FREE,VACANT" onchange="saveColorSettings()" placeholder="e.g. BREAK,LUNCH,RECESS"><div class="keyword-hint">Comma-separated. Case-insensitive.</div></div>
+                        </div>
+                        <div class="color-types-grid">
+                            <div class="color-type-card"><div class="color-type-title"><span class="type-dot" style="background:#22c55e;"></span>Regular Class</div><div class="color-row"><div class="color-picker-group"><label>BG Start</label><input type="color" id="color-regular-bg" value="#f0fdf4" onchange="applyColors()"></div><div class="color-picker-group"><label>BG End</label><input type="color" id="color-regular-bg2" value="#dcfce7" onchange="applyColors()"></div><div class="color-picker-group"><label>Border</label><input type="color" id="color-regular-border" value="#22c55e" onchange="applyColors()"></div><div class="color-picker-group"><label>Text</label><input type="color" id="color-regular-text" value="#0f172a" onchange="applyColors()"></div></div><div class="color-preview-slot" id="preview-regular" style="--preview-bg:#f0fdf4;--preview-bg2:#dcfce7;--preview-border:#22c55e;--preview-text:#0f172a;">📘 MATHEMATICS 101</div></div>
+                            <div class="color-type-card"><div class="color-type-title"><span class="type-dot" style="background:#f87171;"></span>Async / Asynchronous</div><div class="color-row"><div class="color-picker-group"><label>BG Start</label><input type="color" id="color-async-bg" value="#fff0f0" onchange="applyColors()"></div><div class="color-picker-group"><label>BG End</label><input type="color" id="color-async-bg2" value="#ffe4e4" onchange="applyColors()"></div><div class="color-picker-group"><label>Border</label><input type="color" id="color-async-border" value="#f87171" onchange="applyColors()"></div><div class="color-picker-group"><label>Text</label><input type="color" id="color-async-text" value="#7f1d1d" onchange="applyColors()"></div></div><div class="color-preview-slot" id="preview-async" style="--preview-bg:#fff0f0;--preview-bg2:#ffe4e4;--preview-border:#f87171;--preview-text:#7f1d1d;">📡 ASYNC LEARNING</div></div>
+                            <div class="color-type-card"><div class="color-type-title"><span class="type-dot" style="background:#fb923c;"></span>Homeroom Class</div><div class="color-row"><div class="color-picker-group"><label>BG Start</label><input type="color" id="color-homeroom-bg" value="#fff7ed" onchange="applyColors()"></div><div class="color-picker-group"><label>BG End</label><input type="color" id="color-homeroom-bg2" value="#ffedd5" onchange="applyColors()"></div><div class="color-picker-group"><label>Border</label><input type="color" id="color-homeroom-border" value="#fb923c" onchange="applyColors()"></div><div class="color-picker-group"><label>Text</label><input type="color" id="color-homeroom-text" value="#7c2d12" onchange="applyColors()"></div></div><div class="color-preview-slot" id="preview-homeroom" style="--preview-bg:#fff7ed;--preview-bg2:#ffedd5;--preview-border:#fb923c;--preview-text:#7c2d12;">🏠 HOMEROOM PERIOD</div></div>
+                            <div class="color-type-card"><div class="color-type-title"><span class="type-dot" style="background:#8b5cf6;"></span>Break Time</div><div class="color-row"><div class="color-picker-group"><label>BG Start</label><input type="color" id="color-break-bg" value="#f5f3ff" onchange="applyColors()"></div><div class="color-picker-group"><label>BG End</label><input type="color" id="color-break-bg2" value="#ede9fe" onchange="applyColors()"></div><div class="color-picker-group"><label>Border</label><input type="color" id="color-break-border" value="#8b5cf6" onchange="applyColors()"></div><div class="color-picker-group"><label>Text</label><input type="color" id="color-break-text" value="#4c1d95" onchange="applyColors()"></div></div><div class="color-preview-slot" id="preview-break" style="--preview-bg:#f5f3ff;--preview-bg2:#ede9fe;--preview-border:#8b5cf6;--preview-text:#4c1d95;">☕ BREAK TIME</div></div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+
+            <!-- COLLAPSIBLE: Data List Editor (ADMIN ONLY) -->
+            <div class="mb-8 admin-only hidden" id="dataEditorPanelWrap">
+                <button class="panel-toggle-bar" id="toggleDataEditor" onclick="togglePanel('panelDataEditor','toggleDataEditor')">
+                    <div class="toggle-bar-left">
+                        <i class="fa-solid fa-database"></i>
+                        DATA LIST EDITOR
+                        <span class="panel-badge badge-dataeditor">ADMIN ONLY</span>
+                    </div>
+                    <div class="toggle-bar-right"><span id="dataEditorToggleLabel">Show</span> <i class="fa-solid fa-chevron-down chevron"></i></div>
+                </button>
+                <div class="collapsible-body" id="panelDataEditor">
+                    <div class="data-editor-panel">
+                        <div class="data-editor-header">
+                            <h3><i class="fa-solid fa-pen-to-square"></i> MANAGE INPUT DROPDOWN LISTS</h3>
+                            <div class="data-editor-tabs">
+                                <button class="data-editor-tab active" onclick="switchDataTab('subjects')">Subjects</button>
+                                <button class="data-editor-tab" onclick="switchDataTab('sections')">Sections</button>
+                                <button class="data-editor-tab" onclick="switchDataTab('teachers')">Teachers</button>
+                                <button class="data-editor-tab" onclick="switchDataTab('rooms')">Rooms</button>
+                                <button class="data-editor-tab" onclick="switchDataTab('clusters')">Clusters</button>
+                            </div>
+                        </div>
+                        <div class="data-editor-note"><i class="fa-solid fa-circle-info"></i> These lists pre-populate the autocomplete dropdowns in the encode form. Items are stored globally (across all semesters). Edit or delete any entry, or add new ones. Changes reflect immediately in all input fields.</div>
+                        <!-- Subjects -->
+                        <div class="data-editor-body active" id="tab-subjects">
+                            <div class="data-editor-add-row">
+                                <input type="text" id="newSubjectInput" placeholder="Add new subject..." onkeydown="if(event.key==='Enter')addDataItem('subjects','newSubjectInput')">
+                                <button class="btn-add-item" onclick="addDataItem('subjects','newSubjectInput')"><i class="fa-solid fa-plus"></i> Add</button>
+                            </div>
+                            <div class="data-editor-list" id="list-subjects"></div>
+                        </div>
+                        <!-- Sections -->
+                        <div class="data-editor-body" id="tab-sections">
+                            <div class="data-editor-add-row">
+                                <input type="text" id="newSectionInput" placeholder="Add new section..." onkeydown="if(event.key==='Enter')addDataItem('sections','newSectionInput')">
+                                <button class="btn-add-item" onclick="addDataItem('sections','newSectionInput')"><i class="fa-solid fa-plus"></i> Add</button>
+                            </div>
+                            <div class="data-editor-list" id="list-sections"></div>
+                        </div>
+                        <!-- Teachers -->
+                        <div class="data-editor-body" id="tab-teachers">
+                            <div class="data-editor-add-row">
+                                <input type="text" id="newTeacherInput" placeholder="Add new teacher..." onkeydown="if(event.key==='Enter')addDataItem('teachers','newTeacherInput')">
+                                <button class="btn-add-item" onclick="addDataItem('teachers','newTeacherInput')"><i class="fa-solid fa-plus"></i> Add</button>
+                            </div>
+                            <div class="data-editor-list" id="list-teachers"></div>
+                        </div>
+                        <!-- Rooms -->
+                        <div class="data-editor-body" id="tab-rooms">
+                            <div class="data-editor-add-row">
+                                <input type="text" id="newRoomInput" placeholder="Add new room..." onkeydown="if(event.key==='Enter')addDataItem('rooms','newRoomInput')">
+                                <button class="btn-add-item" onclick="addDataItem('rooms','newRoomInput')"><i class="fa-solid fa-plus"></i> Add</button>
+                            </div>
+                            <div class="data-editor-list" id="list-rooms"></div>
+                        </div>
+                        <!-- Clusters -->
+                        <div class="data-editor-body" id="tab-clusters">
+                            <div class="data-editor-add-row">
+                                <input type="text" id="newClusterInput" placeholder="Add new cluster..." onkeydown="if(event.key==='Enter')addDataItem('clusters','newClusterInput')">
+                                <button class="btn-add-item" onclick="addDataItem('clusters','newClusterInput')"><i class="fa-solid fa-plus"></i> Add</button>
+                            </div>
+                            <div class="data-editor-list" id="list-clusters"></div>
+                        </div>
+                        <div style="margin-top:14px;">
+                            <button onclick="openBulkClusterModal()" style="background:#6366f1;color:white;border:none;padding:8px 16px;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;"><i class="fa-solid fa-layer-group"></i> Bulk Update Cluster on Existing Entries</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- end ospBody -->
 
         <div class="input-card">
-            <div id="editLockNotice" style="display:none;background:#fef3c7;border:1.5px solid #f59e0b;border-radius:6px;padding:8px 12px;margin-bottom:10px;font-size:11px;font-weight:700;color:#92400e;display:flex;align-items:center;gap:8px;">
+            <div id="editLockNotice" style="display:none;background:#fef3c7;border:1.5px solid #f59e0b;border-radius:6px;padding:8px 12px;margin-bottom:10px;font-size:11px;font-weight:700;color:#92400e;align-items:center;gap:8px;">
                 <i class="fa-solid fa-lock"></i> <span id="editLockNoticeText">You have the edit lock. Others cannot edit until you save or cancel.</span>
             </div>
             <div class="input-row">
@@ -627,6 +799,7 @@
                 <div class="input-group"><label>Section</label><input id="section" type="text" list="sectionList" oninput="acquireEditLock()"><datalist id="sectionList"></datalist></div>
                 <div class="input-group"><label>Instructor</label><input id="teacher" type="text" list="teacherList" oninput="acquireEditLock()"><datalist id="teacherList"></datalist></div>
                 <div class="input-group"><label>Room</label><input id="room" type="text" list="roomList" oninput="acquireEditLock()"><datalist id="roomList"></datalist></div>
+                <div class="input-group"><label>Cluster <span style="font-size:8px;color:#94a3b8;font-weight:600;">(optional)</span></label><input id="cluster" type="text" list="clusterList" placeholder="e.g. Cluster A" oninput="acquireEditLock()"><datalist id="clusterList"></datalist></div>
                 <div class="input-group"><label>Day</label><select id="day" onchange="acquireEditLock()"><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option></select></div>
                 <div class="input-group"><label>Start</label><input id="startTime" type="time" value="07:00" onchange="acquireEditLock()"></div>
                 <div class="input-group"><label>End</label><input id="endTime" type="time" value="08:00" onchange="acquireEditLock()"></div>
@@ -646,36 +819,45 @@
     <div id="matrixSection" class="section-container">
         <div class="section-header">
             <div class="section-title"><i class="fa-solid fa-table-cells"></i> Schedule View Matrix <span id="matrixSemTag" style="background:#dbeafe;color:#1e40af;font-size:10px;font-weight:700;padding:3px 10px;border-radius:6px;margin-left:8px;"></span></div>
-            <button class="btn-close-section" onclick="closeSection('matrixSection')"><i class="fa-solid fa-xmark"></i> Close</button>
+            <div style="display:flex;gap:8px;align-items:center;">
+                <!-- OPERATOR PANEL COLLAPSE TOGGLE FOR MATRIX -->
+                <button class="operator-section-toggle operator-only" id="ospToggleMatrix" onclick="toggleOperatorMatrixPanel()" style="max-width:220px;padding:7px 12px;" title="Show/Hide Break Time Management">
+                    <div class="osp-left" style="font-size:10px;"><i class="fa-solid fa-mug-hot"></i> BREAK MGMT <span class="osp-badge">OP</span></div>
+                    <div class="osp-right"><span id="ospMatrixToggleLabel" style="font-size:9px;">Hide</span> <i class="fa-solid fa-chevron-down osp-chevron"></i></div>
+                </button>
+                <button class="btn-close-section" onclick="closeSection('matrixSection')"><i class="fa-solid fa-xmark"></i> Close</button>
+            </div>
         </div>
 
         <!-- COLLAPSIBLE: Break Time Management (Operator only) -->
-        <div class="mb-8 operator-only" id="breakPanelWrap">
-            <button class="panel-toggle-bar" id="toggleBreaks" onclick="togglePanel('panelBreaks','toggleBreaks')">
-                <div class="toggle-bar-left">
-                    <i class="fa-solid fa-mug-hot"></i>
-                    BREAK TIME MANAGEMENT
-                    <span class="panel-badge badge-breaks">BREAKS</span>
-                    <span id="breakCountBadge" style="background:rgba(255,255,255,0.2);color:white;font-size:8px;font-weight:800;padding:2px 8px;border-radius:10px;margin-left:4px;"></span>
-                </div>
-                <div class="toggle-bar-right"><span id="breaksToggleLabel">Show</span> <i class="fa-solid fa-chevron-down chevron"></i></div>
-            </button>
-            <div class="collapsible-body" id="panelBreaks">
-                <div class="breaktime-panel">
-                    <div class="breaktime-panel-header"><h3><i class="fa-solid fa-mug-hot"></i> BREAK TIME MANAGEMENT</h3><button class="btn-add-break" onclick="toggleBreakForm()"><i class="fa-solid fa-plus"></i> ADD BREAK</button></div>
-                    <div class="break-entries-list" id="breakEntriesList"></div>
-                    <div class="break-add-form" id="breakAddForm">
-                        <p id="breakFormTitle" style="font-size:11px;font-weight:800;color:#6b21a8;margin:0 0 10px 0;">NEW BREAK TIME</p>
-                        <input type="hidden" id="editBreakKey">
-                        <div class="break-form-grid">
-                            <div class="input-group"><label style="font-size:10px;font-weight:800;color:#6b21a8;text-transform:uppercase;">Label</label><input type="text" id="breakLabel" placeholder="e.g. Lunch Break"></div>
-                            <div class="input-group"><label style="font-size:10px;font-weight:800;color:#6b21a8;text-transform:uppercase;">Start Time</label><input type="time" id="breakStart" value="12:00"></div>
-                            <div class="input-group"><label style="font-size:10px;font-weight:800;color:#6b21a8;text-transform:uppercase;">End Time</label><input type="time" id="breakEnd" value="13:00"></div>
-                            <div class="input-group"><label style="font-size:10px;font-weight:800;color:#6b21a8;text-transform:uppercase;">Days</label><select id="breakDays"><option value="all">All Days</option><option value="weekdays">Weekdays Only</option><option value="Monday">Monday</option><option value="Tuesday">Tuesday</option><option value="Wednesday">Wednesday</option><option value="Thursday">Thursday</option><option value="Friday">Friday</option><option value="Saturday">Saturday</option><option value="Sunday">Sunday</option></select></div>
-                            <div class="input-group"><label style="font-size:10px;font-weight:800;color:#6b21a8;text-transform:uppercase;">Scope</label><select id="breakScope" onchange="updateBreakScopeValue()"><option value="all">All (Global)</option><option value="section">Specific Section</option><option value="teacher">Specific Teacher</option><option value="room">Specific Room</option></select></div>
-                            <div class="input-group" id="breakScopeValueGroup" style="display:none;"><label id="breakScopeValueLabel" style="font-size:10px;font-weight:800;color:#6b21a8;text-transform:uppercase;">Value</label><input type="text" id="breakScopeValue" list="breakScopeList" placeholder="Type or select..."><datalist id="breakScopeList"></datalist></div>
+        <div class="operator-section-body operator-only" id="ospMatrixBody">
+            <div class="mb-8" id="breakPanelWrap">
+                <button class="panel-toggle-bar open" id="toggleBreaks" onclick="togglePanel('panelBreaks','toggleBreaks')">
+                    <div class="toggle-bar-left">
+                        <i class="fa-solid fa-mug-hot"></i>
+                        BREAK TIME MANAGEMENT
+                        <span class="panel-badge badge-breaks">BREAKS</span>
+                        <span id="breakCountBadge" style="background:rgba(255,255,255,0.2);color:white;font-size:8px;font-weight:800;padding:2px 8px;border-radius:10px;margin-left:4px;"></span>
+                    </div>
+                    <div class="toggle-bar-right"><span id="breaksToggleLabel">Hide</span> <i class="fa-solid fa-chevron-up chevron"></i></div>
+                </button>
+                <div class="collapsible-body open" id="panelBreaks">
+                    <div class="breaktime-panel">
+                        <div class="breaktime-panel-header"><h3><i class="fa-solid fa-mug-hot"></i> BREAK TIME MANAGEMENT</h3><button class="btn-add-break" onclick="toggleBreakForm()"><i class="fa-solid fa-plus"></i> ADD BREAK</button></div>
+                        <div class="break-entries-list" id="breakEntriesList"></div>
+                        <div class="break-add-form" id="breakAddForm">
+                            <p id="breakFormTitle" style="font-size:11px;font-weight:800;color:#6b21a8;margin:0 0 10px 0;">NEW BREAK TIME</p>
+                            <input type="hidden" id="editBreakKey">
+                            <div class="break-form-grid">
+                                <div class="input-group"><label style="font-size:10px;font-weight:800;color:#6b21a8;text-transform:uppercase;">Label</label><input type="text" id="breakLabel" placeholder="e.g. Lunch Break"></div>
+                                <div class="input-group"><label style="font-size:10px;font-weight:800;color:#6b21a8;text-transform:uppercase;">Start Time</label><input type="time" id="breakStart" value="12:00"></div>
+                                <div class="input-group"><label style="font-size:10px;font-weight:800;color:#6b21a8;text-transform:uppercase;">End Time</label><input type="time" id="breakEnd" value="13:00"></div>
+                                <div class="input-group"><label style="font-size:10px;font-weight:800;color:#6b21a8;text-transform:uppercase;">Days</label><select id="breakDays"><option value="all">All Days</option><option value="weekdays">Weekdays Only</option><option value="Monday">Monday</option><option value="Tuesday">Tuesday</option><option value="Wednesday">Wednesday</option><option value="Thursday">Thursday</option><option value="Friday">Friday</option><option value="Saturday">Saturday</option><option value="Sunday">Sunday</option></select></div>
+                                <div class="input-group"><label style="font-size:10px;font-weight:800;color:#6b21a8;text-transform:uppercase;">Scope</label><select id="breakScope" onchange="updateBreakScopeValue()"><option value="all">All (Global)</option><option value="section">Specific Section</option><option value="teacher">Specific Teacher</option><option value="room">Specific Room</option></select></div>
+                                <div class="input-group" id="breakScopeValueGroup" style="display:none;"><label id="breakScopeValueLabel" style="font-size:10px;font-weight:800;color:#6b21a8;text-transform:uppercase;">Value</label><input type="text" id="breakScopeValue" list="breakScopeList" placeholder="Type or select..."><datalist id="breakScopeList"></datalist></div>
+                            </div>
+                            <div class="break-form-actions"><button class="btn-save-break" onclick="saveBreak()"><i class="fa-solid fa-floppy-disk"></i> SAVE BREAK</button><button class="btn-cancel-break" onclick="cancelBreakForm()">Cancel</button></div>
                         </div>
-                        <div class="break-form-actions"><button class="btn-save-break" onclick="saveBreak()"><i class="fa-solid fa-floppy-disk"></i> SAVE BREAK</button><button class="btn-cancel-break" onclick="cancelBreakForm()">Cancel</button></div>
                     </div>
                 </div>
             </div>
@@ -703,7 +885,7 @@
 
         <div style="margin-bottom:10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
             <span style="font-weight:800;font-size:10px;color:#64748b;">VIEW:</span>
-            <select id="modeSelect" onchange="updateFilterList(true)" style="padding:4px;font-size:11px;border-radius:4px;border:1px solid #cbd5e1;"><option value="section">Section</option><option value="teacher">Instructor</option><option value="room">Room</option></select>
+            <select id="modeSelect" onchange="updateFilterList(true)" style="padding:4px;font-size:11px;border-radius:4px;border:1px solid #cbd5e1;"><option value="section">Section</option><option value="teacher">Instructor</option><option value="room">Room</option><option value="cluster">Cluster</option></select>
             <select id="filterSelector" onchange="renderMatrix()" style="padding:4px;font-size:11px;width:200px;border:2px solid #3b82f6;border-radius:4px;"></select>
             <span style="font-size:10px;color:#64748b;background:#f1f5f9;padding:3px 8px;border-radius:4px;border:1px solid #e2e8f0;"><i class="fa-solid fa-circle-info"></i> Optimized for Long Bond Landscape</span>
         </div>
@@ -752,12 +934,12 @@
         </div>
         <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px;">
             <div style="display:flex;gap:8px;align-items:center;flex:1;">
-                <input id="searchBox" type="search" placeholder="Search masterlist (subject, section, teacher, room, day, time)">
+                <input id="searchBox" type="search" placeholder="Search masterlist (subject, section, teacher, room, cluster, day, time)">
                 <button class="btn-export" style="background:#64748b;" onclick="clearSearch()"><i class="fa-solid fa-xmark"></i> CLEAR</button>
             </div>
         </div>
         <div style="max-height:500px;overflow-y:auto;border:1px solid #e2e8f0;border-radius:6px;">
-            <table class="manage-table"><thead><tr><th>DAY</th><th>TIME</th><th>SUBJECT</th><th>SECTION</th><th>TEACHER</th><th>ROOM</th><th>TYPE</th><th class="operator-only" style="width:70px;text-align:center;">ACTIONS</th></tr></thead><tbody id="manageBody"></tbody></table>
+            <table class="manage-table"><thead><tr><th>DAY</th><th>TIME</th><th>SUBJECT</th><th>SECTION</th><th>TEACHER</th><th>ROOM</th><th>CLUSTER</th><th>TYPE</th><th class="operator-only" style="width:70px;text-align:center;">ACTIONS</th></tr></thead><tbody id="manageBody"></tbody></table>
         </div>
     </div>
 </div>
@@ -785,6 +967,7 @@ const colorSettingsRef = ref(db, 'colorSettings');
 const semestersRef = ref(db, 'semesters');
 const appStateRef = ref(db, 'appState');
 const editLockRef = ref(db, 'editLock');
+const dataListsRef = ref(db, 'dataLists'); // global data lists for autocomplete
 
 let isLoginMode = true;
 let currentUserRole = 'viewer';
@@ -795,35 +978,49 @@ window.schedules = [];
 window.breakTimes = [];
 window.semesters = [];
 window.activeSemesterId = null;
+window.dataLists = { subjects: {}, sections: {}, teachers: {}, rooms: {}, clusters: {} };
+let activeDataTab = 'subjects';
+
+// ===== OPERATOR SECTION PANEL TOGGLE =====
+window.toggleOperatorSectionPanel = () => {
+    const body = document.getElementById('ospBody');
+    const btn = document.getElementById('ospToggle');
+    const label = document.getElementById('ospToggleLabel');
+    if (!body) return;
+    const isCollapsed = body.classList.contains('collapsed');
+    body.classList.toggle('collapsed');
+    btn.classList.toggle('collapsed', !isCollapsed);
+    label.textContent = isCollapsed ? 'Hide' : 'Show';
+};
+
+window.toggleOperatorMatrixPanel = () => {
+    const body = document.getElementById('ospMatrixBody');
+    const btn = document.getElementById('ospToggleMatrix');
+    const label = document.getElementById('ospMatrixToggleLabel');
+    if (!body) return;
+    const isCollapsed = body.classList.contains('collapsed');
+    body.classList.toggle('collapsed');
+    btn.classList.toggle('collapsed', !isCollapsed);
+    label.textContent = isCollapsed ? 'Hide' : 'Show';
+};
 
 // ===== EDIT LOCK SYSTEM =====
 let lockHeartbeatInterval = null;
 let lockWatcherUnsubscribe = null;
-let myLockId = null; // unique session ID
-
-function generateLockId() {
-    return Date.now().toString(36) + Math.random().toString(36).substr(2,5);
-}
+let myLockId = null;
+function generateLockId() { return Date.now().toString(36) + Math.random().toString(36).substr(2,5); }
 myLockId = generateLockId();
 
-// Acquire lock: called when user starts typing/editing
 window.acquireEditLock = () => {
     if (currentUserRole !== 'operator') return;
     get(editLockRef).then(snap => {
         const lock = snap.val();
         const now = Date.now();
-        // If no lock, or stale lock (> 30 seconds), or my own lock
         if (!lock || lock.lockId === myLockId || (now - (lock.ts || 0)) > 30000) {
-            set(editLockRef, {
-                lockId: myLockId,
-                email: auth.currentUser?.email || 'Unknown',
-                ts: now
-            });
+            set(editLockRef, { lockId: myLockId, email: auth.currentUser?.email || 'Unknown', ts: now });
             startHeartbeat();
             showMyLockNotice(true);
-        }
-        // If someone else has the lock and it's fresh, show the overlay
-        else {
+        } else {
             document.getElementById('lockEditorName').textContent = lock.email || 'Another user';
             document.getElementById('lockOverlay').classList.add('visible');
         }
@@ -834,44 +1031,26 @@ function startHeartbeat() {
     if (lockHeartbeatInterval) clearInterval(lockHeartbeatInterval);
     lockHeartbeatInterval = setInterval(() => {
         if (auth.currentUser && currentUserRole === 'operator') {
-            // Check we still own it
             get(editLockRef).then(snap => {
                 const lock = snap.val();
-                if (lock && lock.lockId === myLockId) {
-                    update(editLockRef, { ts: Date.now() });
-                } else {
-                    // Someone else took over
-                    stopHeartbeat();
-                    showMyLockNotice(false);
-                }
+                if (lock && lock.lockId === myLockId) { update(editLockRef, { ts: Date.now() }); }
+                else { stopHeartbeat(); showMyLockNotice(false); }
             });
         }
-    }, 10000); // heartbeat every 10s
+    }, 10000);
 }
-
-function stopHeartbeat() {
-    if (lockHeartbeatInterval) { clearInterval(lockHeartbeatInterval); lockHeartbeatInterval = null; }
-}
-
+function stopHeartbeat() { if (lockHeartbeatInterval) { clearInterval(lockHeartbeatInterval); lockHeartbeatInterval = null; } }
 function releaseEditLock() {
     if (!auth.currentUser) return;
-    get(editLockRef).then(snap => {
-        const lock = snap.val();
-        if (lock && lock.lockId === myLockId) {
-            set(editLockRef, null);
-        }
-    });
-    stopHeartbeat();
-    showMyLockNotice(false);
+    get(editLockRef).then(snap => { const lock = snap.val(); if (lock && lock.lockId === myLockId) set(editLockRef, null); });
+    stopHeartbeat(); showMyLockNotice(false);
 }
-
 function showMyLockNotice(active) {
     const notice = document.getElementById('editLockNotice');
     const cancelBtn = document.getElementById('cancelEditBtn');
     if (notice) notice.style.display = active ? 'flex' : 'none';
     if (cancelBtn) cancelBtn.style.display = active ? 'inline-block' : 'none';
 }
-
 function watchEditLock() {
     if (lockWatcherUnsubscribe) lockWatcherUnsubscribe();
     lockWatcherUnsubscribe = onValue(editLockRef, (snap) => {
@@ -879,27 +1058,13 @@ function watchEditLock() {
         const banner = document.getElementById('editLockBanner');
         const bannerText = document.getElementById('lockBannerText');
         const forceBtn = document.getElementById('forceUnlockBtn');
-        if (!lock || !lock.lockId) {
-            banner.classList.remove('visible');
-            return;
-        }
-        // If it's my lock
-        if (lock.lockId === myLockId) {
-            banner.classList.remove('visible');
-            return;
-        }
-        // Stale check (> 30 seconds)
+        if (!lock || !lock.lockId) { banner.classList.remove('visible'); return; }
+        if (lock.lockId === myLockId) { banner.classList.remove('visible'); return; }
         const now = Date.now();
-        if ((now - (lock.ts || 0)) > 30000) {
-            banner.classList.remove('visible');
-            return;
-        }
-        // Someone else is editing
+        if ((now - (lock.ts || 0)) > 30000) { banner.classList.remove('visible'); return; }
         if (bannerText) bannerText.textContent = `🔒 ${lock.email || 'Another operator'} is currently editing — changes may conflict`;
         banner.classList.add('visible');
-        // Admin can force unlock
         if (auth.currentUser?.email === ADMIN_EMAIL && forceBtn) forceBtn.style.display = 'inline-block';
-        // Show lock overlay if I'm on the encode section
         const encodeSection = document.getElementById('encodeSection');
         if (encodeSection && encodeSection.classList.contains('active') && currentUserRole === 'operator') {
             document.getElementById('lockEditorName').textContent = lock.email || 'Another user';
@@ -907,13 +1072,9 @@ function watchEditLock() {
         }
     });
 }
-
 window.forceUnlock = () => {
     if (auth.currentUser?.email === ADMIN_EMAIL) {
-        if (confirm('Force release the edit lock? The other user will lose their editing session.')) {
-            set(editLockRef, null);
-            stopHeartbeat();
-        }
+        if (confirm('Force release the edit lock? The other user will lose their editing session.')) { set(editLockRef, null); stopHeartbeat(); }
     }
 };
 
@@ -921,25 +1082,152 @@ window.forceUnlock = () => {
 window.togglePanel = (panelId, btnId) => {
     const panel = document.getElementById(panelId);
     const btn = document.getElementById(btnId);
-    const labelId = btnId.replace('toggle','').toLowerCase() + 'ToggleLabel';
+    const suffix = btnId.replace('toggle','').charAt(0).toLowerCase() + btnId.replace('toggle','').slice(1);
+    const labelId = suffix + 'ToggleLabel';
     const labelEl = document.getElementById(labelId);
     if (!panel || !btn) return;
     const isOpen = panel.classList.contains('open');
-    if (isOpen) {
-        panel.classList.remove('open');
-        btn.classList.remove('open');
-        if (labelEl) labelEl.textContent = 'Show';
-    } else {
-        panel.classList.add('open');
-        btn.classList.add('open');
-        if (labelEl) labelEl.textContent = 'Hide';
-    }
+    if (isOpen) { panel.classList.remove('open'); btn.classList.remove('open'); if (labelEl) labelEl.textContent = 'Show'; }
+    else { panel.classList.add('open'); btn.classList.add('open'); if (labelEl) labelEl.textContent = 'Hide'; }
+};
+
+// ===== DATA LISTS (ADMIN ONLY GLOBAL LISTS) =====
+function loadDataLists() {
+    onValue(dataListsRef, (snap) => {
+        const data = snap.val() || {};
+        window.dataLists = {
+            subjects: data.subjects || {},
+            sections: data.sections || {},
+            teachers: data.teachers || {},
+            rooms: data.rooms || {},
+            clusters: data.clusters || {}
+        };
+        updateDataListUI();
+        updateDataListsAutocomplete();
+    });
+}
+
+function updateDataListsAutocomplete() {
+    // Update datalists from stored lists + existing schedule data
+    const fields = ['subject','section','teacher','room','cluster'];
+    const listKeys = ['subjects','sections','teachers','rooms','clusters'];
+    fields.forEach((f, i) => {
+        const list = document.getElementById(`${f}List`);
+        if (!list) return;
+        const stored = Object.values(window.dataLists[listKeys[i]] || {}).map(v => v.toUpperCase()).filter(v => v);
+        const fromSchedules = [...new Set(window.schedules.map(s => (s[f]||'').trim().toUpperCase()))].filter(v => v);
+        const merged = [...new Set([...stored, ...fromSchedules])].sort();
+        list.innerHTML = merged.map(v => `<option value="${v}">`).join('');
+    });
+}
+
+window.switchDataTab = (tab) => {
+    activeDataTab = tab;
+    document.querySelectorAll('.data-editor-tab').forEach(btn => {
+        btn.classList.toggle('active', btn.textContent.toLowerCase() === tab);
+    });
+    document.querySelectorAll('.data-editor-body').forEach(body => body.classList.remove('active'));
+    const tabEl = document.getElementById(`tab-${tab}`);
+    if (tabEl) tabEl.classList.add('active');
+};
+
+function updateDataListUI() {
+    ['subjects','sections','teachers','rooms','clusters'].forEach(type => {
+        const list = document.getElementById(`list-${type}`);
+        if (!list) return;
+        const items = window.dataLists[type] || {};
+        const entries = Object.entries(items);
+        if (entries.length === 0) {
+            list.innerHTML = `<div style="text-align:center;padding:12px;color:#94a3b8;font-size:11px;border:1.5px dashed #fde68a;border-radius:6px;margin-top:8px;">No items yet. Add your first ${type.slice(0,-1)} above.</div>`;
+            return;
+        }
+        list.innerHTML = entries.map(([key, val]) => `
+            <div class="data-item-row">
+                <input type="text" value="${val}" id="edit-${type}-${key}" onkeydown="if(event.key==='Enter')saveDataItem('${type}','${key}')">
+                <button class="btn-item-save" onclick="saveDataItem('${type}','${key}')"><i class="fa-solid fa-floppy-disk"></i> Save</button>
+                <button class="btn-item-delete" onclick="deleteDataItem('${type}','${key}')"><i class="fa-solid fa-trash"></i></button>
+            </div>
+        `).join('');
+    });
+}
+
+window.addDataItem = (type, inputId) => {
+    const input = document.getElementById(inputId);
+    const val = input?.value.trim().toUpperCase();
+    if (!val) return alert('Please enter a value.');
+    const exists = Object.values(window.dataLists[type] || {}).some(v => v.toUpperCase() === val);
+    if (exists) { alert(`"${val}" already exists in ${type}.`); return; }
+    push(ref(db, `dataLists/${type}`), val);
+    if (input) input.value = '';
+};
+
+window.saveDataItem = (type, key) => {
+    const input = document.getElementById(`edit-${type}-${key}`);
+    const val = input?.value.trim().toUpperCase();
+    if (!val) return;
+    set(ref(db, `dataLists/${type}/${key}`), val);
+};
+
+window.deleteDataItem = (type, key) => {
+    if (confirm('Delete this item from the list?')) remove(ref(db, `dataLists/${type}/${key}`));
+};
+
+// ===== BULK CLUSTER MODAL =====
+window.openBulkClusterModal = () => {
+    renderBulkClusterTable();
+    // Populate the fill select
+    const sel = document.getElementById('bulkClusterFillSelect');
+    const clusters = Object.values(window.dataLists.clusters || {}).sort();
+    const fromSched = [...new Set(window.schedules.map(s=>(s.cluster||'').trim()).filter(v=>v))];
+    const merged = [...new Set([...clusters, ...fromSched])].sort();
+    sel.innerHTML = '<option value="">— Fill All Visible with... —</option>' + merged.map(c => `<option value="${c}">${c}</option>`).join('');
+    document.getElementById('bulkClusterModal').classList.add('active');
+};
+window.closeBulkClusterModal = () => { document.getElementById('bulkClusterModal').classList.remove('active'); };
+
+window.renderBulkClusterTable = () => {
+    const filter = (document.getElementById('bulkClusterFilter')?.value || '').trim().toLowerCase();
+    const tbody = document.getElementById('bulkClusterBody');
+    if (!tbody) return;
+    const filtered = window.schedules.filter(s => !filter || [s.subject,s.section,s.teacher,s.room,s.day].join(' ').toLowerCase().includes(filter));
+    if (filtered.length === 0) { tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:20px;color:#94a3b8;">No entries found.</td></tr>`; return; }
+    const clusters = Object.values(window.dataLists.clusters || {}).sort();
+    const clOpts = clusters.map(c => `<option value="${c}">${c}</option>`).join('');
+    tbody.innerHTML = filtered.map(s => `
+        <tr>
+            <td style="padding:5px 6px;border-bottom:1px solid #f1f5f9;font-size:11px;color:#2563eb;font-weight:600;">${s.subject}</td>
+            <td style="padding:5px 6px;border-bottom:1px solid #f1f5f9;font-size:11px;">${s.section}</td>
+            <td style="padding:5px 6px;border-bottom:1px solid #f1f5f9;font-size:11px;">${s.teacher}</td>
+            <td style="padding:5px 6px;border-bottom:1px solid #f1f5f9;font-size:11px;white-space:nowrap;">${s.day} ${militaryToAMPM(s.start)}-${militaryToAMPM(s.end)}</td>
+            <td style="padding:5px 6px;border-bottom:1px solid #f1f5f9;">
+                <input type="text" list="bulkClusterDataList" id="bulk-cluster-${s.firebaseKey}" value="${s.cluster||''}" placeholder="Enter cluster..." style="width:100%;padding:4px 6px;border:1px solid #cbd5e1;border-radius:4px;font-size:11px;box-sizing:border-box;" onkeydown="if(event.key==='Enter')saveBulkClusterRow('${s.firebaseKey}')">
+                <datalist id="bulkClusterDataList">${clOpts}</datalist>
+            </td>
+            <td style="padding:5px 6px;border-bottom:1px solid #f1f5f9;text-align:center;">
+                <button onclick="saveBulkClusterRow('${s.firebaseKey}')" style="background:#10b981;color:white;border:none;padding:4px 8px;border-radius:4px;font-size:9px;font-weight:700;cursor:pointer;"><i class="fa-solid fa-floppy-disk"></i></button>
+            </td>
+        </tr>
+    `).join('');
+};
+
+window.saveBulkClusterRow = (key) => {
+    if (!window.activeSemesterId) return;
+    const input = document.getElementById(`bulk-cluster-${key}`);
+    const val = input?.value.trim().toUpperCase();
+    update(semRef(window.activeSemesterId, `schedules/${key}`), { cluster: val });
+    // Visual feedback
+    if (input) { input.style.borderColor = '#10b981'; setTimeout(() => { if(input) input.style.borderColor = '#cbd5e1'; }, 1200); }
+};
+
+window.bulkFillCluster = () => {
+    const val = document.getElementById('bulkClusterFillSelect').value;
+    if (!val) return;
+    document.querySelectorAll('[id^="bulk-cluster-"]').forEach(inp => { inp.value = val; });
+    document.getElementById('bulkClusterFillSelect').value = '';
 };
 
 // ===== SEMESTER REFS =====
-function semRef(semId, path) {
-    return ref(db, `semesters/${semId}/${path}`);
-}
+function semRef(semId, path) { return ref(db, `semesters/${semId}/${path}`); }
 
 const DEFAULT_COLORS = {
     'regular-bg':'#f0fdf4','regular-bg2':'#dcfce7','regular-border':'#22c55e','regular-text':'#0f172a',
@@ -951,7 +1239,6 @@ const DEFAULT_ASYNC_KW = 'ASYNC,ASYNCHRONOUS';
 const DEFAULT_HOMEROOM_KW = 'HOMEROOM,HOME ROOM,HR';
 const DEFAULT_BREAK_KW = 'BREAK,LUNCH,RECESS,FREE,VACANT';
 
-// ===== SLOT TYPE =====
 function getSlotType(subject) {
     if (!subject) return 'regular';
     const up = subject.toUpperCase();
@@ -964,7 +1251,6 @@ function getSlotType(subject) {
     return 'regular';
 }
 
-// ===== COLORS =====
 window.applyColors = () => {
     const root = document.documentElement;
     ['regular','async','homeroom','break'].forEach(type => {
@@ -1058,10 +1344,7 @@ function updateSemesterSelector() {
 function updateSemTags() {
     const sem = window.semesters.find(s=>s.id===window.activeSemesterId);
     const name = sem ? sem.name : '';
-    ['encodeSemTag','matrixSemTag','masterlistSemTag'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.textContent = name || '';
-    });
+    ['encodeSemTag','matrixSemTag','masterlistSemTag'].forEach(id => { const el = document.getElementById(id); if (el) el.textContent = name || ''; });
     const ml = document.getElementById('matrixSemLabel');
     if (ml) ml.textContent = name ? `📅 ${name}` : '';
 }
@@ -1070,9 +1353,7 @@ window.switchSemester = (semId) => {
     if (!semId) return;
     window.activeSemesterId = semId;
     document.getElementById('activeSemesterSelect').value = semId;
-    if (currentUserRole !== 'viewer') {
-        set(appStateRef, { activeSemesterId: semId });
-    }
+    if (currentUserRole !== 'viewer') { set(appStateRef, { activeSemesterId: semId }); }
     attachSemesterListeners(semId);
     updateSemTags();
 };
@@ -1087,10 +1368,12 @@ function attachSemesterListeners(semId) {
         const data = snap.val();
         window.schedules = data ? Object.entries(data).map(([k,v])=>({...v,firebaseKey:k})) : [];
         updateFilterList(false);
-        updateDataLists();
+        updateDataListsAutocomplete();
         renderManageTable();
         renderMatrix();
         checkAllTeachersHourLimits();
+        // Refresh bulk cluster table if modal open
+        if (document.getElementById('bulkClusterModal').classList.contains('active')) renderBulkClusterTable();
     });
 
     semesterUnsubBreaks = onValue(semRef(semId,'breakTimes'), (snap) => {
@@ -1128,8 +1411,7 @@ function openModal(title, bodyHTML, buttons) {
 window.closeSemModal = () => document.getElementById('semesterModal').classList.remove('active');
 
 function yearOptions() {
-    const years = [];
-    for (let y = 2024; y <= 2035; y++) years.push(y);
+    const years = []; for (let y = 2024; y <= 2035; y++) years.push(y);
     return years.map(y => `<option value="${y}-${y+1}">${y}-${y+1}</option>`).join('');
 }
 
@@ -1311,11 +1593,8 @@ window.editBreak = (key) => {
     document.getElementById('breakScope').value = item.scope||'all';
     updateBreakScopeValue();
     if (item.scope!=='all'&&item.scopeValue) document.getElementById('breakScopeValue').value = item.scopeValue;
-    // Make sure panel is open
     const panelBreaks = document.getElementById('panelBreaks');
-    if (panelBreaks && !panelBreaks.classList.contains('open')) {
-        togglePanel('panelBreaks','toggleBreaks');
-    }
+    if (panelBreaks && !panelBreaks.classList.contains('open')) togglePanel('panelBreaks','toggleBreaks');
     document.getElementById('breakAddForm').classList.add('visible');
     document.getElementById('breakAddForm').scrollIntoView({behavior:'smooth'});
 };
@@ -1344,7 +1623,6 @@ function renderBreakEntriesList() {
     }).join('');
 }
 
-// Check if a break applies to a specific day/mode/filterVal
 function getBreakForRange(startMin, endMin, day, mode, filterVal) {
     if (!window.breakTimes||window.breakTimes.length===0) return null;
     return window.breakTimes.find(b => {
@@ -1445,14 +1723,28 @@ function initAppUI() {
         if (currentUserRole==='viewer') el.classList.add('hidden'); else el.classList.remove('hidden');
     });
     document.querySelectorAll('.admin-only').forEach(el => {
-        if (auth.currentUser?.email===ADMIN_EMAIL) { el.classList.remove('hidden'); setupAdminDashboard(); } else el.classList.add('hidden');
+        if (auth.currentUser?.email===ADMIN_EMAIL) { el.classList.remove('hidden'); setupAdminDashboard(); }
+        else el.classList.add('hidden');
     });
+    // Show/hide operator section toggle based on role
+    const ospToggle = document.getElementById('ospToggle');
+    const ospToggleMatrix = document.getElementById('ospToggleMatrix');
+    if (ospToggle) ospToggle.style.display = currentUserRole==='viewer' ? 'none' : 'flex';
+    if (ospToggleMatrix) ospToggleMatrix.style.display = currentUserRole==='viewer' ? 'none' : 'flex';
+
+    // Viewers: collapse operator body by default
+    if (currentUserRole==='viewer') {
+        const ospBody = document.getElementById('ospBody');
+        const ospMatrixBody = document.getElementById('ospMatrixBody');
+        if (ospBody) { ospBody.classList.add('collapsed'); }
+        if (ospMatrixBody) { ospMatrixBody.classList.add('collapsed'); }
+    }
+
     loadColorSettings();
     loadSemesters();
     loadAppState();
+    loadDataLists();
     watchEditLock();
-
-    // Release lock on page close
     window.addEventListener('beforeunload', () => { releaseEditLock(); });
 }
 
@@ -1486,67 +1778,39 @@ window.approveUser=(uid)=>update(ref(db,`users/${uid}`),{status:'approved'});
 window.rejectUser=(uid)=>{if(confirm("Delete this user?"))remove(ref(db,`users/${uid}`));};
 window.changeUserRole=(uid,role)=>{const d={role};if(role==='operator')d.status='approved';update(ref(db,`users/${uid}`),d);alert("Role updated.");};
 
-// ===== SCHEDULE LOGIC =====
-
-/**
- * Build a unified list of all unique time boundaries across schedules and break times.
- * Returns an array of {startMin, endMin} sorted by startMin, then endMin.
- * Break times are MERGED into the time grid - no duplication.
- */
+// ===== MATRIX BUILDER =====
 function buildUnifiedTimeGrid(mode, filterVal) {
-    // Collect all unique time boundaries
     const boundarySet = new Set();
-
     window.schedules.forEach(s => {
         if ((s[mode]||'').trim() === filterVal.trim()) {
             boundarySet.add(timeToMinutes(s.start));
             boundarySet.add(timeToMinutes(s.end));
         }
     });
-
     window.breakTimes.forEach(b => {
         const sc = b.scope||'all';
         const applies = sc==='all' || (sc===mode && b.scopeValue && b.scopeValue.trim().toUpperCase() === (filterVal||'').trim().toUpperCase());
-        if (applies) {
-            boundarySet.add(timeToMinutes(b.start));
-            boundarySet.add(timeToMinutes(b.end));
-        }
+        if (applies) { boundarySet.add(timeToMinutes(b.start)); boundarySet.add(timeToMinutes(b.end)); }
     });
-
     if (boundarySet.size < 2) return [];
-
     const sorted = [...boundarySet].sort((a,b)=>a-b);
-    // Build grid from consecutive boundaries
     const grid = [];
-    for (let i = 0; i < sorted.length - 1; i++) {
-        grid.push({ startMin: sorted[i], endMin: sorted[i+1] });
-    }
+    for (let i = 0; i < sorted.length - 1; i++) grid.push({ startMin: sorted[i], endMin: sorted[i+1] });
     return grid;
 }
 
-/**
- * For a given filterVal, mode, and day - find all schedule entries that overlap [startMin, endMin].
- * Returns {items, isBreak, breakEntry}.
- */
 function getCellData(startMin, endMin, day, mode, filterVal) {
     const breakEntry = getBreakForRange(startMin, endMin, day, mode, filterVal);
     if (breakEntry) return { isBreak: true, breakEntry, items: [] };
-
     const items = window.schedules.filter(s => {
         if ((s[mode]||'').trim() !== filterVal.trim()) return false;
         if (s.day !== day) return false;
         const sS = timeToMinutes(s.start), sE = timeToMinutes(s.end);
-        // This sub-slot belongs to this schedule entry
         return sS <= startMin && sE >= endMin;
     });
     return { isBreak: false, breakEntry: null, items };
 }
 
-/**
- * ROWSPAN MATRIX BUILDER
- * For each day column, group consecutive sub-slots that belong to the same entry (or break)
- * and calculate the rowspan. Then render the table with proper rowspan merging.
- */
 window.renderMatrix = () => {
     const mode = document.getElementById('modeSelect').value;
     const filterVal = document.getElementById('filterSelector').value;
@@ -1570,55 +1834,27 @@ window.renderMatrix = () => {
         td.colSpan = 8;
         td.style.cssText = 'text-align:center;padding:30px;color:#94a3b8;font-size:12px;font-weight:600;';
         td.innerHTML = '<i class="fa-solid fa-calendar-xmark" style="font-size:24px;margin-bottom:8px;display:block;"></i>No schedules found for this selection.';
-        tr.appendChild(td);
-        body.appendChild(tr);
-        return;
+        tr.appendChild(td); body.appendChild(tr); return;
     }
 
-    /**
-     * For each day, precompute per-row cell plan:
-     * plan[dayIndex][rowIndex] = { skip: bool, rowspan: int, isBreak: bool, breakEntry, items, startMin, endMin }
-     */
-    const plan = DAYS.map(day => {
-        return grid.map((slot, ri) => {
-            return { ...getCellData(slot.startMin, slot.endMin, day, mode, filterVal), startMin: slot.startMin, endMin: slot.endMin, rowspan: 1, skip: false };
-        });
-    });
+    const plan = DAYS.map(day => grid.map((slot) => ({ ...getCellData(slot.startMin, slot.endMin, day, mode, filterVal), startMin: slot.startMin, endMin: slot.endMin, rowspan: 1, skip: false })));
 
-    // Compute rowspans: for each day, merge consecutive rows with same entry key (or same break label+time)
     DAYS.forEach((day, di) => {
         const col = plan[di];
         let r = 0;
         while (r < col.length) {
             const cell = col[r];
-            // Find the "key" for this cell
             let key = null;
-            if (cell.isBreak && cell.breakEntry) {
-                key = `break::${cell.breakEntry.label}::${cell.breakEntry.start}::${cell.breakEntry.end}`;
-            } else if (cell.items && cell.items.length > 0) {
-                // Key = all firebaseKeys joined
-                key = cell.items.map(i => i.firebaseKey || `${i.subject}:${i.day}:${i.start}:${i.end}`).sort().join('|');
-            } else {
-                key = null; // empty cell - no merge
-            }
-
+            if (cell.isBreak && cell.breakEntry) key = `break::${cell.breakEntry.label}::${cell.breakEntry.start}::${cell.breakEntry.end}`;
+            else if (cell.items && cell.items.length > 0) key = cell.items.map(i => i.firebaseKey || `${i.subject}:${i.day}:${i.start}:${i.end}`).sort().join('|');
             if (key !== null) {
-                // Check if full coverage: this sub-slot is entirely within a schedule entry's range
                 let span = 1;
                 for (let nr = r + 1; nr < col.length; nr++) {
                     const nextCell = col[nr];
                     let nextKey = null;
-                    if (nextCell.isBreak && nextCell.breakEntry) {
-                        nextKey = `break::${nextCell.breakEntry.label}::${nextCell.breakEntry.start}::${nextCell.breakEntry.end}`;
-                    } else if (nextCell.items && nextCell.items.length > 0) {
-                        nextKey = nextCell.items.map(i => i.firebaseKey || `${i.subject}:${i.day}:${i.start}:${i.end}`).sort().join('|');
-                    }
-                    if (nextKey === key) {
-                        span++;
-                        col[nr].skip = true;
-                    } else {
-                        break;
-                    }
+                    if (nextCell.isBreak && nextCell.breakEntry) nextKey = `break::${nextCell.breakEntry.label}::${nextCell.breakEntry.start}::${nextCell.breakEntry.end}`;
+                    else if (nextCell.items && nextCell.items.length > 0) nextKey = nextCell.items.map(i => i.firebaseKey || `${i.subject}:${i.day}:${i.start}:${i.end}`).sort().join('|');
+                    if (nextKey === key) { span++; col[nr].skip = true; } else break;
                 }
                 col[r].rowspan = span;
             }
@@ -1626,14 +1862,10 @@ window.renderMatrix = () => {
         }
     });
 
-    // Now build the table rows
     grid.forEach((slot, ri) => {
         const tr = document.createElement('tr');
-
-        // Time column
         const timeTd = document.createElement('td');
         timeTd.className = 'time-col';
-        // Check if ANY day has a break in this row range
         const anyBreakInRow = DAYS.some((day, di) => plan[di][ri].isBreak && !plan[di][ri].skip);
         if (anyBreakInRow) timeTd.classList.add('break-row-label');
         timeTd.innerHTML = `<span class="time-start">${minutesTo12Hr(slot.startMin)}</span><span class="time-dash">—</span><span class="time-end">${minutesTo12Hr(slot.endMin)}</span>`;
@@ -1641,17 +1873,11 @@ window.renderMatrix = () => {
 
         DAYS.forEach((day, di) => {
             const cell = plan[di][ri];
-            if (cell.skip) return; // skipped due to rowspan
-
+            if (cell.skip) return;
             const td = document.createElement('td');
             td.setAttribute('ondragover', 'handleDragOver(event)');
             td.setAttribute('ondrop', `handleDrop(event,'${day}',${slot.startMin})`);
-
-            if (cell.rowspan > 1) {
-                td.rowSpan = cell.rowspan;
-                td.classList.add('merged-cell');
-            }
-
+            if (cell.rowspan > 1) { td.rowSpan = cell.rowspan; td.classList.add('merged-cell'); }
             if (cell.isBreak && cell.breakEntry) {
                 td.classList.add('break-cell');
                 td.style.verticalAlign = 'middle';
@@ -1667,25 +1893,24 @@ window.renderMatrix = () => {
                     if (mode==="section") dispInfo = item.teacher || 'No Teacher';
                     else if (mode==="teacher") dispInfo = item.section || 'No Section';
                     else if (mode==="room") dispInfo = `${item.section||'No Section'} · ${item.teacher||'No Teacher'}`;
+                    else if (mode==="cluster") dispInfo = `${item.section||''} · ${item.teacher||''}`;
                     let badge = '';
                     if (type==='async') badge = `<span class="slot-type-badge badge-async"><i class="fa-solid fa-wifi-slash"></i> ASYNC</span>`;
                     else if (type==='homeroom') badge = `<span class="slot-type-badge badge-homeroom"><i class="fa-solid fa-house-chimney-user"></i> HR</span>`;
                     else if (type==='break') badge = `<span class="slot-type-badge badge-break-slot"><i class="fa-solid fa-mug-hot"></i> BREAK</span>`;
+                    const clusterBadge = item.cluster ? `<span class="slot-cluster-badge"><i class="fa-solid fa-layer-group"></i> ${item.cluster}</span>` : '';
                     const actions = currentUserRole==='operator'
                         ? `<div class="slot-actions"><button class="slot-action-btn slot-edit-btn" onclick="event.stopPropagation();editEntry('${item.firebaseKey}')" title="Edit"><i class="fa-solid fa-pen"></i></button><button class="slot-action-btn slot-delete-btn" onclick="event.stopPropagation();deleteEntry('${item.firebaseKey}')" title="Delete"><i class="fa-solid fa-trash"></i></button></div>`
                         : '';
-                    // Time range inside the slot (full range, not the sub-slot)
                     const timeRange = `${militaryToAMPM(item.start)} – ${militaryToAMPM(item.end)}`;
-                    div.innerHTML = `${actions}${badge}<strong>${item.subject}</strong><span class="room-badge">${item.room||'No Room'}</span><div class="info-line">${dispInfo}</div><div class="info-line" style="color:#94a3b8;">${timeRange}</div>`;
+                    div.innerHTML = `${actions}${badge}<strong>${item.subject}</strong><span class="room-badge">${item.room||'No Room'}</span>${clusterBadge}<div class="info-line">${dispInfo}</div><div class="info-line" style="color:#94a3b8;">${timeRange}</div>`;
                     td.appendChild(div);
                 });
             } else {
                 td.innerHTML = '<div class="empty-cell"></div>';
             }
-
             tr.appendChild(td);
         });
-
         body.appendChild(tr);
     });
 };
@@ -1693,12 +1918,13 @@ window.renderMatrix = () => {
 // ===== MASTERLIST =====
 function renderManageTable() {
     const q=(document.getElementById('searchBox')?.value||'').trim().toLowerCase();
-    const filtered=window.schedules.filter(s=>!q||[s.subject,s.section,s.teacher,s.room,s.day,`${s.start}-${s.end}`].join(' ').toLowerCase().includes(q));
+    const filtered=window.schedules.filter(s=>!q||[s.subject,s.section,s.teacher,s.room,s.cluster||'',s.day,`${s.start}-${s.end}`].join(' ').toLowerCase().includes(q));
     const typeColors={regular:{bg:'#dcfce7',color:'#166534',label:'Regular'},async:{bg:'#fee2e2',color:'#991b1b',label:'Async'},homeroom:{bg:'#ffedd5',color:'#7c2d12',label:'Homeroom'},break:{bg:'#ede9fe',color:'#4c1d95',label:'Break'}};
     document.getElementById('manageBody').innerHTML=filtered.map(s=>{
         const type=getSlotType(s.subject), tc=typeColors[type]||typeColors.regular;
         const ac=currentUserRole==='viewer'?'hidden':'';
-        return `<tr><td><b>${s.day?s.day.substring(0,3):''}</b></td><td>${militaryToAMPM(s.start)} - ${militaryToAMPM(s.end)}</td><td style="color:#2563eb;font-weight:600">${s.subject}</td><td>${s.section}</td><td>${s.teacher}</td><td>${s.room}</td><td><span style="background:${tc.bg};color:${tc.color};font-size:8px;font-weight:800;padding:2px 6px;border-radius:4px;">${tc.label}</span></td><td class="${ac}" style="text-align:center;"><button onclick="editEntry('${s.firebaseKey}')" class="btn-edit"><i class="fa-solid fa-pen"></i></button><button onclick="deleteEntry('${s.firebaseKey}')" class="btn-delete"><i class="fa-solid fa-trash"></i></button></td></tr>`;
+        const clBadge = s.cluster ? `<span style="background:#e0e7ff;color:#4338ca;font-size:8px;font-weight:800;padding:1px 5px;border-radius:3px;">${s.cluster}</span>` : '<span style="color:#cbd5e1;font-size:10px;">—</span>';
+        return `<tr><td><b>${s.day?s.day.substring(0,3):''}</b></td><td>${militaryToAMPM(s.start)} - ${militaryToAMPM(s.end)}</td><td style="color:#2563eb;font-weight:600">${s.subject}</td><td>${s.section}</td><td>${s.teacher}</td><td>${s.room}</td><td>${clBadge}</td><td><span style="background:${tc.bg};color:${tc.color};font-size:8px;font-weight:800;padding:2px 6px;border-radius:4px;">${tc.label}</span></td><td class="${ac}" style="text-align:center;"><button onclick="editEntry('${s.firebaseKey}')" class="btn-edit"><i class="fa-solid fa-pen"></i></button><button onclick="deleteEntry('${s.firebaseKey}')" class="btn-delete"><i class="fa-solid fa-trash"></i></button></td></tr>`;
     }).join('');
 }
 
@@ -1709,20 +1935,21 @@ document.addEventListener('DOMContentLoaded',()=>{ const sb=document.getElementB
 window.updateFilterList=(forceReset=false)=>{
     const m=document.getElementById('modeSelect').value, sel=document.getElementById('filterSelector');
     const prev=sel.value;
-    const vals=[...new Set(window.schedules.map(s=>(s[m]||'').trim()))].filter(v=>v).sort();
+    let vals;
+    if (m === 'cluster') {
+        // Cluster view: values from stored clusters + schedule data
+        const stored = Object.values(window.dataLists.clusters || {}).map(v=>v.toUpperCase());
+        const fromSched = window.schedules.map(s=>(s.cluster||'').trim().toUpperCase()).filter(v=>v);
+        vals = [...new Set([...stored, ...fromSched])].filter(v=>v).sort();
+    } else {
+        vals=[...new Set(window.schedules.map(s=>(s[m]||'').trim()))].filter(v=>v).sort();
+    }
     sel.innerHTML=vals.map(v=>`<option value="${v}">${v}</option>`).join('');
     if(!forceReset&&prev&&vals.includes(prev)) sel.value=prev;
     renderMatrix();
 };
 
-window.updateDataLists=()=>{
-    ['subject','section','teacher','room'].forEach(f=>{
-        const list=document.getElementById(`${f}List`);
-        if(!list)return;
-        const vals=[...new Set(window.schedules.map(s=>s[f]))].filter(v=>v).sort();
-        list.innerHTML=vals.map(v=>`<option value="${v}">`).join('');
-    });
-};
+window.updateDataLists=()=>{ updateDataListsAutocomplete(); };
 
 // ===== SECTION NAV =====
 window.showSection=(id)=>{
@@ -1731,7 +1958,6 @@ window.showSection=(id)=>{
     document.getElementById(id).classList.add('active');
 };
 window.closeSection=(id)=>{
-    // Release edit lock when closing encode section
     if (id === 'encodeSection') { clearInputs(); }
     document.getElementById(id).classList.remove('active');
     document.getElementById('dashboardCards').style.display='grid';
@@ -1810,6 +2036,7 @@ window.addSchedule = () => {
         section: document.getElementById('section').value.trim().toUpperCase(),
         teacher: document.getElementById('teacher').value.trim().toUpperCase(),
         room: document.getElementById('room').value.trim().toUpperCase(),
+        cluster: document.getElementById('cluster').value.trim().toUpperCase(),
         day: document.getElementById('day').value,
         start: document.getElementById('startTime').value,
         end: document.getElementById('endTime').value
@@ -1828,13 +2055,12 @@ window.addSchedule = () => {
 
 function clearInputs() {
     document.getElementById('editKey').value='';
-    ['subject','section','teacher','room'].forEach(f=>document.getElementById(f).value='');
+    ['subject','section','teacher','room','cluster'].forEach(f=>{ const el=document.getElementById(f); if(el) el.value=''; });
     document.getElementById('saveBtn').innerText='SAVE';
     releaseEditLock();
     showMyLockNotice(false);
     document.getElementById('cancelEditBtn').style.display = 'none';
 }
-// Expose globally so button onclick works
 window.clearInputs = clearInputs;
 
 window.editEntry = (key) => {
@@ -1846,6 +2072,7 @@ window.editEntry = (key) => {
     document.getElementById('section').value=item.section;
     document.getElementById('teacher').value=item.teacher;
     document.getElementById('room').value=item.room;
+    document.getElementById('cluster').value=item.cluster||'';
     document.getElementById('day').value=item.day;
     document.getElementById('startTime').value=item.start;
     document.getElementById('endTime').value=item.end;
@@ -1867,11 +2094,9 @@ window.resetDatabase = () => {
 
 // ===== DRAG & DROP =====
 window.handleDragStart=(e,k)=>{
-    // Check lock before allowing drag
     if(currentUserRole==='viewer') { e.preventDefault(); return; }
     get(editLockRef).then(snap => {
-        const lock = snap.val();
-        const now = Date.now();
+        const lock = snap.val(); const now = Date.now();
         if (lock && lock.lockId !== myLockId && (now - (lock.ts||0)) < 30000) {
             e.preventDefault();
             document.getElementById('lockEditorName').textContent = lock.email || 'Another user';
@@ -1954,7 +2179,7 @@ window.downloadFullMatrix=async(type)=>{
 window.downloadExcelMasterlist=()=>{
     const sem=window.semesters.find(s=>s.id===window.activeSemesterId);
     const semName=sem?sem.name:'';
-    const data=window.schedules.map(s=>({Semester:semName,Day:s.day,Start:militaryToAMPM(s.start),End:militaryToAMPM(s.end),Subject:s.subject,Section:s.section,Teacher:s.teacher,Room:s.room,Type:getSlotType(s.subject).toUpperCase()}));
+    const data=window.schedules.map(s=>({Semester:semName,Day:s.day,Start:militaryToAMPM(s.start),End:militaryToAMPM(s.end),Subject:s.subject,Section:s.section,Teacher:s.teacher,Room:s.room,Cluster:s.cluster||'',Type:getSlotType(s.subject).toUpperCase()}));
     const ws=XLSX.utils.json_to_sheet(data), wb=XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb,ws,"Masterlist");
     XLSX.writeFile(wb,`ARK_Masterlist_${(semName||'export').replace(/\s+/g,'_')}.xlsx`);
