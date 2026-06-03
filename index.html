@@ -101,7 +101,7 @@
         .modal-overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); display:none; align-items:center; justify-content:center; z-index:9999; backdrop-filter:blur(3px); }
         .modal-overlay.active { display:flex; }
         .modal-content { background:white; padding:30px; border-radius:14px; max-width:520px; width:90%; box-shadow:0 25px 50px -12px rgba(0,0,0,0.5); }
-        .modal-content.modal-wide { max-width:900px; }
+        .modal-content.modal-wide { max-width:960px; }
         .modal-title { font-size:17px; font-weight:800; margin-bottom:18px; color:#0f172a; display:flex; align-items:center; gap:8px; }
         .modal-field { margin-bottom:14px; }
         .modal-field label { display:block; font-size:10px; font-weight:800; color:#64748b; text-transform:uppercase; margin-bottom:5px; }
@@ -127,7 +127,7 @@
         .active-sem-row { background:#eff6ff !important; }
         .active-sem-badge { background:#dbeafe; color:#1e40af; font-size:8px; font-weight:800; padding:2px 7px; border-radius:10px; text-transform:uppercase; }
 
-        /* ===== OPERATOR PANEL TOGGLE (NEW) ===== */
+        /* ===== OPERATOR PANEL TOGGLE ===== */
         .operator-section-toggle {
             display: flex;
             align-items: center;
@@ -220,6 +220,25 @@
         .matrix-header-text p { margin:2px 0 0 0; font-size:9px; font-weight:700; color:#64748b; text-transform:uppercase; }
         .matrix-header-text h3 { margin:4px 0 0 0; font-size:11px; color:#3b82f6; font-weight:800; text-transform:uppercase; }
         .matrix-sem-tag { background:#dbeafe; color:#1e40af; font-size:9px; font-weight:800; padding:2px 8px; border-radius:4px; margin-top:4px; display:inline-block; }
+
+        /* ===== CLUSTER TAG IN MATRIX HEADER ===== */
+        .matrix-cluster-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: linear-gradient(135deg, #6366f1, #4f46e5);
+            color: white;
+            font-size: 9px;
+            font-weight: 800;
+            padding: 3px 10px;
+            border-radius: 4px;
+            margin-top: 4px;
+            margin-left: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            vertical-align: middle;
+        }
+
         .color-legend-strip { display:flex; align-items:center; gap:12px; padding:6px 12px; background:#f8fafc; border-bottom:1px solid #e2e8f0; flex-wrap:wrap; }
         .legend-label { font-size:8px; font-weight:800; color:#64748b; text-transform:uppercase; letter-spacing:0.5px; margin-right:4px; }
         .legend-item { display:flex; align-items:center; gap:5px; font-size:8px; font-weight:700; color:#334155; }
@@ -292,7 +311,7 @@
         .btn-cancel-break { background:#e2e8f0; color:#475569; border:none; padding:7px 14px; border-radius:6px; font-size:11px; font-weight:600; cursor:pointer; }
         .no-breaks-msg { text-align:center; padding:20px; color:#9ca3af; font-size:11px; font-weight:600; border:2px dashed #e9d5ff; border-radius:8px; margin-top:10px; }
 
-        /* ===== DATA EDITOR PANEL (ADMIN ONLY) ===== */
+        /* ===== DATA EDITOR PANEL ===== */
         .data-editor-panel { background:linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); border:2px solid #f59e0b; padding:15px; border-radius:8px; }
         .data-editor-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; flex-wrap:wrap; gap:8px; }
         .data-editor-header h3 { margin:0; color:#92400e; font-size:13px; display:flex; align-items:center; gap:8px; font-weight:800; }
@@ -318,10 +337,7 @@
         .data-editor-note { font-size:10px; color:#92400e; background:#fef3c7; border:1px solid #fde68a; border-radius:6px; padding:8px 10px; margin-top:10px; line-height:1.5; }
         .data-editor-count { font-size:9px; font-weight:800; background:#fde68a; color:#92400e; padding:2px 8px; border-radius:10px; margin-left:6px; }
 
-        /* ===== CLUSTER BADGE IN SLOT ===== */
-        .slot-cluster-badge { display:inline-block; background:rgba(99,102,241,0.15); color:#4338ca; padding:1px 4px; border-radius:2px; font-size:6px; font-weight:800; margin-top:1px; text-transform:uppercase; letter-spacing:0.3px; }
-
-        /* ===== SLOT STYLES ===== */
+        /* ===== SLOT STYLES (no cluster badge inside slot) ===== */
         .slot-box { padding:2px 3px; border-radius:2px; font-size:7px; margin:1px; cursor:grab; display:block; min-height:24px; box-shadow:0 1px 2px rgba(0,0,0,0.1); transition:0.2s; line-height:1.2; position:relative; }
         .slot-box:hover { box-shadow:0 2px 4px rgba(0,0,0,0.15); transform:translateY(-1px); }
         .slot-box:hover .slot-actions { opacity:1; }
@@ -383,6 +399,43 @@
         }
         .break-fill { display:flex; align-items:center; justify-content:center; gap:3px; font-size:7px; font-weight:800; color:var(--slot-break-text); text-transform:uppercase; letter-spacing:0.5px; height:100%; min-height:24px; padding:3px 2px; }
 
+        /* ===== CLUSTER FILTER BAR ===== */
+        .cluster-filter-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #eef2ff, #e0e7ff);
+            border: 1.5px solid #a5b4fc;
+            border-radius: 8px;
+            padding: 8px 12px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        .cluster-filter-bar label {
+            font-size: 10px;
+            font-weight: 800;
+            color: #4338ca;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+        .cluster-filter-bar select {
+            padding: 5px 10px;
+            border: 1.5px solid #818cf8;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #312e81;
+            background: white;
+            cursor: pointer;
+        }
+        .cluster-filter-bar select:focus { outline: none; border-color: #4f46e5; }
+        .cluster-filter-note {
+            font-size: 9px;
+            color: #6366f1;
+            font-weight: 600;
+        }
+
         /* ===== HOURS SUMMARY ===== */
         .hours-summary { background:linear-gradient(135deg, #111 0%, #000 50%, #1a1a1a 100%); color:white; padding:20px; border-radius:12px; margin-bottom:15px; box-shadow:0 8px 16px rgba(255,107,107,0.25); border:1px solid rgba(255,255,255,0.2); }
         .hours-summary.over-limit { background:linear-gradient(135deg, #dc2626 0%, #991b1b 100%); animation:pulse 2s ease-in-out infinite; }
@@ -432,15 +485,29 @@
         .no-sem-state h3 { font-size:18px; font-weight:800; color:#475569; margin-bottom:8px; }
         .no-sem-state p { font-size:13px; margin-bottom:20px; }
 
-        /* ===== BULK EDIT CLUSTER MODAL ===== */
-        .bulk-cluster-table { width:100%; border-collapse:collapse; font-size:11px; max-height:400px; display:block; overflow-y:auto; }
-        .bulk-cluster-table thead { display:table; width:100%; table-layout:fixed; }
-        .bulk-cluster-table tbody { display:block; max-height:350px; overflow-y:auto; }
-        .bulk-cluster-table tr { display:table; width:100%; table-layout:fixed; }
-        .bulk-cluster-table th { background:#f1f5f9; padding:7px 8px; text-align:left; font-weight:800; font-size:10px; color:#64748b; text-transform:uppercase; border-bottom:2px solid #e2e8f0; }
-        .bulk-cluster-table td { padding:5px 6px; border-bottom:1px solid #f1f5f9; vertical-align:middle; }
-        .bulk-cluster-table input { width:100%; padding:4px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:11px; box-sizing:border-box; }
-        .bulk-cluster-table input:focus { border-color:#3b82f6; outline:none; }
+        /* ===== BULK CLUSTER MODAL — NO LOCK, REAL-TIME ===== */
+        .bulk-cluster-realtime-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: #dcfce7;
+            border: 1.5px solid #86efac;
+            color: #166534;
+            font-size: 9px;
+            font-weight: 800;
+            padding: 3px 9px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .bulk-cluster-realtime-badge .rt-dot {
+            width: 6px; height: 6px; border-radius: 50%;
+            background: #22c55e;
+            animation: rtPulse 1.2s ease-in-out infinite;
+        }
+        @keyframes rtPulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.4;transform:scale(0.7);} }
+        .bce-row-saved { background: #f0fdf4 !important; transition: background 0.5s; }
+        .bce-row-saving { background: #fef9c3 !important; transition: background 0.1s; }
 
         @page { size:13in 8.5in landscape; margin:6mm; }
         @media print {
@@ -529,16 +596,22 @@
     </div>
 </div>
 
-<!-- BULK CLUSTER UPDATE MODAL -->
+<!-- BULK CLUSTER UPDATE MODAL — NO LOCK, ALL OPERATORS CAN EDIT, REAL-TIME -->
 <div id="bulkClusterModal" class="modal-overlay">
     <div class="modal-content modal-wide">
-        <div class="modal-title"><i class="fa-solid fa-layer-group" style="color:#6366f1;"></i> Bulk Update Cluster Field</div>
-        <p style="font-size:11px;color:#64748b;margin-bottom:12px;">Update the Cluster field for existing schedule entries that were encoded without it. Changes are saved individually per row.</p>
+        <div class="modal-title">
+            <i class="fa-solid fa-layer-group" style="color:#6366f1;"></i> Bulk Update Cluster Field
+            <span class="bulk-cluster-realtime-badge"><span class="rt-dot"></span> Live Updates</span>
+        </div>
+        <p style="font-size:11px;color:#64748b;margin-bottom:6px;">
+            All operators can edit simultaneously. Each row saves independently and updates in real-time for everyone.
+        </p>
         <div style="display:flex;gap:8px;margin-bottom:10px;align-items:center;flex-wrap:wrap;">
             <input type="text" id="bulkClusterFilter" placeholder="Filter by section, teacher, subject..." oninput="renderBulkClusterTable()" style="flex:1;padding:7px 10px;border:1px solid #cbd5e1;border-radius:6px;font-size:12px;">
             <select id="bulkClusterFillSelect" style="padding:7px;border:1px solid #cbd5e1;border-radius:6px;font-size:12px;" onchange="bulkFillCluster()">
                 <option value="">— Fill All Visible with... —</option>
             </select>
+            <button onclick="saveAllVisibleClusters()" style="background:#6366f1;color:white;border:none;padding:7px 14px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;"><i class="fa-solid fa-floppy-disk"></i> Save All Visible</button>
         </div>
         <div style="overflow:auto;max-height:420px;border:1px solid #e2e8f0;border-radius:8px;">
             <table style="width:100%;border-collapse:collapse;font-size:11px;">
@@ -548,14 +621,17 @@
                         <th style="padding:8px;text-align:left;font-weight:800;font-size:10px;color:#64748b;text-transform:uppercase;border-bottom:2px solid #e2e8f0;">Section</th>
                         <th style="padding:8px;text-align:left;font-weight:800;font-size:10px;color:#64748b;text-transform:uppercase;border-bottom:2px solid #e2e8f0;">Teacher</th>
                         <th style="padding:8px;text-align:left;font-weight:800;font-size:10px;color:#64748b;text-transform:uppercase;border-bottom:2px solid #e2e8f0;">Day / Time</th>
-                        <th style="padding:8px;text-align:left;font-weight:800;font-size:10px;color:#64748b;text-transform:uppercase;border-bottom:2px solid #e2e8f0;min-width:140px;">Cluster</th>
-                        <th style="padding:8px;text-align:center;font-weight:800;font-size:10px;color:#64748b;text-transform:uppercase;border-bottom:2px solid #e2e8f0;width:60px;">Save</th>
+                        <th style="padding:8px;text-align:left;font-weight:800;font-size:10px;color:#64748b;text-transform:uppercase;border-bottom:2px solid #e2e8f0;min-width:160px;">Cluster</th>
+                        <th style="padding:8px;text-align:center;font-weight:800;font-size:10px;color:#64748b;text-transform:uppercase;border-bottom:2px solid #e2e8f0;width:70px;">Save</th>
                     </tr>
                 </thead>
                 <tbody id="bulkClusterBody"></tbody>
             </table>
         </div>
-        <div class="modal-buttons"><button class="btn-modal btn-modal-cancel" onclick="closeBulkClusterModal()"><i class="fa-solid fa-xmark"></i> Close</button></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;">
+            <span style="font-size:10px;color:#6366f1;font-weight:600;"><i class="fa-solid fa-circle-info"></i> Changes auto-save row by row. Use <kbd style="background:#f1f5f9;padding:1px 5px;border-radius:3px;font-size:9px;">Enter</kbd> or the save button per row.</span>
+            <button class="btn-modal btn-modal-cancel" onclick="closeBulkClusterModal()"><i class="fa-solid fa-xmark"></i> Close</button>
+        </div>
     </div>
 </div>
 
@@ -649,7 +725,6 @@
         <div class="section-header">
             <div class="section-title"><i class="fa-solid fa-calendar-plus"></i> Encode Schedule <span id="encodeSemTag" style="background:#dbeafe;color:#1e40af;font-size:10px;font-weight:700;padding:3px 10px;border-radius:6px;margin-left:8px;"></span></div>
             <div style="display:flex;gap:8px;align-items:center;">
-                <!-- OPERATOR PANEL COLLAPSE TOGGLE (visible to operator only) -->
                 <button class="operator-section-toggle" id="ospToggle" onclick="toggleOperatorSectionPanel()" style="max-width:220px;padding:7px 12px;" title="Show/Hide Operator Tools">
                     <div class="osp-left" style="font-size:10px;"><i class="fa-solid fa-sliders"></i> OPERATOR TOOLS <span class="osp-badge">OP</span></div>
                     <div class="osp-right"><span id="ospToggleLabel" style="font-size:9px;">Hide</span> <i class="fa-solid fa-chevron-down osp-chevron"></i></div>
@@ -658,18 +733,11 @@
             </div>
         </div>
 
-        <!-- OPERATOR COLLAPSIBLE SECTION BODY -->
         <div class="operator-section-body" id="ospBody">
-
-            <!-- COLLAPSIBLE: Hour Limit Settings -->
+            <!-- Settings -->
             <div class="mb-8">
                 <button class="panel-toggle-bar open" id="toggleSettings" onclick="togglePanel('panelSettings','toggleSettings')">
-                    <div class="toggle-bar-left">
-                        <i class="fa-solid fa-gear"></i>
-                        HOUR LIMIT SETTINGS
-                        <span class="panel-badge badge-settings">SETTINGS</span>
-                        <span id="enforcementBadge" class="enforcement-badge badge-strict" style="margin-left:4px;">STRICT MODE</span>
-                    </div>
+                    <div class="toggle-bar-left"><i class="fa-solid fa-gear"></i> HOUR LIMIT SETTINGS <span class="panel-badge badge-settings">SETTINGS</span><span id="enforcementBadge" class="enforcement-badge badge-strict" style="margin-left:4px;">STRICT MODE</span></div>
                     <div class="toggle-bar-right"><span id="settingsToggleLabel">Hide</span> <i class="fa-solid fa-chevron-up chevron"></i></div>
                 </button>
                 <div class="collapsible-body open" id="panelSettings">
@@ -686,14 +754,10 @@
                 </div>
             </div>
 
-            <!-- COLLAPSIBLE: Color Customization -->
+            <!-- Color Customization -->
             <div class="mb-8" id="colorPanelWrap">
                 <button class="panel-toggle-bar" id="toggleColors" onclick="togglePanel('panelColors','toggleColors')">
-                    <div class="toggle-bar-left">
-                        <i class="fa-solid fa-palette"></i>
-                        SLOT COLOR CUSTOMIZATION
-                        <span class="panel-badge badge-colors">COLORS</span>
-                    </div>
+                    <div class="toggle-bar-left"><i class="fa-solid fa-palette"></i> SLOT COLOR CUSTOMIZATION <span class="panel-badge badge-colors">COLORS</span></div>
                     <div class="toggle-bar-right"><span id="colorsToggleLabel">Show</span> <i class="fa-solid fa-chevron-down chevron"></i></div>
                 </button>
                 <div class="collapsible-body" id="panelColors">
@@ -717,14 +781,10 @@
                 </div>
             </div>
 
-            <!-- COLLAPSIBLE: Data List Editor (ADMIN ONLY) -->
+            <!-- Data List Editor (ADMIN ONLY) -->
             <div class="mb-8 admin-only hidden" id="dataEditorPanelWrap">
                 <button class="panel-toggle-bar" id="toggleDataEditor" onclick="togglePanel('panelDataEditor','toggleDataEditor')">
-                    <div class="toggle-bar-left">
-                        <i class="fa-solid fa-database"></i>
-                        DATA LIST EDITOR
-                        <span class="panel-badge badge-dataeditor">ADMIN ONLY</span>
-                    </div>
+                    <div class="toggle-bar-left"><i class="fa-solid fa-database"></i> DATA LIST EDITOR <span class="panel-badge badge-dataeditor">ADMIN ONLY</span></div>
                     <div class="toggle-bar-right"><span id="dataEditorToggleLabel">Show</span> <i class="fa-solid fa-chevron-down chevron"></i></div>
                 </button>
                 <div class="collapsible-body" id="panelDataEditor">
@@ -740,53 +800,17 @@
                             </div>
                         </div>
                         <div class="data-editor-note"><i class="fa-solid fa-circle-info"></i> These lists pre-populate the autocomplete dropdowns in the encode form. Items are stored globally (across all semesters). Edit or delete any entry, or add new ones. Changes reflect immediately in all input fields.</div>
-                        <!-- Subjects -->
-                        <div class="data-editor-body active" id="tab-subjects">
-                            <div class="data-editor-add-row">
-                                <input type="text" id="newSubjectInput" placeholder="Add new subject..." onkeydown="if(event.key==='Enter')addDataItem('subjects','newSubjectInput')">
-                                <button class="btn-add-item" onclick="addDataItem('subjects','newSubjectInput')"><i class="fa-solid fa-plus"></i> Add</button>
-                            </div>
-                            <div class="data-editor-list" id="list-subjects"></div>
-                        </div>
-                        <!-- Sections -->
-                        <div class="data-editor-body" id="tab-sections">
-                            <div class="data-editor-add-row">
-                                <input type="text" id="newSectionInput" placeholder="Add new section..." onkeydown="if(event.key==='Enter')addDataItem('sections','newSectionInput')">
-                                <button class="btn-add-item" onclick="addDataItem('sections','newSectionInput')"><i class="fa-solid fa-plus"></i> Add</button>
-                            </div>
-                            <div class="data-editor-list" id="list-sections"></div>
-                        </div>
-                        <!-- Teachers -->
-                        <div class="data-editor-body" id="tab-teachers">
-                            <div class="data-editor-add-row">
-                                <input type="text" id="newTeacherInput" placeholder="Add new teacher..." onkeydown="if(event.key==='Enter')addDataItem('teachers','newTeacherInput')">
-                                <button class="btn-add-item" onclick="addDataItem('teachers','newTeacherInput')"><i class="fa-solid fa-plus"></i> Add</button>
-                            </div>
-                            <div class="data-editor-list" id="list-teachers"></div>
-                        </div>
-                        <!-- Rooms -->
-                        <div class="data-editor-body" id="tab-rooms">
-                            <div class="data-editor-add-row">
-                                <input type="text" id="newRoomInput" placeholder="Add new room..." onkeydown="if(event.key==='Enter')addDataItem('rooms','newRoomInput')">
-                                <button class="btn-add-item" onclick="addDataItem('rooms','newRoomInput')"><i class="fa-solid fa-plus"></i> Add</button>
-                            </div>
-                            <div class="data-editor-list" id="list-rooms"></div>
-                        </div>
-                        <!-- Clusters -->
-                        <div class="data-editor-body" id="tab-clusters">
-                            <div class="data-editor-add-row">
-                                <input type="text" id="newClusterInput" placeholder="Add new cluster..." onkeydown="if(event.key==='Enter')addDataItem('clusters','newClusterInput')">
-                                <button class="btn-add-item" onclick="addDataItem('clusters','newClusterInput')"><i class="fa-solid fa-plus"></i> Add</button>
-                            </div>
-                            <div class="data-editor-list" id="list-clusters"></div>
-                        </div>
+                        <div class="data-editor-body active" id="tab-subjects"><div class="data-editor-add-row"><input type="text" id="newSubjectInput" placeholder="Add new subject..." onkeydown="if(event.key==='Enter')addDataItem('subjects','newSubjectInput')"><button class="btn-add-item" onclick="addDataItem('subjects','newSubjectInput')"><i class="fa-solid fa-plus"></i> Add</button></div><div class="data-editor-list" id="list-subjects"></div></div>
+                        <div class="data-editor-body" id="tab-sections"><div class="data-editor-add-row"><input type="text" id="newSectionInput" placeholder="Add new section..." onkeydown="if(event.key==='Enter')addDataItem('sections','newSectionInput')"><button class="btn-add-item" onclick="addDataItem('sections','newSectionInput')"><i class="fa-solid fa-plus"></i> Add</button></div><div class="data-editor-list" id="list-sections"></div></div>
+                        <div class="data-editor-body" id="tab-teachers"><div class="data-editor-add-row"><input type="text" id="newTeacherInput" placeholder="Add new teacher..." onkeydown="if(event.key==='Enter')addDataItem('teachers','newTeacherInput')"><button class="btn-add-item" onclick="addDataItem('teachers','newTeacherInput')"><i class="fa-solid fa-plus"></i> Add</button></div><div class="data-editor-list" id="list-teachers"></div></div>
+                        <div class="data-editor-body" id="tab-rooms"><div class="data-editor-add-row"><input type="text" id="newRoomInput" placeholder="Add new room..." onkeydown="if(event.key==='Enter')addDataItem('rooms','newRoomInput')"><button class="btn-add-item" onclick="addDataItem('rooms','newRoomInput')"><i class="fa-solid fa-plus"></i> Add</button></div><div class="data-editor-list" id="list-rooms"></div></div>
+                        <div class="data-editor-body" id="tab-clusters"><div class="data-editor-add-row"><input type="text" id="newClusterInput" placeholder="Add new cluster..." onkeydown="if(event.key==='Enter')addDataItem('clusters','newClusterInput')"><button class="btn-add-item" onclick="addDataItem('clusters','newClusterInput')"><i class="fa-solid fa-plus"></i> Add</button></div><div class="data-editor-list" id="list-clusters"></div></div>
                         <div style="margin-top:14px;">
                             <button onclick="openBulkClusterModal()" style="background:#6366f1;color:white;border:none;padding:8px 16px;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;"><i class="fa-solid fa-layer-group"></i> Bulk Update Cluster on Existing Entries</button>
                         </div>
                     </div>
                 </div>
             </div>
-
         </div><!-- end ospBody -->
 
         <div class="input-card">
@@ -820,7 +844,6 @@
         <div class="section-header">
             <div class="section-title"><i class="fa-solid fa-table-cells"></i> Schedule View Matrix <span id="matrixSemTag" style="background:#dbeafe;color:#1e40af;font-size:10px;font-weight:700;padding:3px 10px;border-radius:6px;margin-left:8px;"></span></div>
             <div style="display:flex;gap:8px;align-items:center;">
-                <!-- OPERATOR PANEL COLLAPSE TOGGLE FOR MATRIX -->
                 <button class="operator-section-toggle operator-only" id="ospToggleMatrix" onclick="toggleOperatorMatrixPanel()" style="max-width:220px;padding:7px 12px;" title="Show/Hide Break Time Management">
                     <div class="osp-left" style="font-size:10px;"><i class="fa-solid fa-mug-hot"></i> BREAK MGMT <span class="osp-badge">OP</span></div>
                     <div class="osp-right"><span id="ospMatrixToggleLabel" style="font-size:9px;">Hide</span> <i class="fa-solid fa-chevron-down osp-chevron"></i></div>
@@ -829,16 +852,11 @@
             </div>
         </div>
 
-        <!-- COLLAPSIBLE: Break Time Management (Operator only) -->
+        <!-- Break Time Management -->
         <div class="operator-section-body operator-only" id="ospMatrixBody">
             <div class="mb-8" id="breakPanelWrap">
                 <button class="panel-toggle-bar open" id="toggleBreaks" onclick="togglePanel('panelBreaks','toggleBreaks')">
-                    <div class="toggle-bar-left">
-                        <i class="fa-solid fa-mug-hot"></i>
-                        BREAK TIME MANAGEMENT
-                        <span class="panel-badge badge-breaks">BREAKS</span>
-                        <span id="breakCountBadge" style="background:rgba(255,255,255,0.2);color:white;font-size:8px;font-weight:800;padding:2px 8px;border-radius:10px;margin-left:4px;"></span>
-                    </div>
+                    <div class="toggle-bar-left"><i class="fa-solid fa-mug-hot"></i> BREAK TIME MANAGEMENT <span class="panel-badge badge-breaks">BREAKS</span><span id="breakCountBadge" style="background:rgba(255,255,255,0.2);color:white;font-size:8px;font-weight:800;padding:2px 8px;border-radius:10px;margin-left:4px;"></span></div>
                     <div class="toggle-bar-right"><span id="breaksToggleLabel">Hide</span> <i class="fa-solid fa-chevron-up chevron"></i></div>
                 </button>
                 <div class="collapsible-body open" id="panelBreaks">
@@ -883,11 +901,27 @@
             <div class="total-hours"><div class="label">TOTAL WEEKLY HOURS</div><div class="value" id="totalWeeklyHours">0</div><div class="limit-info" id="limitInfoDisplay">📚 Daily Limit: 8 hours per day</div></div>
         </div>
 
-        <div style="margin-bottom:10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <!-- VIEW CONTROLS: Cluster filter first, then mode/filter -->
+        <div style="margin-bottom:6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
             <span style="font-weight:800;font-size:10px;color:#64748b;">VIEW:</span>
-            <select id="modeSelect" onchange="updateFilterList(true)" style="padding:4px;font-size:11px;border-radius:4px;border:1px solid #cbd5e1;"><option value="section">Section</option><option value="teacher">Instructor</option><option value="room">Room</option><option value="cluster">Cluster</option></select>
+            <select id="modeSelect" onchange="onModeChange()" style="padding:4px;font-size:11px;border-radius:4px;border:1px solid #cbd5e1;">
+                <option value="section">Section</option>
+                <option value="teacher">Instructor</option>
+                <option value="room">Room</option>
+                <option value="cluster">Cluster</option>
+            </select>
             <select id="filterSelector" onchange="renderMatrix()" style="padding:4px;font-size:11px;width:200px;border:2px solid #3b82f6;border-radius:4px;"></select>
             <span style="font-size:10px;color:#64748b;background:#f1f5f9;padding:3px 8px;border-radius:4px;border:1px solid #e2e8f0;"><i class="fa-solid fa-circle-info"></i> Optimized for Long Bond Landscape</span>
+        </div>
+
+        <!-- CLUSTER FILTER BAR — only shown when mode=section -->
+        <div class="cluster-filter-bar" id="clusterFilterBar" style="display:none;">
+            <i class="fa-solid fa-layer-group" style="color:#4338ca;"></i>
+            <label>Filter Sections by Cluster:</label>
+            <select id="clusterFilterSelect" onchange="applyClusterFilter()">
+                <option value="">— Show All Sections —</option>
+            </select>
+            <span class="cluster-filter-note"><i class="fa-solid fa-circle-info"></i> Sections listed are filtered to those belonging to the selected cluster</span>
         </div>
 
         <!-- Print Container -->
@@ -898,7 +932,11 @@
                     <h2>ARK TECHNOLOGICAL INSTITUTE EDUCATION SYSTEM INC.</h2>
                     <p>Class Schedule</p>
                     <h3 id="matrixTitle"></h3>
-                    <div class="matrix-sem-tag" id="matrixSemLabel"></div>
+                    <div style="display:inline-flex;align-items:center;gap:4px;flex-wrap:wrap;margin-top:4px;">
+                        <div class="matrix-sem-tag" id="matrixSemLabel"></div>
+                        <!-- Cluster tag shown here beside semester, only when viewing section mode -->
+                        <div class="matrix-cluster-tag" id="matrixClusterTag" style="display:none;"></div>
+                    </div>
                 </div>
             </div>
             <div class="color-legend-strip">
@@ -967,7 +1005,7 @@ const colorSettingsRef = ref(db, 'colorSettings');
 const semestersRef = ref(db, 'semesters');
 const appStateRef = ref(db, 'appState');
 const editLockRef = ref(db, 'editLock');
-const dataListsRef = ref(db, 'dataLists'); // global data lists for autocomplete
+const dataListsRef = ref(db, 'dataLists');
 
 let isLoginMode = true;
 let currentUserRole = 'viewer';
@@ -1004,7 +1042,7 @@ window.toggleOperatorMatrixPanel = () => {
     label.textContent = isCollapsed ? 'Hide' : 'Show';
 };
 
-// ===== EDIT LOCK SYSTEM =====
+// ===== EDIT LOCK SYSTEM (schedule form only, NOT bulk cluster) =====
 let lockHeartbeatInterval = null;
 let lockWatcherUnsubscribe = null;
 let myLockId = null;
@@ -1091,7 +1129,7 @@ window.togglePanel = (panelId, btnId) => {
     else { panel.classList.add('open'); btn.classList.add('open'); if (labelEl) labelEl.textContent = 'Hide'; }
 };
 
-// ===== DATA LISTS (ADMIN ONLY GLOBAL LISTS) =====
+// ===== DATA LISTS =====
 function loadDataLists() {
     onValue(dataListsRef, (snap) => {
         const data = snap.val() || {};
@@ -1104,11 +1142,12 @@ function loadDataLists() {
         };
         updateDataListUI();
         updateDataListsAutocomplete();
+        // Refresh cluster filter dropdowns
+        updateClusterFilterDropdown();
     });
 }
 
 function updateDataListsAutocomplete() {
-    // Update datalists from stored lists + existing schedule data
     const fields = ['subject','section','teacher','room','cluster'];
     const listKeys = ['subjects','sections','teachers','rooms','clusters'];
     fields.forEach((f, i) => {
@@ -1172,15 +1211,83 @@ window.deleteDataItem = (type, key) => {
     if (confirm('Delete this item from the list?')) remove(ref(db, `dataLists/${type}/${key}`));
 };
 
-// ===== BULK CLUSTER MODAL =====
+// ===== CLUSTER FILTER FOR SECTION VIEW =====
+// Returns clusters that have sections assigned in the schedule
+function getClustersFromSchedules() {
+    const clusterSet = new Set();
+    window.schedules.forEach(s => { if (s.cluster) clusterSet.add(s.cluster.trim().toUpperCase()); });
+    // Also include stored clusters
+    Object.values(window.dataLists.clusters || {}).forEach(c => clusterSet.add(c.toUpperCase()));
+    return [...clusterSet].filter(v => v).sort();
+}
+
+// Returns sections that belong to a given cluster (based on schedule entries)
+function getSectionsForCluster(clusterVal) {
+    if (!clusterVal) {
+        // All sections
+        return [...new Set(window.schedules.map(s => (s.section||'').trim()))].filter(v=>v).sort();
+    }
+    const up = clusterVal.trim().toUpperCase();
+    return [...new Set(
+        window.schedules
+            .filter(s => (s.cluster||'').trim().toUpperCase() === up)
+            .map(s => (s.section||'').trim())
+    )].filter(v=>v).sort();
+}
+
+function updateClusterFilterDropdown() {
+    const sel = document.getElementById('clusterFilterSelect');
+    if (!sel) return;
+    const clusters = getClustersFromSchedules();
+    const prev = sel.value;
+    sel.innerHTML = '<option value="">— Show All Sections —</option>' + clusters.map(c => `<option value="${c}">${c}</option>`).join('');
+    if (prev && clusters.includes(prev)) sel.value = prev;
+}
+
+window.onModeChange = () => {
+    const mode = document.getElementById('modeSelect').value;
+    const bar = document.getElementById('clusterFilterBar');
+    if (bar) bar.style.display = mode === 'section' ? 'flex' : 'none';
+    // Reset cluster filter when switching modes
+    const cfs = document.getElementById('clusterFilterSelect');
+    if (cfs && mode !== 'section') cfs.value = '';
+    updateFilterList(true);
+};
+
+window.applyClusterFilter = () => {
+    updateFilterList(true);
+};
+
+window.updateFilterList = (forceReset=false) => {
+    const m = document.getElementById('modeSelect').value;
+    const sel = document.getElementById('filterSelector');
+    const prev = sel.value;
+    let vals;
+
+    if (m === 'cluster') {
+        const stored = Object.values(window.dataLists.clusters || {}).map(v=>v.toUpperCase());
+        const fromSched = window.schedules.map(s=>(s.cluster||'').trim().toUpperCase()).filter(v=>v);
+        vals = [...new Set([...stored, ...fromSched])].filter(v=>v).sort();
+    } else if (m === 'section') {
+        // Filter by selected cluster
+        const clusterVal = document.getElementById('clusterFilterSelect')?.value || '';
+        vals = getSectionsForCluster(clusterVal);
+    } else {
+        vals = [...new Set(window.schedules.map(s=>(s[m]||'').trim()))].filter(v=>v).sort();
+    }
+
+    sel.innerHTML = vals.map(v => `<option value="${v}">${v}</option>`).join('');
+    if (!forceReset && prev && vals.includes(prev)) sel.value = prev;
+    renderMatrix();
+};
+
+// ===== BULK CLUSTER MODAL — NO LOCK, ALL OPERATORS EDIT FREELY, REAL-TIME =====
 window.openBulkClusterModal = () => {
     renderBulkClusterTable();
     // Populate the fill select
     const sel = document.getElementById('bulkClusterFillSelect');
-    const clusters = Object.values(window.dataLists.clusters || {}).sort();
-    const fromSched = [...new Set(window.schedules.map(s=>(s.cluster||'').trim()).filter(v=>v))];
-    const merged = [...new Set([...clusters, ...fromSched])].sort();
-    sel.innerHTML = '<option value="">— Fill All Visible with... —</option>' + merged.map(c => `<option value="${c}">${c}</option>`).join('');
+    const clusters = getClustersFromSchedules();
+    sel.innerHTML = '<option value="">— Fill All Visible with... —</option>' + clusters.map(c => `<option value="${c}">${c}</option>`).join('');
     document.getElementById('bulkClusterModal').classList.add('active');
 };
 window.closeBulkClusterModal = () => { document.getElementById('bulkClusterModal').classList.remove('active'); };
@@ -1190,33 +1297,75 @@ window.renderBulkClusterTable = () => {
     const tbody = document.getElementById('bulkClusterBody');
     if (!tbody) return;
     const filtered = window.schedules.filter(s => !filter || [s.subject,s.section,s.teacher,s.room,s.day].join(' ').toLowerCase().includes(filter));
-    if (filtered.length === 0) { tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:20px;color:#94a3b8;">No entries found.</td></tr>`; return; }
-    const clusters = Object.values(window.dataLists.clusters || {}).sort();
+    if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:20px;color:#94a3b8;">No entries found.</td></tr>`;
+        return;
+    }
+    const clusters = getClustersFromSchedules();
     const clOpts = clusters.map(c => `<option value="${c}">${c}</option>`).join('');
     tbody.innerHTML = filtered.map(s => `
-        <tr>
+        <tr id="bce-row-${s.firebaseKey}">
             <td style="padding:5px 6px;border-bottom:1px solid #f1f5f9;font-size:11px;color:#2563eb;font-weight:600;">${s.subject}</td>
             <td style="padding:5px 6px;border-bottom:1px solid #f1f5f9;font-size:11px;">${s.section}</td>
             <td style="padding:5px 6px;border-bottom:1px solid #f1f5f9;font-size:11px;">${s.teacher}</td>
             <td style="padding:5px 6px;border-bottom:1px solid #f1f5f9;font-size:11px;white-space:nowrap;">${s.day} ${militaryToAMPM(s.start)}-${militaryToAMPM(s.end)}</td>
             <td style="padding:5px 6px;border-bottom:1px solid #f1f5f9;">
-                <input type="text" list="bulkClusterDataList" id="bulk-cluster-${s.firebaseKey}" value="${s.cluster||''}" placeholder="Enter cluster..." style="width:100%;padding:4px 6px;border:1px solid #cbd5e1;border-radius:4px;font-size:11px;box-sizing:border-box;" onkeydown="if(event.key==='Enter')saveBulkClusterRow('${s.firebaseKey}')">
-                <datalist id="bulkClusterDataList">${clOpts}</datalist>
+                <input type="text" list="bulkClusterDataList_${s.firebaseKey}"
+                    id="bulk-cluster-${s.firebaseKey}"
+                    value="${s.cluster||''}"
+                    placeholder="Enter cluster..."
+                    style="width:100%;padding:4px 6px;border:1px solid #cbd5e1;border-radius:4px;font-size:11px;box-sizing:border-box;"
+                    onkeydown="if(event.key==='Enter')saveBulkClusterRow('${s.firebaseKey}')">
+                <datalist id="bulkClusterDataList_${s.firebaseKey}">${clOpts}</datalist>
             </td>
             <td style="padding:5px 6px;border-bottom:1px solid #f1f5f9;text-align:center;">
-                <button onclick="saveBulkClusterRow('${s.firebaseKey}')" style="background:#10b981;color:white;border:none;padding:4px 8px;border-radius:4px;font-size:9px;font-weight:700;cursor:pointer;"><i class="fa-solid fa-floppy-disk"></i></button>
+                <button onclick="saveBulkClusterRow('${s.firebaseKey}')"
+                    style="background:#10b981;color:white;border:none;padding:4px 8px;border-radius:4px;font-size:9px;font-weight:700;cursor:pointer;">
+                    <i class="fa-solid fa-floppy-disk"></i>
+                </button>
             </td>
         </tr>
     `).join('');
 };
 
-window.saveBulkClusterRow = (key) => {
+// Save individual row — no lock needed, direct write
+window.saveBulkClusterRow = async (key) => {
     if (!window.activeSemesterId) return;
     const input = document.getElementById(`bulk-cluster-${key}`);
-    const val = input?.value.trim().toUpperCase();
-    update(semRef(window.activeSemesterId, `schedules/${key}`), { cluster: val });
-    // Visual feedback
-    if (input) { input.style.borderColor = '#10b981'; setTimeout(() => { if(input) input.style.borderColor = '#cbd5e1'; }, 1200); }
+    const val = (input?.value || '').trim().toUpperCase();
+    const row = document.getElementById(`bce-row-${key}`);
+    if (row) row.classList.add('bce-row-saving');
+    try {
+        await update(semRef(window.activeSemesterId, `schedules/${key}`), { cluster: val });
+        if (row) {
+            row.classList.remove('bce-row-saving');
+            row.classList.add('bce-row-saved');
+            setTimeout(() => { if (row) row.classList.remove('bce-row-saved'); }, 1500);
+        }
+        if (input) { input.style.borderColor = '#22c55e'; setTimeout(() => { if(input) input.style.borderColor = '#cbd5e1'; }, 1200); }
+    } catch(e) {
+        if (row) row.classList.remove('bce-row-saving');
+        alert('Save failed: ' + e.message);
+    }
+};
+
+// Save ALL currently visible rows at once
+window.saveAllVisibleClusters = async () => {
+    if (!window.activeSemesterId) return;
+    const inputs = document.querySelectorAll('[id^="bulk-cluster-"]');
+    const updates = {};
+    inputs.forEach(inp => {
+        const key = inp.id.replace('bulk-cluster-', '');
+        updates[`semesters/${window.activeSemesterId}/schedules/${key}/cluster`] = (inp.value || '').trim().toUpperCase();
+    });
+    try {
+        await update(ref(db), updates);
+        // Flash all rows green
+        inputs.forEach(inp => {
+            const row = document.getElementById(`bce-row-${inp.id.replace('bulk-cluster-', '')}`);
+            if (row) { row.classList.add('bce-row-saved'); setTimeout(() => row.classList.remove('bce-row-saved'), 1500); }
+        });
+    } catch(e) { alert('Bulk save failed: ' + e.message); }
 };
 
 window.bulkFillCluster = () => {
@@ -1369,10 +1518,10 @@ function attachSemesterListeners(semId) {
         window.schedules = data ? Object.entries(data).map(([k,v])=>({...v,firebaseKey:k})) : [];
         updateFilterList(false);
         updateDataListsAutocomplete();
+        updateClusterFilterDropdown();
         renderManageTable();
         renderMatrix();
         checkAllTeachersHourLimits();
-        // Refresh bulk cluster table if modal open
         if (document.getElementById('bulkClusterModal').classList.contains('active')) renderBulkClusterTable();
     });
 
@@ -1726,18 +1875,16 @@ function initAppUI() {
         if (auth.currentUser?.email===ADMIN_EMAIL) { el.classList.remove('hidden'); setupAdminDashboard(); }
         else el.classList.add('hidden');
     });
-    // Show/hide operator section toggle based on role
     const ospToggle = document.getElementById('ospToggle');
     const ospToggleMatrix = document.getElementById('ospToggleMatrix');
     if (ospToggle) ospToggle.style.display = currentUserRole==='viewer' ? 'none' : 'flex';
     if (ospToggleMatrix) ospToggleMatrix.style.display = currentUserRole==='viewer' ? 'none' : 'flex';
 
-    // Viewers: collapse operator body by default
     if (currentUserRole==='viewer') {
         const ospBody = document.getElementById('ospBody');
         const ospMatrixBody = document.getElementById('ospMatrixBody');
-        if (ospBody) { ospBody.classList.add('collapsed'); }
-        if (ospMatrixBody) { ospMatrixBody.classList.add('collapsed'); }
+        if (ospBody) ospBody.classList.add('collapsed');
+        if (ospMatrixBody) ospMatrixBody.classList.add('collapsed');
     }
 
     loadColorSettings();
@@ -1779,6 +1926,14 @@ window.rejectUser=(uid)=>{if(confirm("Delete this user?"))remove(ref(db,`users/$
 window.changeUserRole=(uid,role)=>{const d={role};if(role==='operator')d.status='approved';update(ref(db,`users/${uid}`),d);alert("Role updated.");};
 
 // ===== MATRIX BUILDER =====
+// Get the cluster of the currently viewed section (for showing in header)
+function getClusterForSection(sectionVal) {
+    if (!sectionVal) return null;
+    const up = sectionVal.trim().toUpperCase();
+    const entry = window.schedules.find(s => (s.section||'').trim().toUpperCase() === up && s.cluster);
+    return entry ? entry.cluster.trim().toUpperCase() : null;
+}
+
 function buildUnifiedTimeGrid(mode, filterVal) {
     const boundarySet = new Set();
     window.schedules.forEach(s => {
@@ -1816,8 +1971,25 @@ window.renderMatrix = () => {
     const filterVal = document.getElementById('filterSelector').value;
     const body = document.getElementById('matrixBody');
     const sem = window.semesters.find(s=>s.id===window.activeSemesterId);
+
+    // Update matrix title
     document.getElementById('matrixTitle').innerText = filterVal ? `${mode.toUpperCase()}: ${filterVal}` : "";
     document.getElementById('matrixSemLabel').textContent = sem ? `📅 ${sem.name}` : '';
+
+    // Show cluster tag in header when viewing a section
+    const clusterTag = document.getElementById('matrixClusterTag');
+    if (mode === 'section' && filterVal) {
+        const clusterOfSection = getClusterForSection(filterVal);
+        if (clusterOfSection) {
+            clusterTag.style.display = 'inline-flex';
+            clusterTag.innerHTML = `<i class="fa-solid fa-layer-group"></i> ${clusterOfSection}`;
+        } else {
+            clusterTag.style.display = 'none';
+        }
+    } else {
+        clusterTag.style.display = 'none';
+    }
+
     body.innerHTML = '';
 
     if (mode==='teacher' && filterVal) renderHoursSummary(filterVal);
@@ -1889,21 +2061,25 @@ window.renderMatrix = () => {
                     div.className = `slot-box slot-${type}`;
                     div.draggable = currentUserRole === 'operator';
                     div.setAttribute('ondragstart', `handleDragStart(event,'${item.firebaseKey}')`);
+
+                    // Display info varies by mode — cluster NOT shown inside slot box
                     let dispInfo = '';
                     if (mode==="section") dispInfo = item.teacher || 'No Teacher';
                     else if (mode==="teacher") dispInfo = item.section || 'No Section';
                     else if (mode==="room") dispInfo = `${item.section||'No Section'} · ${item.teacher||'No Teacher'}`;
                     else if (mode==="cluster") dispInfo = `${item.section||''} · ${item.teacher||''}`;
+
                     let badge = '';
                     if (type==='async') badge = `<span class="slot-type-badge badge-async"><i class="fa-solid fa-wifi-slash"></i> ASYNC</span>`;
                     else if (type==='homeroom') badge = `<span class="slot-type-badge badge-homeroom"><i class="fa-solid fa-house-chimney-user"></i> HR</span>`;
                     else if (type==='break') badge = `<span class="slot-type-badge badge-break-slot"><i class="fa-solid fa-mug-hot"></i> BREAK</span>`;
-                    const clusterBadge = item.cluster ? `<span class="slot-cluster-badge"><i class="fa-solid fa-layer-group"></i> ${item.cluster}</span>` : '';
+
+                    // Cluster is NOT rendered inside the slot box — it shows in the matrix header instead
                     const actions = currentUserRole==='operator'
                         ? `<div class="slot-actions"><button class="slot-action-btn slot-edit-btn" onclick="event.stopPropagation();editEntry('${item.firebaseKey}')" title="Edit"><i class="fa-solid fa-pen"></i></button><button class="slot-action-btn slot-delete-btn" onclick="event.stopPropagation();deleteEntry('${item.firebaseKey}')" title="Delete"><i class="fa-solid fa-trash"></i></button></div>`
                         : '';
                     const timeRange = `${militaryToAMPM(item.start)} – ${militaryToAMPM(item.end)}`;
-                    div.innerHTML = `${actions}${badge}<strong>${item.subject}</strong><span class="room-badge">${item.room||'No Room'}</span>${clusterBadge}<div class="info-line">${dispInfo}</div><div class="info-line" style="color:#94a3b8;">${timeRange}</div>`;
+                    div.innerHTML = `${actions}${badge}<strong>${item.subject}</strong><span class="room-badge">${item.room||'No Room'}</span><div class="info-line">${dispInfo}</div><div class="info-line" style="color:#94a3b8;">${timeRange}</div>`;
                     td.appendChild(div);
                 });
             } else {
@@ -1931,31 +2107,17 @@ function renderManageTable() {
 window.clearSearch=()=>{ const sb=document.getElementById('searchBox'); if(sb){sb.value='';renderManageTable();} };
 document.addEventListener('DOMContentLoaded',()=>{ const sb=document.getElementById('searchBox'); if(sb)sb.addEventListener('input',()=>renderManageTable()); });
 
-// ===== FILTER LIST =====
-window.updateFilterList=(forceReset=false)=>{
-    const m=document.getElementById('modeSelect').value, sel=document.getElementById('filterSelector');
-    const prev=sel.value;
-    let vals;
-    if (m === 'cluster') {
-        // Cluster view: values from stored clusters + schedule data
-        const stored = Object.values(window.dataLists.clusters || {}).map(v=>v.toUpperCase());
-        const fromSched = window.schedules.map(s=>(s.cluster||'').trim().toUpperCase()).filter(v=>v);
-        vals = [...new Set([...stored, ...fromSched])].filter(v=>v).sort();
-    } else {
-        vals=[...new Set(window.schedules.map(s=>(s[m]||'').trim()))].filter(v=>v).sort();
-    }
-    sel.innerHTML=vals.map(v=>`<option value="${v}">${v}</option>`).join('');
-    if(!forceReset&&prev&&vals.includes(prev)) sel.value=prev;
-    renderMatrix();
-};
-
-window.updateDataLists=()=>{ updateDataListsAutocomplete(); };
-
 // ===== SECTION NAV =====
 window.showSection=(id)=>{
     document.querySelectorAll('.section-container').forEach(el=>el.classList.remove('active'));
     document.getElementById('dashboardCards').style.display='none';
     document.getElementById(id).classList.add('active');
+    // Show cluster filter bar if entering matrix in section mode
+    if (id === 'matrixSection') {
+        const mode = document.getElementById('modeSelect').value;
+        const bar = document.getElementById('clusterFilterBar');
+        if (bar) bar.style.display = mode === 'section' ? 'flex' : 'none';
+    }
 };
 window.closeSection=(id)=>{
     if (id === 'encodeSection') { clearInputs(); }
